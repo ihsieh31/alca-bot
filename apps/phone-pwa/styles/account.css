@@ -1,0 +1,309 @@
+/* 用 Google 登入 → 選擇電腦 → 驗證碼 (素 Plain §3.13), in the .ob frame of
+   screens.css; /computer-signin in the computer's browser; the Google button. */
+
+/* ── Sign-in art: phone and computer joined by a sealed line ── */
+.gs-art {
+  display: block;
+  width: min(208px, 58vw);
+  height: auto;
+  margin: 0 0 var(--s-8) -4px;
+  overflow: visible;
+}
+
+.gs-line,
+.gs-faint,
+.gs-dash,
+.gs-lock {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.gs-line {
+  stroke: var(--label-2);
+  stroke-width: 1.5;
+}
+
+.gs-faint {
+  stroke: var(--label-3);
+  stroke-width: 1.5;
+}
+
+.gs-dash {
+  stroke: var(--label-3);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 5;
+  animation: gs-flow 2.4s linear infinite;
+}
+
+.gs-seal {
+  fill: var(--bg-cell);
+  stroke: var(--label-2);
+  stroke-width: 1.5;
+}
+
+.gs-lock {
+  stroke: var(--label-2);
+  stroke-width: 1.5;
+}
+
+@keyframes gs-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+/* ── 選擇電腦 ───────────────────────────────────────────────── */
+.gs .pc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-height: var(--nav-h);
+  margin: calc(var(--s-14) * -1 + var(--s-2)) 0 var(--s-2);
+}
+
+.gs .pc-top .icon-btn {
+  margin-left: calc(var(--s-3) * -1);
+  color: var(--accent);
+}
+
+.pc-account {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.pc-avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  font-weight: 600;
+}
+
+.pc-email {
+  overflow: hidden;
+  min-width: 0;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pc-head {
+  margin-bottom: var(--s-6);
+}
+
+/* A list screen: the grouped-list gutter (16), not the setup screens' 24. */
+.gs:has(> .pc-head) {
+  padding-right: calc(var(--safe-right) + var(--s-4));
+  padding-left: calc(var(--safe-left) + var(--s-4));
+}
+
+.pc-head .large-title {
+  margin: 0;
+  padding: 0;
+}
+
+.pc-group {
+  margin-bottom: var(--s-4);
+}
+
+.pc-list[hidden] {
+  display: none;
+}
+
+/* Loading: two quiet placeholder rows, no shimmer. */
+.pc-list[aria-busy="true"]:empty {
+  min-height: calc(var(--row-h-sub, 60px) * 2);
+}
+
+.pc-list:empty:not([aria-busy="true"]) {
+  display: none;
+}
+
+.pc-item[data-online="true"] .pc-state {
+  color: var(--success);
+}
+
+.pc-item[data-online="false"] .row-title {
+  color: var(--label-2);
+}
+
+.pc-note {
+  text-wrap: pretty;
+}
+
+.pc-group > .pc-list:empty + .pc-note,
+.pc-note.pc-error {
+  margin-top: 0;
+}
+
+.pc-note.pc-error {
+  color: var(--danger);
+}
+
+.pc-refresh {
+  display: block;
+}
+
+/* ── 驗證碼 ─────────────────────────────────────────────────── */
+.gs .sas-top {
+  justify-content: flex-start;
+}
+
+.sas-cancel {
+  margin-left: calc(var(--s-2) * -1);
+}
+
+.sas {
+  display: flex;
+  flex-direction: column;
+}
+
+.sas-kicker {
+  margin-top: var(--s-2);
+}
+
+.sas-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+  margin: var(--s-8) 0 var(--s-5);
+  padding: var(--s-6) var(--s-4) var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--bg-cell);
+}
+
+.sas-num {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--t-large-title);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+.sas-num.sas-dim {
+  opacity: 0.4;
+}
+
+.sas-left {
+  margin: 0;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  font-variant-numeric: tabular-nums;
+}
+
+.sas-status {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+}
+
+.sas-status .sas-fail {
+  margin: 0;
+  padding: 0;
+  font-size: var(--t-subhead);
+}
+
+.sas-sub {
+  margin-top: var(--s-5);
+  font-size: var(--t-subhead);
+}
+
+.sas-again[hidden] {
+  display: none;
+}
+
+/* ── /computer-signin, in the computer's browser ───────────── */
+.cs {
+  box-sizing: border-box;
+}
+
+.cs > * {
+  max-width: 440px;
+}
+
+.cs-again {
+  display: block;
+  margin-top: var(--s-6);
+}
+
+/* ── Google button: Google's colours and mark, our 50px / --r-lg shape ── */
+.g-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 50px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-lg);
+  border: 1px solid #8e918f;
+  background: #131314;
+  color: #e3e3e3;
+  font-family: var(--font-text);
+  font-size: var(--t-callout);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--d-instant) linear;
+}
+
+.g-btn:active {
+  background: #2a2b2c;
+}
+
+.g-btn:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.g-btn .g-mark {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+:root[data-theme="light"] .g-btn {
+  background: #ffffff;
+  border-color: #747775;
+  color: #1f1f1f;
+}
+
+:root[data-theme="light"] .g-btn:active {
+  background: #f2f2f2;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .g-btn {
+    background: #ffffff;
+    border-color: #747775;
+    color: #1f1f1f;
+  }
+  :root:not([data-theme]) .g-btn:active {
+    background: #f2f2f2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gs-dash {
+    animation: none;
+  }
+}

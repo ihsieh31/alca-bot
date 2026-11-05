@@ -1,0 +1,37 @@
+[package]
+name = "alca-desktop-shell"
+version = "0.2.0"
+description = "Alca desktop shell: one window around the local core's UI, a tray, open at login, alca:// links"
+edition = "2021"
+license = "Apache-2.0"
+publish = false
+
+[lib]
+name = "alca_shell"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "alca-desktop-shell"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
+tauri-plugin-deep-link = "2"
+tauri-plugin-autostart = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# One-time launch codes for the window (review 2026-11-04b S2.2); already in Cargo.lock via tauri.
+getrandom = "0.2"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

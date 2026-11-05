@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability (private)
+    url: https://github.com/ihsieh31/alca-bot/security/advisories/new
+    about: Never report a security problem in a public issue. Use private vulnerability reporting (SECURITY.md).

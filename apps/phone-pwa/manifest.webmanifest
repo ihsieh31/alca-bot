@@ -1,0 +1,29 @@
+{
+  "name": "Alca",
+  "short_name": "Alca",
+  "description": "看你的電腦在做什麼、隨時批准或拒絕。",
+  "lang": "zh-Hant-TW",
+  "dir": "ltr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone"],
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "任務", "url": "./#workers", "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }] },
+    {
+      "name": "瀏覽器畫面",
+      "url": "./#browser",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

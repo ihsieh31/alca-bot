@@ -1,0 +1,1568 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alca.invalid/spec/alca-event-protocol.v0.schema.json",
+  "title": "Alca Event Protocol v0",
+  "description": "Generated from packages/protocol/src/events.ts. Do not edit by hand; run `pnpm spec:gen`.",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "run.started"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "engine": {
+              "type": "string",
+              "minLength": 1
+            },
+            "model": {
+              "type": "string",
+              "minLength": 1
+            },
+            "parentRunId": {
+              "type": "string",
+              "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "message.delta"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "pattern": "^msg_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "role": {
+              "type": "string",
+              "const": "assistant"
+            },
+            "delta": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "messageId",
+            "role",
+            "delta"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "message.completed"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "messageId": {
+              "type": "string",
+              "pattern": "^msg_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "user",
+                "assistant",
+                "system"
+              ]
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "messageId",
+            "role",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "tool.requested"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "callId": {
+              "type": "string",
+              "pattern": "^call_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "tool": {
+              "type": "string",
+              "minLength": 1
+            },
+            "args": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "actionClass": {
+              "type": "string",
+              "enum": [
+                "read",
+                "write",
+                "execute",
+                "network",
+                "payment",
+                "send",
+                "delete",
+                "publish"
+              ]
+            }
+          },
+          "required": [
+            "callId",
+            "tool",
+            "args",
+            "actionClass"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "tool.completed"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "callId": {
+              "type": "string",
+              "pattern": "^call_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "ok": {
+              "type": "boolean"
+            },
+            "result": {},
+            "error": {
+              "type": "string"
+            },
+            "durationMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "callId",
+            "ok",
+            "durationMs"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "approval.requested"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "approvalId": {
+              "type": "string",
+              "pattern": "^apr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "callId": {
+              "type": "string",
+              "pattern": "^call_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "workerId": {
+              "type": "string",
+              "pattern": "^wkr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "actionClass": {
+              "type": "string",
+              "enum": [
+                "read",
+                "write",
+                "execute",
+                "network",
+                "payment",
+                "send",
+                "delete",
+                "publish"
+              ]
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expiresAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "applied": {
+              "maxItems": 5,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            }
+          },
+          "required": [
+            "approvalId",
+            "actionClass",
+            "summary"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "approval.resolved"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "approvalId": {
+              "type": "string",
+              "pattern": "^apr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "decision": {
+              "type": "string",
+              "enum": [
+                "approved",
+                "denied",
+                "expired"
+              ]
+            },
+            "by": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "agent",
+                    "tool",
+                    "system"
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "kind",
+                "id"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "approvalId",
+            "decision",
+            "by"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "question.asked"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "questionId": {
+              "type": "string",
+              "pattern": "^qst_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "prompt": {
+              "type": "string",
+              "minLength": 1
+            },
+            "choices": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "questionId",
+            "prompt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "question.answered"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "questionId": {
+              "type": "string",
+              "pattern": "^qst_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "answer": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "questionId",
+            "answer"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "handoff.requested"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "handoffId": {
+              "type": "string",
+              "pattern": "^hof_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "to": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent"
+              ]
+            },
+            "targetId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "surface": {
+              "type": "string",
+              "enum": [
+                "chat",
+                "browser"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "handoffId",
+            "to",
+            "surface",
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "run.finished"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "reason": {
+              "type": "string",
+              "enum": [
+                "completed",
+                "cancelled",
+                "failed",
+                "interrupted",
+                "max_turns",
+                "awaiting_input",
+                "handed_off"
+              ]
+            },
+            "usage": {
+              "type": "object",
+              "properties": {
+                "inputTokens": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "outputTokens": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "cachedInputTokens": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "inputTokens",
+                "outputTokens"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "sessionId": {
+          "type": "string",
+          "pattern": "^ses_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "threadId": {
+          "type": "string",
+          "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "runId": {
+          "type": "string",
+          "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "initiator": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "schedule",
+                "agent",
+                "webhook"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "actor": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "user",
+                "agent",
+                "tool",
+                "system"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "kind",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "type": {
+          "type": "string",
+          "const": "error"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "minLength": 1
+            },
+            "message": {
+              "type": "string"
+            },
+            "retryable": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "code",
+            "message",
+            "retryable"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "threadId",
+        "runId",
+        "seq",
+        "initiator",
+        "actor",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

@@ -1,0 +1,614 @@
+/* 設定 as a settings window (素 Plain §3.7): a category list on the left like macOS System
+   Settings, one pane on the right with 15/600 section headings, radio groups instead of
+   radio cards, on/off as switches, the risky-action rule as a lock footnote. The sections
+   (settings-*.ts) reuse the lc-* field pieces; they are restyled here inside the window. */
+
+.st-window {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  width: min(860px, calc(100vw - 48px));
+  height: min(640px, calc(100vh - 64px));
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--r-xl);
+  background: var(--bg);
+  color: var(--label);
+  box-shadow: var(--shadow-3);
+}
+
+.st-window:not([open]) {
+  display: none;
+}
+
+.st-window::backdrop {
+  background: var(--scrim);
+}
+
+/* ── Category list ── */
+.st-side {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: var(--s-4) var(--s-2) var(--s-3);
+  background: var(--bg-grouped);
+  box-shadow: inset -0.5px 0 0 var(--separator);
+}
+
+.st-side-title {
+  margin: 0 0 var(--s-3);
+  padding: 0 var(--s-2);
+  color: var(--label-2);
+  font: var(--t-caption);
+}
+
+.st-cats {
+  display: grid;
+  gap: 1px;
+  align-content: start;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.st-cat {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: 28px;
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+  text-align: left;
+  cursor: default;
+}
+
+.st-cat .ico {
+  flex: none;
+  color: var(--accent);
+}
+
+.st-cat:hover {
+  background: var(--fill-hover);
+}
+
+.st-cat[aria-current="page"] {
+  background: var(--fill-selected);
+}
+
+.st-cat:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.st-window .st-status {
+  margin: var(--s-3) 0 0;
+  padding: 0 var(--s-2);
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.st-window .st-status[data-tone="ok"] {
+  color: var(--success);
+}
+
+.st-window .st-status[data-tone="bad"] {
+  color: var(--danger);
+}
+
+/* ── Pane ── */
+.st-pane {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+
+.st-pane-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-5) var(--s-4) var(--s-2) var(--s-8);
+}
+
+.st-pane-title {
+  flex: 1;
+  margin: 0;
+  font: var(--t-title);
+  letter-spacing: -0.01em;
+}
+
+.st-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  overflow-y: auto;
+  padding: var(--s-3) var(--s-8) var(--s-8);
+}
+
+.st-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  scroll-margin-top: var(--s-4);
+}
+
+.st-section + .st-section {
+  padding-top: var(--s-6);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.st-h {
+  margin: 0;
+  font: var(--t-headline);
+  color: var(--label);
+}
+
+.st-sub {
+  margin: var(--s-3) 0 0;
+  font: var(--t-body);
+  font-weight: 600;
+}
+
+/* ── Radio group (no cards) ── */
+.st-radios,
+.st-choice {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.st-radio,
+.st-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  cursor: default;
+}
+
+.st-radio input,
+.st-option input,
+.st-check:not(.st-line) input[type="checkbox"] {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  accent-color: var(--accent-fill);
+}
+
+.st-option-text,
+.st-line > span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font: var(--t-body);
+}
+
+.st-option-text b,
+.st-line b {
+  font-weight: 400;
+}
+
+.st-option-text small,
+.st-line small {
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+/* The rule nobody can switch off: a lock footnote, not an amber banner. */
+.st-fixed {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin: 0;
+  color: var(--label-2);
+  font: var(--t-small);
+  line-height: 1.6;
+}
+
+.st-fixed .ico {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+
+/* ── On/off: the checkbox drawn as a switch at the trailing edge ── */
+.st-line {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+  min-height: 32px;
+}
+
+.st-line input[type="checkbox"] {
+  position: relative;
+  flex: none;
+  width: 32px;
+  height: 20px;
+  margin: 0;
+  border-radius: var(--r-full);
+  background: var(--fill-strong);
+  appearance: none;
+  -webkit-appearance: none;
+  transition: background-color var(--d-fast) var(--e-standard);
+}
+
+.st-line input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.st-line input[type="checkbox"]:checked {
+  background: var(--accent-fill);
+}
+
+.st-line input[type="checkbox"]:checked::after {
+  transform: translateX(12px);
+}
+
+.st-line input[type="checkbox"]:disabled {
+  opacity: 0.4;
+}
+
+.st-line input[type="checkbox"]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.st-checks {
+  display: grid;
+}
+
+.st-checks > .st-line + .st-line {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.st-check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  font: var(--t-body);
+}
+
+.st-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.st-restart {
+  color: var(--label-2);
+  font: var(--t-small);
+  font-weight: 400;
+}
+
+.st-restart[data-tone="warn"] {
+  color: var(--waiting);
+}
+
+/* ── Fields inside the window (lc-* from the dialogs) ── */
+.st-window .lc-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.st-window .lc-label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  font: var(--t-body);
+  font-weight: 500;
+}
+
+.st-window .lc-help,
+.st-window .lc-label small {
+  color: var(--label-2);
+  font: var(--t-small);
+  line-height: 1.6;
+}
+
+.st-window .lc-help {
+  margin: 0;
+}
+
+.st-window .st-row > .field {
+  flex: 1;
+}
+
+.st-wide {
+  flex: none;
+  min-width: 16rem;
+}
+
+.st-window select.popup {
+  align-self: flex-start;
+}
+
+.st-window .lc-msg {
+  margin: 0;
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.st-window .lc-msg[data-tone="ok"] {
+  color: var(--success);
+}
+
+.st-window .lc-msg[data-tone="bad"] {
+  color: var(--danger);
+}
+
+.st-window .lk-note {
+  margin: 0;
+  color: var(--label-2);
+  font: var(--t-body);
+}
+
+.st-window .lc-btn {
+  flex: none;
+  height: 28px;
+  padding: 0 var(--s-3);
+}
+
+.lc-btn[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.lc-btn[data-tone="danger"][data-armed="true"] {
+  background: var(--danger-fill);
+  color: #fff;
+}
+
+/* ── Value rows ── */
+.st-live {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+/* A read-only fact: label leading, value trailing in --label-2, hairline between (System Settings). */
+.st-kv {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-height: 32px;
+  padding: 6px 0;
+  font: var(--t-body);
+}
+
+.st-kv + .st-kv {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.st-k {
+  flex: none;
+  color: var(--label);
+  font: var(--t-body);
+}
+
+.st-v {
+  min-width: 0;
+  color: var(--label-2);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.st-v code,
+.st-backup code {
+  font: 12px / 1.5 var(--font-mono);
+}
+
+/* One click selects the whole file name (mac test 2026-11-04b B8). */
+.st-backup-name {
+  user-select: all;
+  -webkit-user-select: all;
+}
+
+.st-dim {
+  color: var(--label-2);
+}
+
+/* A former chip: plain text coloured only by meaning (§3.12). */
+.st-tag {
+  color: var(--label-2);
+  font: var(--t-small);
+  white-space: nowrap;
+}
+
+.st-tag[data-tone="ok"] {
+  color: var(--success);
+}
+
+.st-tag[data-tone="warn"] {
+  color: var(--waiting);
+}
+
+.st-actions {
+  flex-wrap: wrap;
+}
+
+/* Devices and backups: plain rows with hairlines. */
+.st-devices,
+.st-backups-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--r-md);
+  background: var(--bg-cell);
+  box-shadow: var(--shadow-1);
+}
+
+.st-device,
+.st-backup {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 44px;
+  padding: var(--s-2) var(--s-4);
+  font: var(--t-body);
+}
+
+.st-device + .st-device,
+.st-backup + .st-backup {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.st-device-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.st-device-main small,
+.st-backup small {
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.st-backup-when {
+  min-width: 88px;
+  font-variant-numeric: tabular-nums;
+}
+
+.st-backup code {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--label-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 驗證稽核紀錄: one line, or the advice in red text (no tinted card). */
+.st-verify-card {
+  margin: var(--s-2) 0;
+}
+
+.st-verify-card p {
+  margin: 2px 0;
+  font: var(--t-small);
+  white-space: pre-wrap;
+}
+
+.st-verify-card[data-tone="bad"] p {
+  color: var(--danger);
+}
+
+.st-perf-more summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--accent);
+  font: var(--t-body);
+  list-style: none;
+  cursor: default;
+}
+
+.st-perf-more summary::-webkit-details-marker {
+  display: none;
+}
+
+.st-perf-more summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.st-perf-more[open] summary::before {
+  transform: rotate(45deg);
+}
+
+.st-window .be-link {
+  align-self: flex-start;
+}
+
+.st-window .st-kv .lc-btn {
+  margin-left: var(--s-2);
+}
+
+.st-window .st-model .pv-chosen {
+  margin: 0 calc(-1 * var(--s-3));
+  width: calc(100% + var(--s-6));
+}
+
+.st-adv {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.st-adv > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--accent);
+  font: var(--t-body);
+  list-style: none;
+}
+
+.st-adv > summary::-webkit-details-marker {
+  display: none;
+}
+
+.st-adv > summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.st-adv[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.st-perf-list {
+  margin: 0;
+  padding-left: 1.2em;
+  font: var(--t-small);
+}
+
+.st-perf-list code {
+  word-break: break-all;
+}
+
+@media (max-width: 640px) {
+  .st-window {
+    grid-template-columns: 1fr;
+  }
+
+  .st-side {
+    display: none;
+  }
+
+  .st-kv {
+    flex-wrap: wrap;
+  }
+}

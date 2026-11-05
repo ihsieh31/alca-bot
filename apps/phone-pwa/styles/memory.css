@@ -1,0 +1,189 @@
+/* 資料庫 › 記憶 and 技能 (素 Plain §4.1): a search field with a 「全部 ⌄」 menu,
+   memory rows (sentence + one secondary line), the memory detail page,
+   skill rows with a switch, numbered steps with a lock on always-confirm ones. */
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: var(--s-1) 0 var(--s-5);
+}
+
+.search {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+  height: 36px;
+  padding: 0 var(--s-2);
+  border-radius: var(--r-md);
+  background: var(--fill);
+  color: var(--label-2);
+}
+
+.search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--label);
+  font-size: var(--t-field);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-input::placeholder {
+  color: var(--placeholder);
+}
+
+.search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+  min-height: 36px;
+  padding: 0 var(--s-1) 0 var(--s-2);
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--t-body);
+  white-space: nowrap;
+}
+
+.filter-btn .icon {
+  stroke-width: 2;
+}
+
+.mem-body {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.row[data-origin="inferred"] .row-sub {
+  color: var(--label-2);
+}
+
+/* The memory itself, as the page's subject. */
+.memory-item {
+  padding-top: var(--s-2);
+}
+
+.mi-body {
+  margin: 0 var(--s-1) var(--s-2);
+  font-family: var(--font-display);
+  font-size: var(--t-title3);
+  font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.mi-quote {
+  margin: 0 var(--s-1) var(--s-5);
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  line-height: 1.5;
+}
+
+.memory-item > .group:first-of-type {
+  margin-top: var(--s-5);
+}
+
+.mi-confirm {
+  margin: 0 0 var(--s-8);
+}
+
+/* Form sheets: one cell with a text area. */
+.form-body {
+  padding-top: var(--s-2);
+}
+
+.field-area {
+  display: block;
+  width: 100%;
+  min-height: calc(5 * 1.5em + var(--s-4));
+  margin: 0;
+  padding: var(--s-2) 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--label);
+  font-size: var(--t-field);
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* ── Skills ─────────────────────────────────────────────── */
+.sk-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+}
+
+.sk-name .icon {
+  color: var(--label-2);
+}
+
+.row.tappable {
+  cursor: pointer;
+}
+
+.row.tappable:active:not(:has(input:active)) {
+  background: var(--fill);
+}
+
+.step-num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.steps .row {
+  align-items: flex-start;
+}
+
+.steps .row .step-num,
+.steps .row .row-value {
+  margin-top: 8px;
+}
+
+.steps .cells > .row + .row::before {
+  left: calc(var(--s-4) + 24px + var(--s-3));
+}
+
+.step-lock {
+  display: grid;
+  color: var(--waiting);
+}
+
+.skill-page .ap-lock {
+  margin-top: calc(var(--s-4) * -1);
+  padding: 0 var(--s-4);
+}
+
+.skill-page .ap-actions {
+  margin-bottom: var(--s-2);
+}
+
+.sk-note,
+.sk-desc {
+  margin: calc(var(--s-6) * -1) 0 var(--s-6);
+}

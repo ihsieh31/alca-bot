@@ -1,0 +1,137 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: shellcheck (scripts/install.sh — the install test runs it too — and scripts/stage-shell-core.sh); bubblewrap for the OS sandbox tests
+        run: sudo apt-get update && sudo apt-get install -y shellcheck bubblewrap && shellcheck scripts/install.sh scripts/stage-shell-core.sh
+      - name: actionlint (the workflows; pinned release, checked against its SHA-256; uses the shellcheck above)
+        env:
+          ACTIONLINT_VERSION: 1.7.7
+          ACTIONLINT_SHA256: 023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757
+        run: |
+          tgz="$RUNNER_TEMP/actionlint.tar.gz"
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$tgz" \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          echo "$ACTIONLINT_SHA256  $tgz" | sha256sum -c -
+          tar -xzf "$tgz" -C "$RUNNER_TEMP" actionlint
+          "$RUNNER_TEMP/actionlint" -color
+      - name: typecheck
+        run: pnpm typecheck
+      - name: lint
+        run: pnpm lint
+      - name: file size (≤ 800 lines per source file)
+        run: pnpm check:size
+      - name: no deployment-specific or sensitive values (domains, client IDs, keys) outside docs
+        run: pnpm check:deploy-values
+      - name: one version in every package.json, tauri.conf.json and Cargo.toml
+        run: pnpm check:versions
+      - name: protocol spec is up to date
+        run: pnpm spec:check
+      - name: let Chromium and bubblewrap start their sandboxes (Ubuntu 24.04 AppArmor blocks unprivileged user namespaces)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: warm up Chromium (its first start on a fresh runner is slow)
+        run: |
+          bin="$(node --disable-warning=ExperimentalWarning -e 'import("./packages/browser/src/index.ts").then((m) => console.log(m.findChromium() ?? ""))' 2>/dev/null || true)"
+          echo "chromium: ${bin:-none}"
+          if [ -n "$bin" ]; then timeout 120 "$bin" --headless=new --no-first-run --user-data-dir="$RUNNER_TEMP/warm" --dump-dom about:blank > /dev/null || true; fi
+      - name: test
+        env:
+          # The bubblewrap tests must run here, not skip (next-round §5.11).
+          ALCA_REQUIRE_BWRAP: "1"
+          # So must the R3 channel tests against a real Chromium.
+          ALCA_REQUIRE_CHROMIUM: "1"
+        run: pnpm test
+
+  evals:
+    name: evals (scripted scenarios, fake engines)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: bubblewrap for the sandbox evals, and let it start (Ubuntu 24.04 AppArmor blocks unprivileged user namespaces)
+        run: sudo apt-get update && sudo apt-get install -y bubblewrap && sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: evals (router, approval gates, memory, routines, team, prompt injection)
+        env:
+          # The sandbox evals must really run here (next round §5.11).
+          ALCA_REQUIRE_BWRAP: "1"
+        run: pnpm evals --out evals-report
+      - name: evals again with column encryption on (R7.9, ALCA_EVAL_SEALED=1)
+        if: always()
+        env:
+          ALCA_EVAL_SEALED: "1"
+        run: pnpm evals --out evals-report-sealed
+      - name: evals with English bots (R9.6, ALCA_EVAL_LANG=en; router, approvals, memory)
+        if: always()
+        env:
+          ALCA_EVAL_LANG: "en"
+        run: pnpm evals --filter router,approvals,memory --out evals-report-en
+      - name: upload report (JSON + markdown)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: evals-report
+          path: evals-report/
+          if-no-files-found: ignore
+      - name: upload sealed report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: evals-report-sealed
+          path: evals-report-sealed/
+          if-no-files-found: ignore
+
+  desktop-shell:
+    name: desktop shell (Tauri 2, Linux)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/desktop-shell/src-tauri
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: build dependencies (WebKitGTK 4.1, tray)
+        working-directory: .
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev build-essential
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable branch, 2026-11-04
+        with:
+          toolchain: stable
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: apps/desktop-shell/src-tauri
+      - name: fmt
+        run: cargo fmt --check
+      - name: check (all targets)
+        run: cargo check --all-targets --locked
+      - name: clippy
+        run: cargo clippy --all-targets --locked -- -D warnings
+      - name: unit tests
+        run: cargo test --locked

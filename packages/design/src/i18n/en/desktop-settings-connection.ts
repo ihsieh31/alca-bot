@@ -1,0 +1,25 @@
+// English strings, desktop-settings-connection. Same keys as ../zh/desktop-settings-connection.ts (typecheck enforces it).
+export const desktopSettingsConnection = {
+  "desktop.settingsConnection.alcaLinkIsOffThis":
+    "Alca Link is off (this launch has no rendezvous server), so phones can't reach this computer.",
+  "desktop.settingsConnection.changeSiteAndRelay": "Change site and relay…",
+  "desktop.settingsConnection.connectedToTheRelay": "Connected to the relay",
+  "desktop.settingsConnection.connecting": "Connecting…",
+  "desktop.settingsConnection.googleSignInNotSet": "Google sign-in not set up",
+  "desktop.settingsConnection.needsAPhoneSiteFirst": " needs a phone site first",
+  "desktop.settingsConnection.neverConnected": "Never connected",
+  "desktop.settingsConnection.notRevoked": "Not revoked: {e}",
+  "desktop.settingsConnection.notSet": "Not set",
+  "desktop.settingsConnection.notSignedIn": "Not signed in",
+  "desktop.settingsConnection.official": "Official",
+  "desktop.settingsConnection.pairANewPhone": "Pair a new phone…",
+  "desktop.settingsConnection.pairedDevices": "Paired devices",
+  "desktop.settingsConnection.phoneSite": "Phone site",
+  "desktop.settingsConnection.remoteControl": "Remote control",
+  "desktop.settingsConnection.revoke": "Revoke?",
+  "desktop.settingsConnection.revoked": "Revoked {name}",
+  "desktop.settingsConnection.selfHosted": "Self-hosted",
+  "desktop.settingsConnection.signedIn": "Signed in",
+  "desktop.settingsConnection.signingIn": "Signing in…",
+  "desktop.settingsConnection.somethingWentWrong": "Something went wrong",
+};

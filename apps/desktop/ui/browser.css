@@ -1,0 +1,454 @@
+/* Alca desktop UI — browser panel (Alca Browser Spaces): the panel, its head, tabs and address.
+   The stage, cards, foot and download live in browser-stage.css. Uses only tokens from /ui/tokens.css. */
+
+.app[data-browser] {
+  grid-template-columns: var(--sidebar-width) minmax(380px, 1fr) minmax(480px, 1fr);
+}
+
+.app[data-sidebar="hidden"][data-browser] {
+  grid-template-columns: minmax(380px, 1fr) minmax(480px, 1fr);
+}
+
+.browser {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg);
+  box-shadow: inset 0.5px 0 0 var(--separator);
+  animation: fade var(--dur-slow) var(--ease-out) both;
+}
+
+/* ── Head: Space switcher · control state · take over / hand back ── */
+.bp-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: var(--header-height);
+  padding: 0 var(--space-3) 0 var(--space-4);
+}
+
+.space-switch {
+  position: relative;
+  min-width: 0;
+}
+
+.space-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 260px;
+  height: 32px;
+  padding: 0 var(--space-2) 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.space-btn:hover,
+.space-btn[aria-expanded="true"] {
+  background: var(--c-hover);
+}
+
+.space-glyph {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 7px;
+  background: var(--c-inverse);
+  color: var(--c-inverse-ink);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0;
+}
+
+.space-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.space-btn svg,
+.bp-icon svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.space-btn svg {
+  color: var(--c-ink-muted);
+}
+
+.space-menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 320px;
+  padding: var(--space-2);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface-raised);
+  box-shadow: var(--shadow-lg);
+  animation: card-in var(--dur-base) var(--ease-out) both;
+}
+
+.space-menu-label {
+  padding: var(--space-2) var(--space-2) var(--space-1);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-medium);
+  color: var(--c-ink-faint);
+  letter-spacing: 0.04em;
+}
+
+.space-opt {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  text-align: left;
+  line-height: var(--leading-tight);
+}
+
+.space-opt:hover,
+.space-opt[aria-current="true"] {
+  background: var(--c-hover);
+}
+
+.space-opt b {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.space-opt small {
+  display: block;
+  margin-top: 2px;
+  color: var(--c-ink-faint);
+  font-size: var(--text-2xs);
+}
+
+.bp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  color: var(--label-2);
+  font: var(--t-small);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.bp-badge svg {
+  width: 11px;
+  height: 11px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+
+.bp-spacer {
+  flex: 1;
+}
+
+/* Who is in control: plain secondary text; a 12px spinner while Alca works (§2.7). */
+.control-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--label-2);
+  font: var(--t-small);
+  white-space: nowrap;
+}
+
+.control-chip i {
+  display: none;
+}
+
+.control-chip[data-state="working"] i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0 12.5%, currentColor 12.5% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 3px, #000 3.5px);
+  mask: radial-gradient(circle, transparent 3px, #000 3.5px);
+  animation: spin 0.8s steps(8) infinite;
+}
+
+.control-chip[data-state="user"],
+.control-chip[data-state="queued"] {
+  color: var(--waiting);
+}
+
+.takeover-btn {
+  height: 32px;
+  padding: 0 var(--space-4) 0 var(--space-3);
+}
+
+.takeover-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bp-icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label-2);
+}
+
+.bp-icon:hover {
+  background: var(--c-hover);
+  color: var(--c-ink);
+}
+
+/* ── Tabs + address ─────────────────────────────────────────── */
+.bp-bar {
+  padding: 0 var(--space-4) var(--space-3);
+}
+
+.bp-tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bp-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 1 220px;
+  min-width: 96px;
+  height: 32px;
+  padding: 0 var(--space-3) 0 var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--c-ink-muted);
+  font-size: var(--text-xs);
+  line-height: 1;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.bp-tab:hover {
+  background: var(--c-hover);
+  color: var(--c-ink-soft);
+}
+
+.bp-tab[aria-selected="true"] {
+  border-color: var(--c-line);
+  background: var(--c-surface-raised);
+  color: var(--c-ink);
+  box-shadow: var(--shadow-xs);
+}
+
+.bp-tab span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fav {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 5px;
+  background: var(--c-active);
+  color: var(--c-ink-soft);
+  font-size: 9px;
+  font-weight: var(--weight-semibold);
+}
+
+.bp-tab[data-loading] .fav {
+  background: transparent;
+  border: 1.5px solid var(--c-line-strong);
+  border-top-color: var(--c-ink);
+  animation: spin 0.8s linear infinite;
+}
+
+.bp-address {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  margin-top: var(--space-2);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  font-size: var(--text-xs);
+  color: var(--c-ink-muted);
+}
+
+.bp-address svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+.bp-address input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+  color: var(--c-ink-muted);
+}
+
+.bp-address input:read-only {
+  cursor: default;
+}
+
+.bp-address:focus-within {
+  border-color: var(--c-line-strong);
+}
+
+.bp-address input:focus-visible {
+  box-shadow: none;
+  color: var(--c-ink);
+}
+
+/* ── 素 Plain: the inspector-hosted browser ─────────────────── */
+.bp-head {
+  height: var(--toolbar-h);
+  gap: var(--s-1);
+  padding: 0 var(--s-2) 0 var(--s-3);
+  box-shadow: inset 0 -0.5px 0 var(--separator);
+}
+
+.space-btn {
+  height: 28px;
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  font: var(--t-headline);
+}
+
+.space-glyph {
+  display: none; /* no letter tiles (§2.8) */
+}
+
+.space-menu {
+  border: 0;
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-2);
+}
+
+.space-menu-label {
+  font: var(--t-caption);
+  letter-spacing: 0;
+  color: var(--label-2);
+}
+
+/* Badges in the head read as plain secondary text, never chips. */
+.bp-badge,
+.control-chip {
+  height: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.control-chip i,
+.bp-badge svg {
+  display: none;
+}
+
+.control-chip[data-state="queued"] {
+  color: var(--waiting);
+  background: transparent;
+}
+
+.takeover-btn {
+  height: 28px;
+  border-radius: var(--r-sm);
+}
+
+.bp-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+}
+
+.bp-bar {
+  padding: var(--s-2) var(--s-3) 0;
+}
+
+.bp-tab {
+  height: 28px;
+  border: 0;
+  border-radius: var(--r-sm);
+  font: var(--t-small);
+}
+
+.bp-tab[aria-selected="true"] {
+  background: var(--fill);
+  box-shadow: none;
+}
+
+.fav {
+  border-radius: var(--r-xs);
+}
+
+/* The address is there to read on demand: quiet until hovered or focused. */
+.bp-address {
+  height: 28px;
+  margin-top: var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--fill-hover);
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.bp-address input {
+  color: var(--label-2);
+}

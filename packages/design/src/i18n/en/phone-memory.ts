@@ -1,0 +1,46 @@
+// English strings, phone-memory. Same keys as ../zh/phone-memory.ts (typecheck enforces it).
+export const phoneMemory = {
+  "phone.memory.alcaKeepsOnlyAnIrreversible":
+    "Alca keeps only an irreversible hash so it doesn't learn it again. The original chat messages aren't deleted.",
+  "phone.memory.alcaMemories": "Alca memories",
+  "phone.memory.allVersionsOfThisMemory":
+    "All {versions} versions of this memory will be deleted permanently.",
+  "phone.memory.cantReadMemories": "Can't read memories",
+  "phone.memory.editsAreSavedAsA": "Edits are saved as a new version; old versions stay in the record.",
+  "phone.memory.exportMemoriesJson": "Export memories (JSON)",
+  "phone.memory.exportedMemoriesAndSkills": "Exported {memoriesCount} memories and {skillsCount} skills",
+  "phone.memory.filter": "Filter",
+  "phone.memory.forgetMemory": "Forget memory",
+  "phone.memory.forgotten": "Forgotten",
+  "phone.memory.forgotten2": ", {forgotten} forgotten",
+  "phone.memory.memoriesLiveOnlyOnYour": "Memories live only on your computer{p0}.",
+  "phone.memory.noMemoriesYetSayRemember":
+    'No memories yet. Say "remember…" in a chat, or let Alca learn from your chats.',
+  "phone.memory.noSkillsYetAfterA":
+    "No skills yet. After a multi-step task, Alca will offer to save the method.",
+  "phone.memory.notExported": "Not exported",
+  "phone.memory.notForgottenPleaseTryAgain": "Not forgotten; please try again",
+  "phone.memory.onlyThisBot": "Only this bot",
+  "phone.memory.savedAsANewVersion": "Saved as a new version",
+  "phone.memory.sharedByAllBots": "Shared by all bots",
+  "phone.memory.skillsDontChangePermissionsPayments":
+    "Skills don't change permissions: payments, sending, deleting and publishing ask you every time.",
+  "phone.memory.text": '"{quote}"',
+  "phone.memory.thatsRight": "That's right",
+  "phone.memory.thisMemoryWillBeDeleted": "This memory will be deleted permanently; this can't be undone.",
+  "phone.memory.who": "Said by",
+  "phone.memory.unconfirmed": "A guess, not confirmed",
+  "phone.memory.source": "Source",
+  "phone.memory.kind": "Kind",
+  "phone.memory.scope": "Shared with",
+  "phone.memory.used": "Used",
+  "phone.memory.updated": "Updated",
+  "phone.memory.forgetThisAction": "Forget this",
+  "phone.memory.techId": "Memory ID",
+  "phone.memory.techConfidence": "Confidence",
+  "phone.memory.techVersions": "Versions",
+  "phone.memory.techCreated": "Created",
+  "phone.memory.techBot": "Bot ID",
+  "phone.memory.noMemoriesTitle": "No memories yet",
+  "phone.memory.filterCount": "{label} ({count})",
+};

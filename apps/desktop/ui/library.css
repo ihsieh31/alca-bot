@@ -1,0 +1,411 @@
+/* Alca desktop — Library pages (記憶與技能, and the shared page parts 團隊 / 連接 use): 素 Plain. */
+
+/* ── Page frame: a toolbar, then a 880 column ── */
+.library {
+  display: grid;
+  grid-template-rows: var(--toolbar-h) minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg);
+  animation: fade var(--d-fast) var(--e-standard) both;
+}
+
+.lb-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0 var(--s-3) 0 var(--s-5);
+  transition: box-shadow var(--d-fast) var(--e-standard);
+}
+
+/* The toolbar's hairline shows once content scrolls under it (macOS). */
+[data-scrolled] > .lb-head {
+  box-shadow: inset 0 -0.5px 0 var(--separator);
+}
+
+/* §3.1: the large title sits in the content; the toolbar title appears only once it scrolls away. */
+.lb-title {
+  margin: 0 var(--s-2) 0 0;
+  font: var(--t-headline);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--d-fast) var(--e-standard);
+}
+
+[data-scrolled] > .lb-head .lb-title {
+  opacity: 1;
+}
+
+.lb-head svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.lb-spacer {
+  flex: 1;
+}
+
+/* Two to three peer views of one page: a segmented control centred in the toolbar (§3.8). */
+.lb-head > .lb-tabs {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.lb-tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+}
+
+.lb-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 var(--s-3);
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--label);
+  font: 500 13px / 1 var(--font-text);
+  white-space: nowrap;
+}
+
+.lb-tab[aria-selected="true"] {
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-1);
+}
+
+:root[data-theme="dark"] .lb-tab[aria-selected="true"] {
+  background: var(--fill-strong);
+}
+
+.lb-count {
+  color: var(--label-2);
+  font: var(--t-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.lb-attn {
+  display: inline-grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--r-full);
+  background: var(--waiting);
+  color: #fff;
+  font: 600 10px / 1 var(--font-text);
+}
+
+.lb-bot,
+.lb-kind,
+.lb-menu {
+  height: 28px;
+  padding: 0 24px 0 8px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background:
+    var(--fill)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='m1 1 4 4 4-4' fill='none' stroke='%238e8e93' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat right 8px center / 10px 6px;
+  color: var(--label);
+  font: var(--t-body);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.lb-botname {
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.lb-scroll {
+  overflow-y: auto;
+}
+
+.lb-inner {
+  max-width: var(--library-max);
+  margin: 0 auto;
+  padding: var(--s-8) var(--s-8) var(--s-10);
+}
+
+.lb-page-title {
+  margin: 0;
+  font: var(--t-title);
+  letter-spacing: -0.01em;
+}
+
+.lb-intro {
+  max-width: 720px;
+  text-wrap: pretty;
+  margin: var(--s-1) 0 var(--s-5);
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.lb-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-3);
+}
+
+.lb-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 1 320px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  color: var(--label-2);
+  cursor: text;
+}
+
+.lb-search:focus-within {
+  box-shadow: var(--focus-ring);
+}
+
+.lb-search svg {
+  width: 14px;
+  height: 14px;
+}
+
+.lb-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  color: var(--label);
+  font: var(--t-body);
+}
+
+.lb-search input:focus-visible {
+  box-shadow: none;
+}
+
+.lb-add {
+  display: flex;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+
+/* ── Lists: plain rows with hairlines inset from the text ── */
+.lb-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lb-row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: 10px var(--s-3);
+  margin: 0 calc(-1 * var(--s-3));
+  border-radius: var(--r-md);
+}
+
+.lb-row + .lb-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--s-3);
+  right: var(--s-3);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.lb-row:hover {
+  background: var(--fill-hover);
+}
+
+.lb-row:hover::before,
+.lb-row:hover + .lb-row::before {
+  visibility: hidden;
+}
+
+.lb-glyph {
+  display: none; /* no letter tiles (§2.3) */
+}
+
+.lb-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.lb-body {
+  margin: 0;
+  font: var(--t-reading);
+  color: var(--label);
+  overflow-wrap: anywhere;
+}
+
+.sk-row[data-status="disabled"] .lb-body {
+  color: var(--label-2);
+}
+
+.lb-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px var(--s-3);
+  margin: 2px 0 0;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+/* A former chip: plain secondary text (§3.12). */
+.lb-pill {
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.lb-pill[data-tone="danger"] {
+  color: var(--label-2);
+}
+
+.lb-guess {
+  color: var(--waiting);
+}
+
+.lb-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lb-lock svg {
+  width: 12px;
+  height: 12px;
+}
+
+.lb-src {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--label-2);
+  font: inherit;
+  text-align: left;
+}
+
+.lb-src:hover {
+  color: var(--accent);
+}
+
+.lb-quote {
+  margin: var(--s-1) 0 0;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+/* Row actions: text buttons that appear on hover (and stay for keyboard focus). */
+.lb-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity var(--d-fast) var(--e-standard);
+}
+
+.lb-row:hover .lb-actions,
+.lb-row:focus-within .lb-actions,
+.lb-actions.lb-confirm,
+.sk-row .lb-actions {
+  opacity: 1;
+}
+
+.lb-act {
+  height: 24px;
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--accent);
+  font: var(--t-body);
+  white-space: nowrap;
+}
+
+.lb-act:hover {
+  background: var(--fill);
+}
+
+.lb-act[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.lb-confirm {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--s-2);
+  max-width: 280px;
+  font: var(--t-small);
+  color: var(--label-2);
+  text-align: right;
+}
+
+.lb-confirm > span {
+  flex-basis: 100%;
+  margin-bottom: var(--s-1);
+}
+
+.btn-link {
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+.lb-hint {
+  margin: var(--s-1) 0 var(--s-2);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+/* §3.10 empty list: a title-weight line, centred in the list area. */
+.lb-empty {
+  padding: var(--s-10) var(--s-4);
+  font: var(--t-body);
+  color: var(--label-2);
+  text-align: center;
+}
+
+.lb-foot {
+  margin-top: var(--s-6);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.lb-section + .lb-section {
+  margin-top: var(--s-8);
+}
+
+.lb-h2 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-2);
+  font: var(--t-headline);
+}

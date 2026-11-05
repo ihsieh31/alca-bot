@@ -1,0 +1,22 @@
+// English strings for the desktop shell. Same keys as ../zh/shell.ts (typecheck enforces it).
+export const shell = {
+  "shell.attached": "Alca is running (background service)",
+  "shell.foot": "Everything runs on this computer.",
+  "shell.keepsStopping": 'The core keeps stopping; check the log file, then press "Restart the core"',
+  "shell.logFile": "Log file: {path}",
+  "shell.logs": "Open the logs folder",
+  "shell.noCore": "Alca's core wasn't found (set ALCA_CORE_CMD, or run scripts/install.sh)",
+  "shell.open": "Open Alca",
+  "shell.openAtLogin": "Open at login",
+  "shell.openWaiting": "See what's waiting on you",
+  "shell.pair": "Pair a phone…",
+  "shell.phones": "{n} phones online",
+  "shell.quit": "Quit Alca",
+  "shell.restart": "Restart the core",
+  "shell.restarting": "The core stopped; restarting in {n} s",
+  "shell.running": "Alca is running",
+  "shell.startFailed": "Couldn't start the core: {e}",
+  "shell.starting": "Alca is starting…",
+  "shell.stopped": "The core stopped",
+  "shell.waiting": "Waiting on you: {n}",
+};

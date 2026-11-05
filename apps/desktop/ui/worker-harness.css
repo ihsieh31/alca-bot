@@ -1,0 +1,305 @@
+/* Alca desktop — the harness part of a task in the inspector (素 Plain §3.6). State is
+   icon + text colour; no pills, no tinted boxes, no dots. Machine facts live in 技術細節. */
+
+/* Mac test 2026-11 B10: the summary may take most of the panel (the stream keeps the rest). */
+.wp-summary {
+  max-height: 72vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.wh {
+  display: grid;
+  gap: var(--s-3);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.wh:empty {
+  display: none;
+}
+
+.wh-done {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+}
+
+.wh-done b,
+.wh-block > b {
+  font: var(--t-small);
+  font-weight: 600;
+  color: var(--label);
+}
+
+.wh-done span {
+  font: var(--t-body);
+  color: var(--label);
+}
+
+/* A section with a hairline above it, not a box. */
+.wh-block {
+  display: grid;
+  gap: var(--s-2);
+  padding-top: var(--s-3);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.wh-block[data-tone="bad"] > b {
+  color: var(--danger);
+}
+
+.wh-block[data-tone="waiting"] > b,
+.wh-block[data-tone="warn"] > b {
+  color: var(--waiting);
+}
+
+.wh-check summary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 24px;
+  color: var(--label);
+  cursor: pointer;
+  list-style: none;
+}
+
+.wh-check summary::-webkit-details-marker {
+  display: none;
+}
+
+/* The check's mark: a red × or a green ✓ drawn with borders, never a dot. */
+.wh-check summary i {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border: solid var(--danger);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.wh-check[data-ok="false"] summary i {
+  width: 10px;
+  height: 1.5px;
+  border: 0;
+  background: var(--danger);
+  transform: none;
+}
+
+.wh-check[data-ok="true"] summary i {
+  width: 5px;
+  height: 9px;
+  margin: -3px 2px 0;
+  border-color: var(--success);
+}
+
+.wh-check code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--label);
+  overflow-wrap: anywhere;
+}
+
+.wh-check small {
+  margin-left: auto;
+  color: var(--label-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.wh-check pre,
+.wh-pre {
+  max-height: 160px;
+  margin: var(--s-1) 0 0;
+  padding: var(--s-2) var(--s-3);
+  overflow: auto;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  font: 400 12px / 18px var(--font-mono);
+  color: var(--label);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ── 技術細節: kind, phase, sandbox, budget ── */
+.wh-tech {
+  display: grid;
+  gap: var(--s-2);
+  margin: var(--s-2) 0;
+}
+
+.wh-facts {
+  margin: 0;
+  font: 400 12px / 18px var(--font-mono);
+  color: var(--label-2);
+  white-space: pre-line;
+}
+
+.wh-budget {
+  display: grid;
+  gap: var(--s-1);
+}
+
+.wh-meter {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s-2);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.wh-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--fill);
+  overflow: hidden;
+}
+
+.wh-bar i {
+  display: block;
+  width: var(--fill, 0%);
+  height: 100%;
+  background: var(--label-3);
+}
+
+.wh-meter[data-high="true"] .wh-bar i {
+  background: var(--waiting);
+}
+
+.wh-meter small {
+  font: var(--t-small);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Questions (NEEDS_INPUT): answered right here ── */
+.wh-qs {
+  display: grid;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wh-q {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.wh-q p {
+  margin: 0;
+  font: var(--t-body);
+  line-height: 1.55;
+  color: var(--label);
+}
+
+.wh-opts {
+  display: grid;
+  gap: 2px;
+}
+
+/* Options are rows with a check, not pills (§3.8). */
+.wh-opt {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  min-height: 28px;
+  padding: 4px var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--d-instant) var(--e-standard);
+}
+
+.wh-opt:hover {
+  background: var(--fill-hover);
+}
+
+.wh-opt[aria-pressed="true"] {
+  background: var(--fill-selected);
+  color: var(--accent);
+}
+
+.wh-opt small {
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.wh-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s-2);
+}
+
+.wh-err {
+  margin: 0;
+  font: var(--t-small);
+  color: var(--danger);
+}
+
+.wh-muted {
+  margin: 0;
+  color: var(--label-2);
+}
+
+.wh-list {
+  display: grid;
+  gap: var(--s-1);
+  margin: 0;
+  padding-left: var(--s-4);
+  color: var(--label);
+}
+
+.wh-allowed summary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  cursor: pointer;
+}
+
+.wh-full {
+  color: var(--waiting);
+}
+
+.wh-snap-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wh-snap-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 32px;
+  color: var(--label);
+}
+
+.wh-snap-list li + li {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.wh-confirm {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--bg-cell);
+  box-shadow: var(--shadow-1);
+}
+
+.wh-confirm p {
+  margin: 0;
+  color: var(--label);
+  line-height: 1.55;
+}
+
+/* Next round §5.7: no sandbox here is a warning sentence, not a banner. */
+.wh-nosandbox {
+  margin: 0;
+  color: var(--waiting);
+}

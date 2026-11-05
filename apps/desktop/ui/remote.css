@@ -1,0 +1,185 @@
+/* 用 Google 登入 (in 新增手機) and the new-device sheet (素 Plain §3.13): a plain block
+   with a button, and a centred sheet window — no letter-spaced eyebrow, tabular digits. */
+.rm-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.rm-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.rm-head h3 {
+  margin: 0;
+  font: var(--t-headline);
+}
+
+/* A former chip: state as text (§3.12). */
+.rm-on {
+  color: var(--success);
+  font: var(--t-small);
+  white-space: nowrap;
+}
+
+.rm-box .lk-note {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.rm-actions {
+  display: flex;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
+}
+
+.rm-google {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.rm-link {
+  align-self: flex-start;
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+/* ── New device sheet ───────────────────────────────────────── */
+.nd-sheet {
+  width: min(380px, calc(100vw - 48px));
+  padding: var(--s-8) var(--s-6) var(--s-6);
+  border: 0;
+  border-radius: var(--r-xl);
+  background: var(--bg-elevated);
+  color: var(--label);
+  box-shadow: var(--shadow-3);
+  text-align: center;
+}
+
+.nd-sheet[open] {
+  animation: nd-in var(--d-base) var(--e-standard);
+}
+
+.nd-sheet::backdrop {
+  background: var(--scrim);
+}
+
+@keyframes nd-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* No 「A L C A」 eyebrow (§1.4). */
+.nd-mark {
+  display: none;
+}
+
+.nd-kicker {
+  margin: 0 0 var(--s-1);
+  color: var(--label-2);
+  font: var(--t-body);
+}
+
+.nd-device {
+  margin: 0;
+  font: 600 20px / 26px var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* The title takes the dialog's first focus (so Enter answers nothing); it is not a control. */
+.nd-device:focus,
+.nd-device:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.nd-sas {
+  margin: var(--s-6) 0 var(--s-4);
+  font: 600 40px / 1.1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.nd-hint {
+  max-width: 26em;
+  margin: 0 auto;
+  color: var(--label-2);
+  font: var(--t-body);
+  line-height: 1.6;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.nd-left {
+  margin: var(--s-2) 0 0;
+  color: var(--label-2);
+  font: var(--t-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.nd-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-2);
+  margin-top: var(--s-6);
+}
+
+.nd-actions .btn {
+  justify-content: center;
+  height: 32px;
+}
+
+/* ── P12: the code typed from the phone ─────────────────────── */
+.nd-form {
+  margin: var(--s-6) 0 0;
+}
+
+.nd-code {
+  box-sizing: border-box;
+  width: 100%;
+  height: 56px;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--separator);
+  border-radius: var(--r-md);
+  background: var(--bg);
+  color: var(--label);
+  font: 600 28px / 1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3em;
+  text-align: center;
+}
+
+.nd-code::placeholder {
+  color: var(--label-3);
+}
+
+.nd-code:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.nd-msg {
+  min-height: 1.5em;
+  margin: var(--s-3) 0 0;
+  color: var(--label-2);
+  font: var(--t-small);
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.nd-msg[data-tone="bad"] {
+  color: var(--danger);
+}
+
+.nd-msg[data-tone="ok"] {
+  color: var(--success);
+}

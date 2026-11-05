@@ -1,0 +1,574 @@
+/* The conversation (素 Plain §3.1, §3.3, §3.4, §3.11): nav bar, transcript,
+   activity rows, receipts, the capsule composer. */
+
+.chat {
+  background: var(--bg);
+}
+
+.nav-bar.chat-bar {
+  min-height: calc(var(--nav-h) + var(--safe-top));
+  padding: var(--safe-top) var(--s-2) 0;
+  background: var(--bar);
+}
+
+.chat-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 56vw;
+}
+
+.chat-title {
+  max-width: 100%;
+}
+
+.chat-sub {
+  margin: 0;
+  color: var(--label-2);
+  font-size: var(--t-caption);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.nav-count {
+  position: absolute;
+  top: 5px;
+  right: 3px;
+}
+
+.icon-btn .count:not([data-tone="waiting"]) {
+  background: var(--accent-fill);
+}
+
+/* ── Connection banner: one row under the nav bar ─────────── */
+.conn-banner.rc {
+  display: grid;
+  /* BUG-12: minmax(0, 1fr), not 1fr: a long line never widens the banner past the screen. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s-2);
+  flex: none;
+  min-width: 0;
+  min-height: 40px;
+  padding: var(--s-1) var(--s-2) var(--s-1) var(--s-4);
+  background: var(--fill);
+  color: var(--label);
+  font-size: var(--t-footnote);
+  font-weight: 500;
+  line-height: 1.35;
+  animation: fade var(--d-base) var(--e-standard);
+}
+
+.conn-banner.rc[hidden] {
+  display: none;
+}
+
+.rc-icon {
+  display: grid;
+  color: var(--label-2);
+}
+
+.rc-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rc-retry {
+  flex: none;
+  min-height: 36px;
+  white-space: nowrap;
+  font-size: var(--t-footnote);
+  font-weight: 600;
+}
+
+.rc-retry[hidden] {
+  display: none;
+}
+
+.conn-banner[data-state="back"] .rc-icon {
+  color: var(--success);
+}
+
+.conn-banner[data-tone="error"] .rc-icon,
+.conn-banner[data-state="revoked"] .rc-icon {
+  color: var(--danger);
+}
+
+/* Very narrow screens (or large text): the button goes under the text. */
+@media (max-width: 340px) {
+  .conn-banner.rc {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .rc-retry {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ── Transcript ─────────────────────────────────────────── */
+.scroller {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-bottom: var(--s-6);
+}
+
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--s-4) var(--phone-gutter) var(--s-2);
+}
+
+.item[data-enter="true"] {
+  animation: fade var(--d-base) var(--e-standard);
+}
+
+.item.user {
+  display: flex;
+  justify-content: flex-end;
+  padding-left: 22%;
+}
+
+.bubble {
+  max-width: 100%;
+  padding: var(--s-2) 14px;
+  border-radius: var(--r-bubble);
+  background: var(--fill);
+  color: var(--label);
+  font-size: var(--t-body);
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.item.assistant {
+  font-size: var(--t-body);
+  line-height: 1.53; /* 17 / 26 */
+  overflow-wrap: anywhere;
+}
+
+.item.assistant p,
+.task-result-text p {
+  margin: 0 0 var(--s-3);
+}
+
+.item.assistant > :last-child,
+.task-result-text > :last-child {
+  margin-bottom: 0;
+}
+
+.item.assistant ul,
+.item.assistant ol,
+.task-result-text ul,
+.task-result-text ol {
+  margin: 0 0 var(--s-3);
+  padding-left: 1.3em;
+}
+
+.item.assistant li + li {
+  margin-top: var(--s-1);
+}
+
+.item.assistant pre,
+.task-result-text pre {
+  margin: 0 0 var(--s-3);
+  padding: var(--s-3);
+  overflow-x: auto;
+  border-radius: var(--r-md);
+  background: var(--fill);
+  font-family: var(--font-mono);
+  font-size: var(--t-footnote);
+  line-height: 1.5;
+}
+
+/* A single caret at the end while it streams (no per-token fade). */
+.item.assistant[data-streaming="true"] > :last-child::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  background: var(--accent);
+  vertical-align: -0.2em;
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.msg-edited {
+  display: block;
+  margin-top: var(--s-1);
+  color: var(--label-2);
+  font-size: var(--t-caption);
+}
+
+/* ── Activity rows (§3.4): one collapsed line per run of tool calls ── */
+.act-group {
+  margin: calc(var(--s-2) * -1) 0;
+}
+
+.act-sum,
+.act-row,
+.inline-row,
+.receipt {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  min-height: 32px;
+  margin: 0;
+  padding: var(--s-1) 0;
+  border: 0;
+  background: transparent;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  line-height: 1.35;
+  text-align: left;
+}
+
+.act-sum:active,
+.act-row:active,
+.inline-row:active {
+  opacity: 0.6;
+}
+
+.act-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--label-2);
+}
+
+.act-icon[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.act-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.act-state {
+  flex: none;
+  font-size: var(--t-footnote);
+}
+
+.act-state[data-tone="danger"],
+.act-row[data-state="fail"] .act-label {
+  color: var(--danger);
+}
+
+.act-chev {
+  display: grid;
+  flex: none;
+  color: var(--label-3);
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.act-chev .icon,
+.inline-row > .icon {
+  stroke-width: 2;
+}
+
+.act-group[data-open="true"] .act-chev {
+  transform: rotate(90deg);
+}
+
+.act-list {
+  padding: 0 0 var(--s-1);
+  animation: fade var(--d-base) var(--e-standard);
+}
+
+.act-list .act-row {
+  min-height: 30px;
+  font-size: var(--t-footnote);
+}
+
+/* A decided approval: one line, the time on the right. */
+.receipt {
+  color: var(--label-2);
+}
+
+.receipt[data-decision="approved"] .act-icon {
+  color: var(--success);
+}
+
+.receipt[data-decision="denied"] .act-icon {
+  color: var(--label-2);
+}
+
+.receipt-time {
+  flex: none;
+  font-size: var(--t-footnote);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 需要你：付款 NT$1,280 ›, and 「Alca 學會了」 */
+.pending-slot,
+.learned {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 var(--phone-gutter);
+}
+
+.pending-slot:empty {
+  display: none;
+}
+
+.learned {
+  padding-bottom: var(--s-1);
+}
+
+.inline-row {
+  min-height: 44px;
+  color: var(--label);
+}
+
+.pending-row {
+  color: var(--waiting);
+  font-weight: 600;
+}
+
+.pending-row .act-icon {
+  color: var(--waiting);
+}
+
+.inline-row > .icon {
+  flex: none;
+  color: var(--label-3);
+}
+
+.inline-cta {
+  flex: none;
+  color: var(--accent);
+}
+
+/* A worker's report: a task row in the transcript. */
+.item.report,
+.item.receipt {
+  margin: calc(var(--s-1) * -1) 0;
+}
+
+.report-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--s-2) var(--s-3);
+  border: 0;
+  border-radius: var(--r-lg);
+  background: var(--fill-hover);
+  color: var(--label);
+  text-align: left;
+}
+
+button.report-row:active {
+  background: var(--fill);
+}
+
+.report-row .row-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.rp-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.rp-title {
+  font-size: var(--t-subhead);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.rp-sub {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+
+.thinking {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+}
+
+.chat-note {
+  margin: var(--s-3) var(--phone-gutter) 0;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  text-align: center;
+}
+
+/* ── Empty conversation (§3.10): a line at ~40% and three suggestions ── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 560px;
+  margin: 0 auto;
+  min-height: 100%;
+  padding: 26vh var(--phone-gutter) var(--s-4);
+}
+
+.empty-line {
+  margin: 0 0 var(--s-4);
+  padding: 0 var(--s-1);
+  font-family: var(--font-display);
+  font-size: var(--t-title3);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.suggestions {
+  background: var(--fill-hover);
+}
+
+.suggestion .row-icon {
+  color: var(--accent);
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .empty {
+    padding-top: var(--s-6);
+  }
+}
+
+/* ── Dock: composer ─────────────────────────────────────── */
+.dock {
+  position: relative;
+  flex: none;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--s-2) var(--s-3) max(var(--safe-bottom), var(--s-2));
+  background: var(--bg);
+}
+
+/* Keyboard up: the app already ends at the keyboard (viewport.ts), and the
+   home indicator is under the keyboard, so no safe-area gap above it. */
+:root[data-keyboard="open"] .dock {
+  padding-bottom: var(--s-2);
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-2);
+  min-height: 40px;
+  padding: 4px 4px 4px var(--s-4);
+  border-radius: var(--r-full);
+  background: var(--fill);
+}
+
+.chat[data-multiline="true"] .composer {
+  border-radius: 20px;
+}
+
+.composer-input {
+  flex: 1;
+  min-width: 0;
+  max-height: 132px;
+  margin: 0;
+  padding: 5px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--label);
+  font-size: var(--t-field);
+  line-height: 1.4;
+  resize: none;
+}
+
+.composer-input::placeholder {
+  color: var(--placeholder);
+}
+
+.send-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent-fill);
+  color: #ffffff;
+  transition:
+    opacity var(--d-fast) linear,
+    transform var(--d-fast) var(--e-standard);
+}
+
+.send-btn .icon {
+  stroke-width: 2.25;
+}
+
+/* Hidden until there is something to send (or a reply to stop). */
+.send-btn[data-mode="idle"],
+.send-btn:disabled:not([data-mode="send"]) {
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+}
+
+.send-btn:disabled[data-mode="send"] {
+  opacity: 0.4;
+}
+
+.send-btn[data-mode="stop"] {
+  background: var(--label);
+  color: var(--bg);
+}
+
+.send-btn[data-mode="stop"] .icon {
+  fill: currentColor;
+  stroke-width: 0;
+}
+
+.send-btn:active:not(:disabled) {
+  opacity: 0.7;
+}
+
+.tech-sheet {
+  padding-bottom: var(--s-4);
+}
+
+.ts-title {
+  margin: 0 0 var(--s-2);
+  padding: 0 var(--s-4);
+  font-size: var(--t-subhead);
+  color: var(--label-2);
+}
+
+.tech-sheet .tech {
+  margin-top: 0;
+}

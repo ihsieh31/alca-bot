@@ -1,0 +1,372 @@
+/* First-run screens (素 Plain §3.13): pairing, 已連上, 這支手機已被撤銷; the
+   Google sign-in, 選擇電腦 and the enroll code share the same frame (.ob,
+   account.css adds their parts). Left-aligned titles, one primary, the rest as
+   text buttons; no wordmark. Also: small info and scan sheets. */
+
+/* ── The frame ─────────────────────────────────────────────── */
+.screen.ob {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg-grouped);
+}
+
+.pairing,
+.gs {
+  padding: calc(var(--safe-top) + var(--s-14)) calc(var(--safe-right) + var(--s-6))
+    calc(max(var(--safe-bottom), var(--s-4)) + var(--s-4)) calc(var(--safe-left) + var(--s-6));
+}
+
+.ob > * {
+  width: 100%;
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+.ob-head {
+  margin-bottom: var(--s-8);
+}
+
+.ob-mark {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--s-6);
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+}
+
+.ob-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--t-title1);
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.ob-sub {
+  margin: var(--s-3) 0 0;
+  color: var(--label-2);
+  font-size: var(--t-body);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.ob-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s-2);
+}
+
+.ob-actions > .text-btn {
+  align-self: center;
+}
+
+/* Pushed to the bottom of the screen, in thumb reach. */
+.ob-bottom {
+  margin-top: auto;
+  padding-top: var(--s-8);
+}
+
+.ob-alt {
+  align-self: center;
+  padding: 0 var(--s-4);
+}
+
+.ob-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: var(--s-6);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.ob-foot .icon {
+  flex: none;
+}
+
+/* ── Pairing: the code, 配對, 掃描 QR code, 進階 ───────────── */
+.pair-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.code-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.code-caption {
+  margin: 0 0 var(--s-2);
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+}
+
+.code-input {
+  width: 100%;
+  height: 64px;
+  padding: 0 var(--s-4);
+  border: 0;
+  border-radius: var(--r-lg);
+  outline: 0;
+  background: var(--bg-cell);
+  color: var(--label);
+  font-family: var(--font-display);
+  font-size: var(--t-title1);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  text-align: center;
+  caret-color: var(--accent);
+  transition: box-shadow var(--d-fast) var(--e-standard);
+}
+
+.code-input:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.code-input::placeholder {
+  color: var(--placeholder);
+  letter-spacing: 0.06em;
+}
+
+.pair-error {
+  margin: var(--s-2) 0 0;
+}
+
+.pair-error[hidden] {
+  display: none;
+}
+
+.pair-form .ob-actions {
+  margin-top: var(--s-6);
+}
+
+.pair-google {
+  margin-top: var(--s-2);
+}
+
+/* iPhone in a Safari tab: a footnote at the content inset with an inline link. */
+.pair-note {
+  margin: var(--s-6) 0 0;
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.pair-note-link {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+}
+
+/* 進階: a quiet disclosure; the server address and 診斷 inside as grouped rows. */
+.pair-advanced {
+  margin-top: var(--s-6);
+}
+
+.pair-advanced summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: var(--touch);
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  cursor: pointer;
+  list-style: none;
+}
+
+.pair-advanced summary::-webkit-details-marker {
+  display: none;
+}
+
+.pair-advanced summary .icon {
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.pair-advanced[open] summary .icon {
+  transform: rotate(90deg);
+}
+
+.pair-advanced .group {
+  margin: var(--s-1) 0 0;
+}
+
+.pair-advanced .field-label {
+  flex: none;
+}
+
+.pair-advanced .field-input {
+  color: var(--label-2);
+  font-size: max(16px, var(--t-subhead));
+}
+
+.pairing > .ob-foot {
+  margin-top: auto;
+  padding-top: var(--s-6);
+}
+
+/* ── 已連上 ─────────────────────────────────────────────────── */
+.paired {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: fade var(--d-base) var(--e-standard);
+}
+
+.paired-mark {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin: auto 0 var(--s-6);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--success);
+  color: var(--success);
+}
+
+.paired-mark .icon {
+  stroke-width: 2;
+}
+
+.paired > .ob-sub {
+  max-width: 30ch;
+  text-wrap: balance;
+}
+
+.paired-safety {
+  width: 100%;
+  margin: var(--s-8) 0 0;
+  text-align: left;
+}
+
+.safety {
+  margin: var(--s-2) 0 0;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-cell);
+  font-family: var(--font-mono);
+  font-size: var(--t-callout);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.safety[hidden] {
+  display: none;
+}
+
+.paired > .ob-actions {
+  width: 100%;
+  margin-top: auto;
+  padding-top: var(--s-8);
+}
+
+/* ── Short landscape: head on the left, the form on the right ── */
+@media (orientation: landscape) and (max-height: 500px) {
+  .pairing,
+  .gs {
+    padding-top: calc(var(--safe-top) + var(--s-8));
+  }
+  .ob:has(> .ob-head) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    align-content: start;
+    column-gap: var(--s-10);
+  }
+  .ob:has(> .ob-head) > * {
+    grid-column: 2;
+    max-width: none;
+  }
+  .ob:has(> .ob-head) > .ob-head {
+    grid-row: 1 / span 8;
+    grid-column: 1;
+    margin-bottom: 0;
+  }
+  .ob:has(> .ob-head) > .ob-bottom {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .ob > .paired {
+    max-width: 560px;
+  }
+  .paired-mark {
+    width: 56px;
+    height: 56px;
+    margin-top: 0;
+    margin-bottom: var(--s-4);
+  }
+  .pairing > .ob-foot {
+    margin-top: var(--s-4);
+  }
+}
+
+/* ── Older settings parts still drawn by add-ons and 診斷 ───── */
+.group-title {
+  margin: 0 0 var(--s-2);
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.forget {
+  margin-top: var(--s-2);
+}
+
+/* ── Info / scan sheets ─────────────────────────────────────── */
+.info-sheet,
+.scan-sheet {
+  padding: var(--s-2) 0 var(--s-6);
+}
+
+.info-sheet h2,
+.scan-sheet h2 {
+  margin: 0 0 var(--s-3);
+  font-family: var(--font-display);
+  font-size: var(--t-title2);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.info-sheet p {
+  margin: 0 0 var(--s-3);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.info-sheet .muted,
+.scan-sheet .muted {
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+}
+
+.scan-video {
+  width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: var(--s-3);
+  border-radius: var(--r-lg);
+  background: var(--fill);
+  object-fit: cover;
+}

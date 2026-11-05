@@ -1,0 +1,14 @@
+{
+  "name": "@alca/desktop-shell",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Alca desktop shell (Tauri 2). The Tauri CLI is pinned here so release builds use the lockfile's version.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "2.12.4"
+  }
+}

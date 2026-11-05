@@ -1,0 +1,19 @@
+{
+  "name": "@alca/relay-worker",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Alca Link relay on Cloudflare Workers + one Durable Object (same hub, Google-account directory and token checks as services/rendezvous)",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/worker.ts"
+  },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@alca/link": "workspace:*",
+    "@alca/rendezvous": "workspace:*"
+  }
+}

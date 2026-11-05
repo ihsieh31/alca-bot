@@ -1,0 +1,17 @@
+{
+  "name": "@alca/hands",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Hands daemon: a stateless executor paired to the core over Alca Link; runs only what the core sends, inside one allowed work directory",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/main.ts"
+  },
+  "dependencies": {
+    "@alca/link": "workspace:*"
+  }
+}

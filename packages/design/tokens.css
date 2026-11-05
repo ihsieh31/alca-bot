@@ -1,0 +1,292 @@
+/*
+ * Alca design tokens — direction: 素 Plain (docs/design/DESIGN-SYSTEM.md).
+ * Native structure, Apple system greys, one accent (Alca Blue). Hue means
+ * state only: blue = you can act / selected, orange = Alca waits on you,
+ * red = destructive or failed, green = a finished check. No tints, no
+ * gradients, no decorative colour.
+ *
+ * Every surface (desktop, phone PWA) imports this file; nothing else defines
+ * raw colours, radii or shadows. Platform type scales and density live with
+ * each app (the desktop's in apps/desktop/ui/base.css).
+ *
+ * Theme: follows the system by default; `data-theme="light" | "dark"` pins it.
+ * Explicit theme blocks on purpose (no light-dark(): older WebKitGTK / WebView2).
+ *
+ * The 墨 Mono names (--c-*, --radius-*, --text-*, --space-*) are kept below as
+ * aliases of the new tokens for one release so screens migrate one by one.
+ */
+:root {
+  /* ── Typography ─────────────────────────────────────────── */
+  /* System faces only (CSP font-src 'self'). Latin first, then Traditional Chinese. */
+  --font-text:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang TC", "Segoe UI Variable Text", "Segoe UI",
+    "Noto Sans TC", "Noto Sans CJK TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-display:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang TC", "Segoe UI Variable Display",
+    "Segoe UI", "Noto Sans TC", "Noto Sans CJK TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  /* ── Space (4px grid) ───────────────────────────────────── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-14: 56px;
+
+  /* ── Radius (concentric: inner = outer − padding) ──────── */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-sheet: 14px;
+  --r-bubble: 18px;
+  --r-full: 9999px; /* count badges, the chat composer, the phone segmented thumb — nothing else */
+
+  /* ── Motion ─────────────────────────────────────────────── */
+  --d-instant: 80ms;
+  --d-fast: 150ms;
+  --d-base: 250ms;
+  --d-sheet: 420ms;
+  --e-standard: cubic-bezier(0.2, 0, 0, 1);
+  --e-exit: cubic-bezier(0.4, 0, 1, 1);
+  --e-spring: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* ── Phone (PWA) ────────────────────────────────────────── */
+  --touch: 44px;
+  --touch-big: 52px; /* phone geometry kept until the phone pass */
+  --phone-topbar: 52px;
+  --phone-gutter: 16px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+
+  /* ── Colour: light (base) ───────────────────────────────── */
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-grouped: #f2f2f7;
+  --bg-cell: #ffffff;
+  --bg-elevated: #ffffff;
+  --fill: rgb(120 120 128 / 0.12);
+  --fill-hover: rgb(120 120 128 / 0.08);
+  --fill-strong: rgb(120 120 128 / 0.2);
+  --fill-selected: rgb(0 102 204 / 0.12);
+  --separator: rgb(60 60 67 / 0.29);
+  --hairline: rgb(60 60 67 / 0.14); /* 1px borders read heavier than 0.5px: the softer line for them */
+  --label: #1d1d1f;
+  --label-soft: #3a3a3c;
+  --label-2: #6e6e73; /* 5.07 on #fff, 4.54 on #f2f2f7 */
+  --label-3: #86868b; /* placeholders, disabled, decorative icons only */
+  --accent: #0066cc; /* 5.57 on #fff */
+  --accent-fill: #0071e3; /* white label 4.70 */
+  --accent-fill-press: #0062c4;
+  --on-accent: #ffffff;
+  --waiting: #a35200; /* 5.58 */
+  --danger: #c4161c; /* 6.04 */
+  --danger-fill: #d70015; /* white label 5.38 */
+  --danger-fill-press: #bd0013;
+  --success: #1f7a34; /* 5.40 */
+  --scrim: rgb(0 0 0 / 0.24);
+  --selection: rgb(0 102 204 / 0.2);
+  --overlay: rgb(0 0 0 / 0.72); /* captions over a live page frame: the same in both themes */
+  --on-overlay: #ffffff;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06), 0 0 0 0.5px rgb(0 0 0 / 0.06);
+  --shadow-2: 0 8px 28px rgb(0 0 0 / 0.14), 0 0 0 0.5px rgb(0 0 0 / 0.08);
+  --shadow-3: 0 24px 64px rgb(0 0 0 / 0.22), 0 0 0 0.5px rgb(0 0 0 / 0.08);
+  --focus-ring: 0 0 0 3px rgb(0 102 204 / 0.35);
+}
+
+/* ── Colour: dark (true black like iOS; cells lift by lightness, not shadow) ── */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-grouped: #000000;
+  --bg-cell: #1c1c1e;
+  --bg-elevated: #2c2c2e;
+  --fill: rgb(120 120 128 / 0.24);
+  --fill-hover: rgb(120 120 128 / 0.16);
+  --fill-strong: rgb(120 120 128 / 0.32);
+  --fill-selected: rgb(77 163 255 / 0.2);
+  --separator: rgb(84 84 88 / 0.6);
+  --hairline: rgb(84 84 88 / 0.42);
+  --label: #f5f5f7;
+  --label-soft: #d1d1d6;
+  --label-2: #98989d; /* 5.93 on #1c1c1e */
+  --label-3: #636366;
+  --accent: #4da3ff; /* 6.48 on #1c1c1e */
+  --accent-fill: #0071e3; /* #0a84ff fails with white (3.65) */
+  --accent-fill-press: #0062c4;
+  --on-accent: #ffffff;
+  --waiting: #ffb340;
+  --danger: #ff6961;
+  --danger-fill: #d70015; /* #e5332a fails with white (4.34) */
+  --danger-fill-press: #bd0013;
+  --success: #32d74b;
+  --scrim: rgb(0 0 0 / 0.5);
+  --selection: rgb(77 163 255 / 0.3);
+  --shadow-1: 0 0 0 0.5px rgb(255 255 255 / 0.08);
+  --shadow-2: 0 8px 28px rgb(0 0 0 / 0.6), 0 0 0 0.5px rgb(255 255 255 / 0.1);
+  --shadow-3: 0 24px 64px rgb(0 0 0 / 0.7), 0 0 0 0.5px rgb(255 255 255 / 0.1);
+  --focus-ring: 0 0 0 3px rgb(77 163 255 / 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #000000;
+    --bg-grouped: #000000;
+    --bg-cell: #1c1c1e;
+    --bg-elevated: #2c2c2e;
+    --fill: rgb(120 120 128 / 0.24);
+    --fill-hover: rgb(120 120 128 / 0.16);
+    --fill-strong: rgb(120 120 128 / 0.32);
+    --fill-selected: rgb(77 163 255 / 0.2);
+    --separator: rgb(84 84 88 / 0.6);
+    --hairline: rgb(84 84 88 / 0.42);
+    --label: #f5f5f7;
+    --label-soft: #d1d1d6;
+    --label-2: #98989d;
+    --label-3: #636366;
+    --accent: #4da3ff;
+    --accent-fill: #0071e3;
+    --accent-fill-press: #0062c4;
+    --on-accent: #ffffff;
+    --waiting: #ffb340;
+    --danger: #ff6961;
+    --danger-fill: #d70015;
+    --danger-fill-press: #bd0013;
+    --success: #32d74b;
+    --scrim: rgb(0 0 0 / 0.5);
+    --selection: rgb(77 163 255 / 0.3);
+    --shadow-1: 0 0 0 0.5px rgb(255 255 255 / 0.08);
+    --shadow-2: 0 8px 28px rgb(0 0 0 / 0.6), 0 0 0 0.5px rgb(255 255 255 / 0.1);
+    --shadow-3: 0 24px 64px rgb(0 0 0 / 0.7), 0 0 0 0.5px rgb(255 255 255 / 0.1);
+    --focus-ring: 0 0 0 3px rgb(77 163 255 / 0.4);
+  }
+}
+
+/* ── 墨 Mono aliases (one release; new code uses the names above) ── */
+:root {
+  --font-sans: var(--font-text);
+
+  --text-2xs: 0.6875rem; /* 11 */
+  --text-xs: 0.75rem; /* 12 */
+  --text-sm: 0.875rem; /* 14 */
+  --text-md: 1rem; /* 16 */
+  --text-lg: 1.125rem; /* 18 */
+  --text-xl: 1.25rem; /* 20 */
+  --text-2xl: 1.375rem; /* 22 */
+  --text-3xl: 1.75rem; /* 28 */
+  --leading-tight: 1.3;
+  --leading-ui: 1.45;
+  --leading-body: 1.6; /* CJK paragraphs need ≥ 1.6 */
+  --tracking-cjk: 0;
+  --tracking-display: -0.01em;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  --space-1: var(--s-1);
+  --space-2: var(--s-2);
+  --space-3: var(--s-3);
+  --space-4: var(--s-4);
+  --space-5: var(--s-5);
+  --space-6: var(--s-6);
+  --space-8: var(--s-8);
+  --space-10: var(--s-10);
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --radius-xs: var(--r-xs);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-pill: var(--r-full);
+  --sheet-radius: 28px; /* phone, until the phone pass */
+
+  --ease-out: var(--e-standard);
+  --ease-in-out: var(--e-standard);
+  --ease-spring: var(--e-spring);
+  --dur-fast: var(--d-fast);
+  --dur-base: var(--d-base);
+  --dur-slow: var(--d-base);
+  --dur-sheet: var(--d-sheet);
+
+  --sidebar-width: 240px;
+  --content-max: 720px;
+  --composer-max: 720px;
+  --header-height: 52px;
+  --control-height: 28px;
+
+  --c-canvas: var(--bg);
+  --c-surface: var(--bg);
+  --c-surface-raised: var(--bg-cell);
+  --c-surface-sunken: var(--fill-hover);
+  --c-sidebar: var(--bg-grouped);
+  --c-composer: var(--bg-cell);
+  --c-hover: var(--fill-hover);
+  --c-active: var(--fill);
+  --c-line: var(--hairline);
+  --c-line-strong: var(--separator);
+  --c-ink: var(--label);
+  --c-ink-soft: var(--label-soft);
+  --c-ink-muted: var(--label-2);
+  --c-ink-faint: var(--label-2); /* was below 4.5:1; readable text now uses --label-2 */
+  --c-accent: var(--accent);
+  --c-accent-strong: var(--accent);
+  --c-accent-soft: var(--fill-selected);
+  --c-accent-ink: var(--on-accent);
+  --c-inverse: var(--accent-fill);
+  --c-inverse-hover: var(--accent-fill-press);
+  --c-inverse-ink: var(--on-accent);
+  --c-attention: var(--waiting);
+  --c-attention-soft: var(--fill);
+  --c-attention-ink: #ffffff;
+  --c-danger: var(--danger);
+  --c-danger-soft: var(--fill);
+  --c-danger-line: var(--hairline);
+  --c-success: var(--success);
+  --c-success-soft: var(--fill);
+  --c-user-bubble: var(--fill);
+  --c-overlay: var(--overlay);
+  --c-overlay-ink: var(--on-overlay);
+  --c-focus: var(--accent);
+  --c-selection: var(--selection);
+  --c-scrim: var(--scrim);
+  --shadow-xs: none;
+  --shadow-sm: var(--shadow-1);
+  --shadow-md: var(--shadow-2);
+  --shadow-lg: var(--shadow-3);
+  --shadow-composer: var(--shadow-1);
+  --shadow-ring: var(--focus-ring);
+
+  /* Bots are told apart by name, not colour: every former tone is the same monochrome glyph. */
+  --c-bot-ink-bg: var(--fill);
+  --c-bot-ink-fg: var(--label);
+  --c-bot-vermilion-bg: var(--fill);
+  --c-bot-vermilion-fg: var(--label);
+  --c-bot-jade-bg: var(--fill);
+  --c-bot-jade-fg: var(--label);
+  --c-bot-indigo-bg: var(--fill);
+  --c-bot-indigo-fg: var(--label);
+  --c-bot-ochre-bg: var(--fill);
+  --c-bot-ochre-fg: var(--label);
+  --c-bot-plum-bg: var(--fill);
+  --c-bot-plum-fg: var(--label);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --d-instant: 0ms;
+    --d-fast: 0ms;
+    --d-base: 0ms;
+    --d-sheet: 0ms;
+  }
+}

@@ -1,0 +1,102 @@
+/* Form sheets (素 Plain §3.14), drawn by app/form-kit.ts: inset grouped rows
+   with the label left and the value right, a text area in its own cell,
+   menu rows for one-of-many values, the error in red under the form. */
+
+/* A part of a group that repaints on its own (routine 「什麼時候」, accounts):
+   its rows sit in the group's cells as if they were direct children. */
+.cells-part {
+  display: contents;
+}
+
+.cells-part > .row + .row::before,
+.cells > * + .cells-part > .row:first-child::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--s-4);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+/* Label left, input right. */
+.row.field-pair {
+  gap: var(--s-4);
+  cursor: text;
+}
+
+.field-label {
+  flex: none;
+  max-width: 45%;
+  color: var(--label);
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+.field-pair .field-input {
+  min-height: var(--row-h);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--label);
+  font: inherit;
+  font-size: var(--t-field);
+}
+
+.field-end {
+  text-align: right;
+}
+
+.field-pair .field-input::placeholder {
+  color: var(--placeholder);
+}
+
+.field-pair .field-input:focus-visible {
+  box-shadow: none;
+}
+
+/* Date and time inputs keep the system picker; align their value like the rest. */
+.field-pair input[type="time"],
+.field-pair input[type="datetime-local"],
+.field-pair input[type="number"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+  color: var(--accent);
+}
+
+.field-pair input::-webkit-date-and-time-value {
+  text-align: right;
+}
+
+.field-pair input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.field-pair input[type="number"]::-webkit-inner-spin-button,
+.field-pair input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* A one-of-many value: the current value in grey with a chevron. */
+.menu-row .row-value {
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The whole form; the error sits under the last group. */
+.form-sheet .form-body {
+  padding-top: var(--s-4);
+}
+
+.form-error {
+  margin: calc(var(--s-6) * -1) 0 var(--s-6);
+}
+
+.form-error[hidden] {
+  display: none;
+}

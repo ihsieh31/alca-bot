@@ -1,0 +1,15 @@
+{
+  "name": "@alca/memory",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Memory + learning: per-bot durable memory, secret filter, tombstones, budgeted recall, skills",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@alca/config": "workspace:*",
+    "@alca/store": "workspace:*"
+  }
+}

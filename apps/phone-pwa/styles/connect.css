@@ -1,0 +1,28 @@
+/* 連接 and 例行工作 (素 Plain §4.1): accounts by app, per-bot access as menu
+   rows on the account page, daily limits as value rows, routines with switches. */
+
+.connect-note {
+  margin: var(--s-2) 0 var(--s-6);
+}
+
+.row-add {
+  display: grid;
+  color: var(--accent);
+}
+
+.row-add .icon {
+  stroke-width: 2;
+}
+
+.draft-body {
+  margin-bottom: var(--s-2);
+  white-space: pre-wrap;
+}
+
+.draft-actions {
+  margin-top: var(--s-6);
+}
+
+.routine-page .task-status[data-tone="danger"] {
+  color: var(--danger);
+}

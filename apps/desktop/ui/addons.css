@@ -1,0 +1,180 @@
+/* Alca desktop UI — the bot editor's 擴充 tab (P14). Uses only tokens from /ui/tokens.css. */
+
+.be-pane {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+}
+.be-pane[hidden] {
+  display: none;
+}
+
+.ad-pane {
+  display: grid;
+  gap: var(--space-3);
+}
+.ad-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ad-row {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface-raised);
+}
+.ad-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.ad-text {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+.ad-name {
+  color: var(--c-ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+}
+.ad-cost {
+  color: var(--c-ink-faint);
+  font-size: var(--text-2xs);
+}
+.ad-cost[data-cost="proactive"] {
+  color: var(--c-danger);
+}
+.ad-desc,
+.ad-usage,
+.ad-unmet,
+.ad-msg {
+  margin: 0;
+  color: var(--c-ink-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-ui);
+}
+.ad-usage {
+  color: var(--c-ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.ad-usage[data-capped="true"],
+.ad-unmet {
+  color: var(--c-attention);
+}
+.ad-switch {
+  flex: none;
+  width: 36px;
+  height: 20px;
+  margin-top: 2px;
+  appearance: none;
+  border-radius: var(--radius-pill);
+  background: var(--c-line-strong);
+  cursor: pointer;
+  position: relative;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.ad-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--c-ink-muted);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.ad-switch:checked {
+  background: var(--c-ink);
+}
+.ad-switch:checked::after {
+  transform: translateX(16px);
+  background: var(--c-canvas);
+}
+.ad-switch:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.ad-switch:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-ring);
+}
+.ad-more {
+  margin-top: var(--space-2);
+}
+.ad-more summary {
+  color: var(--c-ink-muted);
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+.ad-fields {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+}
+.ad-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+.ad-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+.ad-actions .ad-msg {
+  flex: 1;
+  color: var(--c-danger);
+}
+
+/* P14: an offer from 主動留意, shown in the bot's conversation until answered. */
+.offer-card {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface-raised);
+}
+.offer-card .offer-src {
+  color: var(--c-ink-faint);
+  font-size: var(--text-2xs);
+}
+.offer-card .offer-text {
+  margin: 0;
+  color: var(--c-ink);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+.offer-card .offer-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.card-applied {
+  margin: var(--space-1) 0 0;
+  color: var(--c-ink-muted);
+  font-size: var(--text-xs);
+}
+.offer-strip {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5) 0;
+}
+.offer-strip[hidden] {
+  display: none;
+}
+.msg-edited {
+  display: inline-block;
+  margin-left: var(--space-2);
+  color: var(--c-ink-faint);
+  font-size: var(--text-xs);
+}

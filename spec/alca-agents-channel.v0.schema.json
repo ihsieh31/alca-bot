@@ -1,0 +1,1521 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alca.invalid/spec/alca-agents-channel.v0.schema.json",
+  "title": "Alca agents channel v0",
+  "description": "Generated from packages/protocol/src/agents.ts. Do not edit by hand; run `pnpm spec:gen`.",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "worker.updated"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "worker": {
+              "type": "object",
+              "properties": {
+                "workerId": {
+                  "type": "string",
+                  "pattern": "^wkr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "botId": {
+                  "type": "string",
+                  "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "threadId": {
+                  "type": "string",
+                  "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "running",
+                    "waiting",
+                    "succeeded",
+                    "failed",
+                    "stopped",
+                    "needs_review"
+                  ]
+                },
+                "speculative": {
+                  "type": "boolean"
+                },
+                "runId": {
+                  "type": "string",
+                  "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "parentRunId": {
+                  "type": "string",
+                  "pattern": "^run_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "steps": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "startedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "finishedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "lastActivityAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                },
+                "stopReason": {
+                  "type": "string"
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "inline",
+                        "spill"
+                      ]
+                    },
+                    "summary": {
+                      "type": "string"
+                    },
+                    "chars": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "spillId": {
+                      "type": "string",
+                      "pattern": "^spl_[0-9A-HJKMNP-TV-Z]{26}$"
+                    }
+                  },
+                  "required": [
+                    "mode",
+                    "summary",
+                    "chars"
+                  ],
+                  "additionalProperties": false
+                },
+                "subscriptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^str_[0-9A-HJKMNP-TV-Z]{26}$"
+                  }
+                },
+                "harness": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "coding",
+                        "general"
+                      ]
+                    },
+                    "phase": {
+                      "type": "string",
+                      "enum": [
+                        "queued",
+                        "running",
+                        "verifying",
+                        "waiting_input",
+                        "waiting_event",
+                        "continued",
+                        "done",
+                        "partial",
+                        "unverified",
+                        "needs_review",
+                        "blocked",
+                        "failed",
+                        "stopped",
+                        "expired"
+                      ]
+                    },
+                    "dispatchId": {
+                      "type": "string"
+                    },
+                    "doneWhen": {
+                      "type": "string"
+                    },
+                    "verification": {
+                      "type": "object",
+                      "properties": {
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "running",
+                            "passed",
+                            "failed",
+                            "none"
+                          ]
+                        },
+                        "round": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "checks": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "command": {
+                                "type": "string"
+                              },
+                              "exitCode": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": -9007199254740991,
+                                    "maximum": 9007199254740991
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "ok": {
+                                "type": "boolean"
+                              },
+                              "summary": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "command",
+                              "exitCode",
+                              "ok",
+                              "summary"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "feedback": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "state",
+                        "round",
+                        "checks"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "budget": {
+                      "type": "object",
+                      "properties": {
+                        "steps": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "maxSteps": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "tokens": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "maxTokens": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "cachedTokens": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "waitedMs": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "maxRunMs": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "steps",
+                        "tokens",
+                        "waitedMs"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "questions": {
+                      "maxItems": 3,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string"
+                          },
+                          "options": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "personOnly": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "personOnly"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "questionsExpireAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                    },
+                    "gaps": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "review": {
+                      "type": "object",
+                      "properties": {
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "met",
+                            "gaps",
+                            "skipped"
+                          ]
+                        },
+                        "round": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "gaps": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "reason": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "state",
+                        "round"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "autoAllowed": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "tool": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "at",
+                          "tool",
+                          "summary"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "cap": {
+                      "type": "object",
+                      "properties": {
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "waiting",
+                            "continued",
+                            "refused",
+                            "expired",
+                            "stopped"
+                          ]
+                        },
+                        "n": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "continues": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "max": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "refusal": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        }
+                      },
+                      "required": [
+                        "state",
+                        "n",
+                        "continues",
+                        "max"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "snapshotSkipped": {
+                      "type": "string",
+                      "enum": [
+                        "not_git",
+                        "snapshot_failed"
+                      ]
+                    },
+                    "sandbox": {
+                      "type": "string",
+                      "enum": [
+                        "seatbelt",
+                        "bwrap",
+                        "off",
+                        "unavailable"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "phase",
+                    "budget"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "workerId",
+                "botId",
+                "threadId",
+                "title",
+                "status",
+                "speculative",
+                "steps",
+                "createdAt",
+                "subscriptions"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "worker"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "trigger.fired"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "triggerId": {
+              "type": "string",
+              "pattern": "^trg_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "eventId": {
+              "type": "string",
+              "pattern": "^tev_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1
+            },
+            "streamId": {
+              "type": "string",
+              "pattern": "^str_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "rule": {
+              "type": "string",
+              "enum": [
+                "drop",
+                "candidate",
+                "explicit"
+              ]
+            },
+            "judged": {
+              "type": "string",
+              "enum": [
+                "wake",
+                "skip"
+              ]
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "dropped",
+                "router",
+                "workers"
+              ]
+            }
+          },
+          "required": [
+            "triggerId",
+            "eventId",
+            "botId",
+            "source",
+            "rule",
+            "outcome"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "watchdog.flagged"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "workerId": {
+              "type": "string",
+              "pattern": "^wkr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "stuck",
+                "looping",
+                "over_budget"
+              ]
+            },
+            "detail": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string",
+              "const": "stopped"
+            }
+          },
+          "required": [
+            "workerId",
+            "botId",
+            "kind",
+            "detail",
+            "action"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "routine.checked"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "routineId": {
+              "type": "string",
+              "pattern": "^rtn_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "runId": {
+              "type": "string",
+              "pattern": "^rrn_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "threadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "outcome": {
+              "type": "string",
+              "enum": [
+                "quiet",
+                "new",
+                "read_failed",
+                "capped",
+                "ai_done",
+                "ai_invalid",
+                "ai_failed"
+              ]
+            },
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "workerId": {
+              "type": "string",
+              "pattern": "^wkr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "error": {
+              "type": "string"
+            },
+            "nextAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            }
+          },
+          "required": [
+            "routineId",
+            "runId",
+            "botId",
+            "threadId",
+            "outcome",
+            "items"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "connector.changed"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "accountId": {
+              "type": "string",
+              "pattern": "^acc_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "key",
+                "connecting",
+                "active",
+                "failed",
+                "removed",
+                "renamed",
+                "grants",
+                "trigger"
+              ]
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "draft.ready"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "draftId": {
+              "type": "string",
+              "pattern": "^drf_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "threadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "title": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "reply",
+                "message",
+                "note"
+              ]
+            }
+          },
+          "required": [
+            "draftId",
+            "botId",
+            "threadId",
+            "title",
+            "kind"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "peer.updated"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "requestId": {
+              "type": "string",
+              "pattern": "^peer_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "ask",
+                "delegate"
+              ]
+            },
+            "fromBotId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "toBotId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "rootThreadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "fromThreadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "peerThreadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "depth": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "running",
+                "done",
+                "failed",
+                "denied",
+                "refused",
+                "stopped"
+              ]
+            },
+            "title": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "requestId",
+            "kind",
+            "fromBotId",
+            "toBotId",
+            "rootThreadId",
+            "fromThreadId",
+            "depth",
+            "status",
+            "title"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "team.changed"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "created",
+                "updated",
+                "archived",
+                "restored",
+                "lead",
+                "rules",
+                "providers"
+              ]
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "addon.capped"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "addonId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "day": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "tokens",
+                "runs"
+              ]
+            }
+          },
+          "required": [
+            "botId",
+            "addonId",
+            "day",
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "offer.created"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "offerId": {
+              "type": "string",
+              "pattern": "^ofr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "threadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "source": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "category": {
+              "type": "string",
+              "enum": [
+                "project",
+                "errand",
+                "money_account",
+                "social",
+                "study",
+                "other"
+              ]
+            },
+            "text": {
+              "type": "string"
+            },
+            "dueAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            }
+          },
+          "required": [
+            "offerId",
+            "botId",
+            "source",
+            "category",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "offer.updated"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "offerId": {
+              "type": "string",
+              "pattern": "^ofr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "threadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "accepted",
+                "declined",
+                "ignored",
+                "expired"
+              ]
+            },
+            "workerId": {
+              "type": "string",
+              "pattern": "^wkr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "required": [
+            "offerId",
+            "botId",
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "reply.revised"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "threadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "messageId": {
+              "type": "string",
+              "pattern": "^msg_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            },
+            "issues": {
+              "maxItems": 6,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              }
+            }
+          },
+          "required": [
+            "botId",
+            "threadId",
+            "messageId",
+            "text",
+            "issues"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "system.alert"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "audit_broken"
+            },
+            "id": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "prev_hash",
+                "hash",
+                "detail_json",
+                "id_gap",
+                "behind"
+              ]
+            },
+            "at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            }
+          },
+          "required": [
+            "kind",
+            "reason",
+            "at"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "dispatch.event"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "dispatchId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "seq": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "runId": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "turnId": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "waitId": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "workerId": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "detail": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "dispatchId",
+            "seq",
+            "kind",
+            "at"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

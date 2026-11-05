@@ -1,0 +1,159 @@
+/* Phone — a bot's 擴充 list and the 主動留意 offers at the top of 對話 (P14),
+   on the Plain parts: one inset-grouped cell per list, hairlines inset to the
+   text, the shared switch, no borders or cards-in-cards. */
+
+.ad-sec {
+  margin: var(--s-6) 0 var(--s-2);
+}
+
+.ad-list {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  border-radius: var(--r-lg);
+  background: var(--bg-cell);
+}
+
+.sheet:not(.page) .ad-list {
+  background: var(--bg-sheet-cell);
+}
+
+.ad-row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: 11px var(--s-4);
+}
+
+.ad-row + .ad-row::before,
+.ad-list > li + li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--s-4);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.ad-list > li {
+  position: relative;
+}
+
+.ad-text {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ad-name {
+  color: var(--label);
+  font-size: var(--t-body);
+}
+
+/* Spends on its own: plain --label-2 words, never a red chip (§3.12). */
+.ad-cost {
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+}
+
+.ad-desc,
+.ad-usage,
+.ad-unmet {
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.ad-usage {
+  font-variant-numeric: tabular-nums;
+}
+
+.ad-usage[data-capped="true"],
+.ad-unmet {
+  color: var(--waiting);
+}
+
+.ad-switch {
+  margin-top: 2px;
+}
+
+/* 回覆檢查's model: a quiet inline menu, no bordered box. */
+.ad-model-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
+}
+
+.ad-model {
+  min-width: 0;
+  max-width: 60%;
+  /* A <select> takes no ::before: the full 44pt height, with the extra given back in margins. */
+  min-height: var(--touch);
+  margin-block: -6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: max(16px, var(--t-footnote));
+  text-align: right;
+  text-align-last: right;
+}
+
+/* ── 待處理: a suggestion per cell, its answers as buttons under it ── */
+.offer-sec {
+  margin-top: var(--s-2);
+}
+
+.offer-list {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0 0 var(--s-4);
+  padding: 0;
+  list-style: none;
+}
+
+.offer-card {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-cell);
+}
+
+.offer-card .offer-src {
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+}
+
+.offer-card .offer-text {
+  margin: 0;
+  color: var(--label);
+  font-size: var(--t-body);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.offer-card .offer-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
+}
+
+.offer-card .offer-acts .btn {
+  min-height: 36px;
+  padding: 0 var(--s-3);
+  font-size: var(--t-subhead);
+}
+
+.offer-card .fine {
+  padding: 0;
+}

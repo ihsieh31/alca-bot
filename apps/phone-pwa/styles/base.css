@@ -1,0 +1,455 @@
+/* Alca phone — base. 素 Plain (docs/design/DESIGN-SYSTEM.md): system greys,
+   one blue for "tap this", orange only while Alca waits on you, red only for
+   destructive or failed. Tokens only (styles/plain.css). */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* The page itself never scrolls or rubber-bands: the root is pinned to the
+   screen (position: fixed; inset: 0) and only inner lists scroll. A pinned
+   root also fills a Home Screen app edge to edge, where 100dvh / 100% can
+   come up a safe area short on iOS and leave a strip of nothing. html and
+   body carry the canvas so any overscroll shows the canvas, not white. */
+html {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--c-canvas);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  overflow: hidden;
+  background: var(--c-canvas);
+  color: var(--c-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: var(--leading-ui);
+  letter-spacing: var(--tracking-cjk);
+  /* A line that opens with 「 or （ starts flush with the others (CJK). */
+  text-spacing-trim: trim-start;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+}
+
+#app {
+  position: absolute;
+  inset: 0;
+  /* viewport.ts: while the keyboard is up (and the browser did not resize the
+     layout for it), the app takes the visual viewport's height and pan, so the
+     composer sits right above the keyboard. Unset = fill the screen. */
+  top: var(--vvt, 0px);
+  height: var(--vvh, auto);
+  overflow: hidden;
+  /* biome-ignore lint/suspicious/noDuplicateProperties: hidden is the fallback where clip is unsupported */
+  overflow: clip;
+}
+
+p,
+h1,
+h2,
+h3 {
+  /* No lone last character on its own line (CJK paragraphs). */
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--c-selection);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+input,
+textarea,
+select {
+  font-size: var(--t-field);
+}
+
+button {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+/* CJK and Latin alike: no one-character last line, balanced short titles. */
+p,
+li,
+dd,
+.row-text,
+.row-sub,
+.group-f,
+.fine {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-ring);
+}
+
+a {
+  color: var(--accent);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.icon {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+}
+
+/* ── Buttons (§3.9): filled primary, tinted secondary, text, icon ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: var(--touch);
+  padding: 0 var(--s-4);
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--fill);
+  color: var(--label);
+  font-size: var(--t-callout);
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  transition:
+    background-color var(--d-instant) linear,
+    opacity var(--d-fast) linear;
+}
+
+.btn.big {
+  min-height: var(--touch-big);
+  width: 100%;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-lg);
+  font-size: var(--t-body);
+}
+
+.btn.primary {
+  background: var(--accent-fill);
+  color: #ffffff;
+}
+
+.btn.primary:active:not(:disabled) {
+  background: var(--accent-fill-press);
+}
+
+.btn.primary[data-tone="danger"] {
+  background: var(--danger-fill);
+  color: #ffffff;
+}
+
+.btn.secondary {
+  background: var(--fill);
+  color: var(--label);
+}
+
+.btn.secondary:active:not(:disabled),
+.btn:not(.primary):active:not(:disabled) {
+  background: var(--fill-2);
+}
+
+.btn.plain {
+  background: transparent;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.btn.plain[data-tone="danger"],
+.btn.secondary[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+}
+
+/* A filled button that can't be pressed yet: neutral fill, tertiary label (as iOS). */
+.btn.primary:disabled:not([data-busy="true"]) {
+  opacity: 1;
+  background: var(--fill);
+  color: var(--label-3);
+}
+
+.btn[data-busy="true"] {
+  opacity: 1;
+}
+
+.btn[data-busy="true"] .btn-label::after,
+.btn[data-busy="true"]:not(:has(.btn-label))::after {
+  content: "";
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-left: var(--s-2);
+  vertical-align: -2px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.icon-btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--touch);
+  height: var(--touch);
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--accent);
+  transition: opacity var(--d-instant) linear;
+}
+
+.icon-btn:active:not(:disabled) {
+  opacity: 0.5;
+}
+
+.text-btn {
+  min-height: var(--touch);
+  min-width: var(--touch);
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--t-body);
+  font-weight: 400;
+}
+
+.text-btn.danger,
+.text-btn[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.text-btn:active:not(:disabled) {
+  opacity: 0.5;
+}
+
+.text-btn:disabled {
+  color: var(--label-3);
+}
+
+/* ── Small parts ────────────────────────────────────────────── */
+/* §3.12: tags are plain secondary text now — no border, no fill. */
+.badge {
+  display: inline;
+  font-size: var(--t-footnote);
+  font-weight: 400;
+  color: var(--label-2);
+  white-space: nowrap;
+}
+
+.badge[data-tone="danger"] {
+  color: var(--danger);
+}
+
+/* Count badge: the one capsule (tab bar, nav icons). */
+.count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--r-full);
+  background: var(--count-fill);
+  color: #ffffff;
+  font-size: var(--t-caption);
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.count[data-tone="waiting"] {
+  background: var(--waiting-fill);
+}
+
+/* §2.7: a 12px system-style spinner (8 ticks), never pulsing dots. */
+.spin {
+  display: inline-block;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: conic-gradient(from 22.5deg, transparent 0 12%, currentColor);
+  -webkit-mask:
+    radial-gradient(circle, transparent 0 38%, #000 40%),
+    repeating-conic-gradient(from -12deg, #000 0 24deg, transparent 24deg 45deg);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle, transparent 0 38%, #000 40%),
+    repeating-conic-gradient(from -12deg, #000 0 24deg, transparent 24deg 45deg);
+  mask-composite: intersect;
+  color: var(--label-2);
+  animation: spin 0.8s steps(8) infinite;
+}
+
+.tag {
+  display: inline;
+  margin-left: var(--s-2);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  font-weight: 400;
+}
+
+.muted {
+  color: var(--label-2);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 1px 4px;
+  border-radius: var(--r-xs);
+  background: var(--fill);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+  .btn[data-busy="true"] .btn-label::after {
+    animation: none !important;
+    border-right-color: currentColor;
+    opacity: 0.6;
+  }
+  /* A spinner still turns (slowly, stepped): it is information, not decoration. */
+  .spin {
+    animation: spin 1.6s steps(8) infinite !important;
+  }
+}
+
+/* Short explanatory lines (one to three lines): even lines instead of a
+   stranded last word — CJK has no spaces for pretty to work with. */
+.ob-sub,
+.sheet-title p,
+.np-lead,
+.group-f,
+.fine,
+.pair-note,
+.ap-lock > span,
+.es-text {
+  text-wrap: balance;
+}
+
+/* Long chat prose wraps as written. */
+.prose p,
+.prose li {
+  text-wrap: wrap;
+}
+
+/* ── 44pt tap areas (HIG) without growing the visuals ──
+   Small controls keep their drawn size; an invisible ::before reaches out to at least 44×44
+   (each side grows by half of what is missing, never shrinks a larger control). */
+.send-btn,
+.q-send,
+.td-copy,
+.to-chip-x,
+.rc-retry,
+.filter-btn,
+.bv-handback,
+.bv-space,
+.offer-card .offer-acts .btn,
+.act-sum,
+button.act-row {
+  position: relative;
+}
+
+.send-btn::before,
+.q-send::before,
+.td-copy::before,
+.to-chip-x::before,
+.rc-retry::before,
+.filter-btn::before,
+.bv-handback::before,
+.bv-space::before,
+.offer-card .offer-acts .btn::before,
+.act-sum::before,
+button.act-row::before {
+  content: "";
+  position: absolute;
+  inset: min(0px, calc((100% - var(--touch)) / 2));
+}
+
+/* For VoiceOver only: present in the accessibility tree, never drawn. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

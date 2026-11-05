@@ -1,0 +1,8 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "The splash page only. The core's UI is a loopback http page and gets no Tauri IPC at all.",
+  "windows": ["main"],
+  "local": true,
+  "permissions": ["core:default"]
+}

@@ -1,0 +1,30 @@
+node_modules/
+dist/
+coverage/
+*.log
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+*.db-wal
+*.db-shm
+.DS_Store
+.env
+.env.*
+.alca-dev/
+target/
+apps/desktop-shell/src-tauri/gen/
+apps/desktop-shell/src-tauri/bundle-core/
+
+# P12: generated from build variables (scripts/gen-official-config.ts), never committed
+apps/desktop/official-config.json
+# Phase E: from the build variable ALCA_RELEASE_PUBLIC_KEY (scripts/pack-core.ts), never committed
+apps/desktop/release-keys.json
+# pnpm evals / evals:live reports (CI uploads them as artifacts)
+evals-report*/
+# local screenshot runs (only docs/screenshots/README.md's list is committed)
+docs/screenshots-*/
+docs/screenshots/failure.png
+*.tsbuildinfo
+*.tgz
+*.tar.gz

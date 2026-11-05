@@ -1,0 +1,46 @@
+/* What a task asks and its 續做 (Phase 6), on the task page: grouped rows
+   with a check for the chosen option, a plain field, one primary. */
+
+.wh[hidden] {
+  display: none;
+}
+
+.wh-ask {
+  margin-bottom: var(--s-8);
+}
+
+.wh-q {
+  margin-bottom: var(--s-5);
+}
+
+.wh-q .group-h {
+  color: var(--label);
+  font-size: var(--t-subhead);
+}
+
+.wh-opt .wh-check {
+  display: grid;
+  color: var(--accent);
+  visibility: hidden;
+}
+
+.wh-opt[aria-pressed="true"] .wh-check {
+  visibility: visible;
+}
+
+.wh-opt {
+  max-width: 100%;
+}
+
+.field-row {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.wh-cap {
+  margin-bottom: var(--s-8);
+}
+
+.wh-cap .group {
+  margin-bottom: var(--s-3);
+}

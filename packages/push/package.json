@@ -1,0 +1,13 @@
+{
+  "name": "@alca/push",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Web Push from the core: VAPID keys kept locally (RFC 8292), aes128gcm message encryption (RFC 8291), delivery to the browser's push service (RFC 8030); payloads carry a type and an opaque id only",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./testing/mock-push-service.ts"
+  },
+  "dependencies": {}
+}

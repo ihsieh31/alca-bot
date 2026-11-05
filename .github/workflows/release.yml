@@ -1,0 +1,518 @@
+# Release on a version tag (v0.1.0, v0.2.0-rc.1 …): the core + PWA tarball,
+# install.sh, and the Tauri desktop shell for macOS (universal .dmg), Windows
+# (NSIS .exe) and Linux (.deb, .AppImage), attached to a draft GitHub release.
+#
+# The macOS and Linux shells carry their own core + Node 22 runtime
+# (scripts/stage-shell-core.sh), so they run without install.sh; the Windows
+# shell still runs the core install.sh / alca installed.
+#
+# Official service (P12): the repository variables ALCA_OFFICIAL_RELAY_URL,
+# ALCA_OFFICIAL_SITE_URL and ALCA_OFFICIAL_GOOGLE_CLIENT_ID (Settings → Secrets
+# and variables → Actions → Variables; all public values) are written into the
+# packed core's apps/desktop/official-config.json, so an installed Alca needs
+# no settings. Unset = empty defaults (self-host). They are never committed.
+#
+# Signing: macOS signing + notarization run only when the repository secrets
+# are set (APPLE_CERTIFICATE = base64 .p12, APPLE_CERTIFICATE_PASSWORD,
+# APPLE_SIGNING_IDENTITY, and for notarization APPLE_ID, APPLE_PASSWORD = an
+# app-specific password, APPLE_TEAM_ID); without them those steps are skipped
+# and the App is ad-hoc signed instead (Tauri signingIdentity "-" through the
+# --config overlay; Apple Silicon runs only signed code). The ad-hoc App ships
+# twice: in the .dmg (a browser download is quarantined → 系統設定 → 隱私權與安全性
+# → 仍要打開 once) and as Alca-macos.app.tar.gz + .sha256, which
+# `install.sh --app` downloads with curl (no quarantine mark, no Gatekeeper
+# prompt).
+#
+# Phase E (docs/RELEASE.md has the owner's checklist and every secret):
+# - macOS with APPLE_ID / APPLE_PASSWORD / APPLE_TEAM_ID: the .dmg is notarized with notarytool
+#   and stapled too, and both App and .dmg are checked with spctl + stapler.
+# - Windows Authenticode with WINDOWS_CERTIFICATE (base64 .pfx) + WINDOWS_CERTIFICATE_PASSWORD:
+#   imported into the runner's CurrentUser store, the Tauri CLI signs with signtool (sha256, RFC
+#   3161 timestamp from the variable WINDOWS_TIMESTAMP_URL or DigiCert's), then the installer
+#   must be Valid by Get-AuthenticodeSignature. Without them: unsigned, and said so.
+# - SHA256SUMS over every file; with ALCA_RELEASE_SIGNING_KEY (Ed25519 PEM) also SHA256SUMS.sig,
+#   checked against the variable ALCA_RELEASE_PUBLIC_KEY, which the packed core carries for
+#   `alca update` (apps/desktop/src/update-verify.ts).
+# - Each platform's signing state goes into the job summary and the release notes; a missing
+#   secret never fails the run. install.ps1 is a release file and is run once on windows-latest.
+# - The Tauri updater is not wired (its endpoint must be anonymous: a public repo and a
+#   published release); `alca update` covers the installed core.
+#
+# Supply chain (review H4): every action is pinned by commit SHA (Dependabot
+# keeps them current, .github/dependabot.yml); the Tauri CLI is the lockfile's
+# (apps/desktop-shell/package.json); the APPLE_* secrets are in the env of the
+# signing steps only; files get a build provenance attestation when the
+# repository is public (GitHub offers it free there).
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build (must exist), e.g. v0.1.0"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  core:
+    name: core + PWA tarball
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ env.TAG }}
+          fetch-depth: 0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck && shellcheck scripts/install.sh scripts/stage-shell-core.sh
+      - name: the tag is the version every package.json / tauri.conf.json / Cargo.toml carries
+        run: node scripts/check-versions.ts "$TAG"
+      - name: let Chromium start its sandbox (Ubuntu 24.04 AppArmor blocks unprivileged user namespaces; as in ci.yml)
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: warm up Chromium (its first start on a fresh runner is slow; as in ci.yml)
+        run: |
+          bin="$(node --disable-warning=ExperimentalWarning -e 'import("./packages/browser/src/index.ts").then((m) => console.log(m.findChromium() ?? ""))' 2>/dev/null || true)"
+          echo "chromium: ${bin:-none}"
+          if [ -n "$bin" ]; then timeout 120 "$bin" --headless=new --no-first-run --user-data-dir="$RUNNER_TEMP/warm" --dump-dom about:blank > /dev/null || true; fi
+      - name: check
+        run: pnpm check
+      - name: pack
+        env:
+          ALCA_VERSION: ${{ env.TAG }}
+          ALCA_OFFICIAL_RELAY_URL: ${{ vars.ALCA_OFFICIAL_RELAY_URL }}
+          ALCA_OFFICIAL_SITE_URL: ${{ vars.ALCA_OFFICIAL_SITE_URL }}
+          ALCA_OFFICIAL_GOOGLE_CLIENT_ID: ${{ vars.ALCA_OFFICIAL_GOOGLE_CLIENT_ID }}
+          ALCA_RELEASE_PUBLIC_KEY: ${{ vars.ALCA_RELEASE_PUBLIC_KEY }}
+        run: |
+          node --disable-warning=ExperimentalWarning scripts/pack-core.ts --tar out/alca-core.tar.gz
+          cp out/alca-core.tar.gz "out/alca-core-${TAG#v}.tar.gz"
+          cp scripts/install.sh out/install.sh
+          cp scripts/install.ps1 out/install.ps1
+          cd out
+          for f in alca-core.tar.gz "alca-core-${TAG#v}.tar.gz" install.sh install.ps1; do sha256sum "$f" > "$f.sha256"; done
+      - name: smoke-test the tarball
+        run: bash scripts/install.sh --tarball out/alca-core.tar.gz --prefix "$RUNNER_TEMP/alca" --no-service
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: core
+          path: out/*
+          if-no-files-found: error
+
+  shell:
+    name: desktop shell (${{ matrix.name }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS universal
+            os: macos-latest
+            args: --target universal-apple-darwin --bundles dmg,app
+            rust-targets: aarch64-apple-darwin,x86_64-apple-darwin
+            out: apps/desktop-shell/src-tauri/target/universal-apple-darwin/release/bundle
+            core: darwin-universal
+          - name: Windows x64
+            os: windows-latest
+            args: --bundles nsis
+            rust-targets: ""
+            out: apps/desktop-shell/src-tauri/target/release/bundle
+            core: ""
+          - name: Linux x64
+            os: ubuntu-22.04
+            args: --bundles deb,appimage
+            rust-targets: ""
+            out: apps/desktop-shell/src-tauri/target/release/bundle
+            core: linux-x64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    # No secret at job level (review H4): `pnpm install` (install scripts), `cargo test` (every
+    # crate's build.rs) and the core bundling never see the APPLE_* secrets. Each secret is in the
+    # env of only the step that needs it; the `signing` step below says whether they are set as a
+    # plain true / false, so the `if:` lines need no secret.
+    steps:
+      - name: signing available? (macOS; true / false only, no secret value)
+        id: signing
+        shell: bash
+        env:
+          HAS_CERT: ${{ secrets.APPLE_CERTIFICATE != '' && secrets.APPLE_SIGNING_IDENTITY != '' }}
+          HAS_NOTARY: ${{ secrets.APPLE_ID != '' && secrets.APPLE_PASSWORD != '' && secrets.APPLE_TEAM_ID != '' }}
+          HAS_WIN_CERT: ${{ secrets.WINDOWS_CERTIFICATE != '' && secrets.WINDOWS_CERTIFICATE_PASSWORD != '' }}
+        run: |
+          sign=false; notarize=false; win_sign=false
+          if [ "$RUNNER_OS" = macOS ] && [ "$HAS_CERT" = true ]; then
+            sign=true
+            if [ "$HAS_NOTARY" = true ]; then notarize=true; fi
+          fi
+          if [ "$RUNNER_OS" = Windows ] && [ "$HAS_WIN_CERT" = true ]; then win_sign=true; fi
+          { echo "sign=$sign"; echo "notarize=$notarize"; echo "win_sign=$win_sign"; } >> "$GITHUB_OUTPUT"
+          echo "signing: $sign, notarization: $notarize, authenticode: $win_sign"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ env.TAG }}
+      - name: Linux build dependencies (WebKitGTK 4.1, tray)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libssl-dev build-essential file
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable branch, 2026-11-04
+        with:
+          toolchain: stable
+          targets: ${{ matrix.rust-targets }}
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: apps/desktop-shell/src-tauri
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: unit tests
+        working-directory: apps/desktop-shell/src-tauri
+        run: cargo test --locked
+      - name: bundle the core and a Node runtime
+        if: matrix.core != ''
+        shell: bash
+        env:
+          ALCA_VERSION: ${{ env.TAG }}
+          ALCA_OFFICIAL_RELAY_URL: ${{ vars.ALCA_OFFICIAL_RELAY_URL }}
+          ALCA_OFFICIAL_SITE_URL: ${{ vars.ALCA_OFFICIAL_SITE_URL }}
+          ALCA_OFFICIAL_GOOGLE_CLIENT_ID: ${{ vars.ALCA_OFFICIAL_GOOGLE_CLIENT_ID }}
+          ALCA_RELEASE_PUBLIC_KEY: ${{ vars.ALCA_RELEASE_PUBLIC_KEY }}
+        run: bash scripts/stage-shell-core.sh "${{ matrix.core }}" > "$RUNNER_TEMP/bundle-core.json"
+      - name: import the signing certificate (macOS, only with the APPLE_* secrets)
+        if: steps.signing.outputs.sign == 'true'
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          KEYCHAIN="$RUNNER_TEMP/alca-signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -hex 24)"
+          echo "$APPLE_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security set-keychain-settings -lut 3600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          security import "$RUNNER_TEMP/cert.p12" -k "$KEYCHAIN" -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          # Keep the existing search list and put this keychain first.
+          existing=()
+          while IFS= read -r k; do existing+=("$k"); done < <(security list-keychains -d user | tr -d '"' | sed 's/^ *//')
+          security list-keychains -d user -s "$KEYCHAIN" "${existing[@]}"
+          rm -f "$RUNNER_TEMP/cert.p12"
+      - name: sign the bundled Node (macOS, only with the APPLE_* secrets)
+        if: steps.signing.outputs.sign == 'true' && matrix.core != ''
+        shell: bash
+        env:
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+        run: |
+          codesign --force --timestamp --options runtime \
+            --entitlements apps/desktop-shell/src-tauri/node.entitlements \
+            --sign "$APPLE_SIGNING_IDENTITY" apps/desktop-shell/src-tauri/bundle-core/node
+          codesign --verify --strict --verbose=2 apps/desktop-shell/src-tauri/bundle-core/node
+      - name: ad-hoc sign the bundled Node (macOS, without the APPLE_* secrets)
+        if: runner.os == 'macOS' && steps.signing.outputs.sign != 'true' && matrix.core != ''
+        shell: bash
+        run: |
+          codesign --force --options runtime \
+            --entitlements apps/desktop-shell/src-tauri/node.entitlements \
+            --sign - apps/desktop-shell/src-tauri/bundle-core/node
+          codesign --verify --strict --verbose=2 apps/desktop-shell/src-tauri/bundle-core/node
+      - name: import the Authenticode certificate (Windows, only with the WINDOWS_* secrets)
+        id: wincert
+        if: steps.signing.outputs.win_sign == 'true'
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          $pfx = Join-Path $env:RUNNER_TEMP 'alca-signing.pfx'
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE))
+          try {
+            $pw = ConvertTo-SecureString $env:WINDOWS_CERTIFICATE_PASSWORD -AsPlainText -Force
+            $cert = Import-PfxCertificate -FilePath $pfx -CertStoreLocation Cert:\CurrentUser\My -Password $pw
+          } finally {
+            Remove-Item -LiteralPath $pfx -Force
+          }
+          if (-not $cert.HasPrivateKey) { throw 'the .pfx has no private key' }
+          # The thumbprint is public (it is in every signed file); signtool finds the key by it.
+          "thumbprint=$($cert.Thumbprint)" >> $env:GITHUB_OUTPUT
+          "Authenticode: $($cert.Subject), until $($cert.NotAfter.ToString('yyyy-MM-dd'))"
+      - name: tauri build (signed + notarized on macOS when the secrets are set, else ad-hoc signed)
+        working-directory: apps/desktop-shell
+        shell: bash
+        env:
+          # bundle_dmg.sh lays the .dmg window out with Finder AppleScript unless CI is set; without
+          # Automation permission that times out (-1712, mac test 2026-11-04). Runners set CI, but say so.
+          CI: "true"
+          # The certificate is already in the keychain above; the CLI signs with the identity and
+          # notarizes with the Apple ID. Empty unless the signing step said so (Linux / Windows
+          # and unsigned builds get nothing). This step still runs cargo build with them: the
+          # certificate and its password never reach it.
+          APPLE_SIGNING_IDENTITY: ${{ steps.signing.outputs.sign == 'true' && secrets.APPLE_SIGNING_IDENTITY || '' }}
+          APPLE_ID: ${{ steps.signing.outputs.notarize == 'true' && secrets.APPLE_ID || '' }}
+          APPLE_PASSWORD: ${{ steps.signing.outputs.notarize == 'true' && secrets.APPLE_PASSWORD || '' }}
+          APPLE_TEAM_ID: ${{ steps.signing.outputs.notarize == 'true' && secrets.APPLE_TEAM_ID || '' }}
+          # A neutral id is in tauri.conf.json (local.alca.desktop); a release may set its own
+          # with the repository variable ALCA_BUNDLE_ID (reverse-DNS, e.g. com.example.alca).
+          ALCA_BUNDLE_ID: ${{ vars.ALCA_BUNDLE_ID }}
+          # Windows: the imported certificate's thumbprint (empty = unsigned) and the timestamp server.
+          WIN_THUMBPRINT: ${{ steps.wincert.outputs.thumbprint }}
+          WIN_TIMESTAMP_URL: ${{ vars.WINDOWS_TIMESTAMP_URL || 'http://timestamp.digicert.com' }}
+        run: |
+          for v in APPLE_SIGNING_IDENTITY APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID; do
+            if [ -z "${!v}" ]; then unset "$v"; fi
+          done
+          overlay='{}'
+          if [ -s "$RUNNER_TEMP/bundle-core.json" ]; then overlay="$(cat "$RUNNER_TEMP/bundle-core.json")"; fi
+          if [ "$RUNNER_OS" = macOS ] && [ -z "${APPLE_SIGNING_IDENTITY:-}" ]; then
+            # No certificate: ad-hoc sign ("-"), so the App runs on Apple Silicon without one.
+            overlay="$(printf '%s' "$overlay" | jq -c '. * {bundle: {macOS: {signingIdentity: "-"}}}')"
+          fi
+          if [ "$RUNNER_OS" = Windows ] && [ -n "$WIN_THUMBPRINT" ]; then
+            overlay="$(printf '%s' "$overlay" | jq -c --arg t "$WIN_THUMBPRINT" --arg u "$WIN_TIMESTAMP_URL" \
+              '. * {bundle: {windows: {certificateThumbprint: $t, digestAlgorithm: "sha256", timestampUrl: $u}}}')"
+          fi
+          if [ -n "$ALCA_BUNDLE_ID" ]; then
+            [[ "$ALCA_BUNDLE_ID" =~ ^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$ ]] || { echo "ALCA_BUNDLE_ID is not a reverse-DNS id"; exit 1; }
+            overlay="$(printf '%s' "$overlay" | jq -c --arg id "$ALCA_BUNDLE_ID" '. + {identifier: $id}')"
+          fi
+          # The Tauri CLI comes from the lockfile (apps/desktop-shell/package.json), not npx @2.
+          pnpm exec tauri build --ci ${{ matrix.args }} --config "$overlay"
+      - name: the App as Alca-macos.app.tar.gz + .sha256 (macOS; what install.sh --app downloads)
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          OUT: ${{ matrix.out }}
+        run: |
+          app="$OUT/macos/Alca.app"
+          [ -d "$app/Contents/MacOS" ] || { echo "no $app"; exit 1; }
+          if ! codesign --verify --deep --strict --verbose=2 "$app"; then
+            # Fallback when the CLI left the bundle unsealed: ad-hoc sign it here and remake the .dmg
+            # from the signed App, so both downloads carry the same signature.
+            echo "::warning::the App was not sealed by tauri build; ad-hoc signing it with codesign"
+            codesign --force --deep --sign - "$app"
+            codesign --verify --deep --strict --verbose=2 "$app"
+            for dmg in "$OUT"/dmg/*.dmg; do
+              [ -e "$dmg" ] || continue
+              rm -f "$dmg"
+              hdiutil create -volname Alca -srcfolder "$app" -ov -format UDZO "$dmg"
+            done
+          fi
+          codesign -dv "$app" 2>&1 | grep -E '^(Signature|TeamIdentifier|Authority)=' || true
+          mkdir -p "$OUT/app-tar"
+          # Alca.app at the top (install.sh unpacks with tar -xzf and looks for Alca.app/Contents/MacOS);
+          # tar keeps the bundle's symlinks; no AppleDouble ._ files.
+          COPYFILE_DISABLE=1 tar -C "$OUT/macos" -czf "$OUT/app-tar/Alca-macos.app.tar.gz" Alca.app
+          tar -tzf "$OUT/app-tar/Alca-macos.app.tar.gz" | grep -q '^Alca.app/Contents/MacOS/'
+          (cd "$OUT/app-tar" && shasum -a 256 Alca-macos.app.tar.gz > Alca-macos.app.tar.gz.sha256 && cat Alca-macos.app.tar.gz.sha256)
+      - name: notarize and staple the .dmg; check App and .dmg with Gatekeeper (macOS, only with notarization secrets)
+        if: steps.signing.outputs.notarize == 'true'
+        shell: bash
+        env:
+          OUT: ${{ matrix.out }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          app="$OUT/macos/Alca.app"
+          # tauri build notarized and stapled the App; the .dmg around it is submitted on its own.
+          xcrun stapler validate "$app"
+          spctl --assess --type execute -vv "$app"
+          for dmg in "$OUT"/dmg/*.dmg; do
+            [ -e "$dmg" ] || continue
+            xcrun notarytool submit "$dmg" --apple-id "$APPLE_ID" --password "$APPLE_PASSWORD" --team-id "$APPLE_TEAM_ID" --wait
+            xcrun stapler staple "$dmg"
+            xcrun stapler validate "$dmg"
+            spctl --assess --type open --context context:primary-signature -vv "$dmg"
+          done
+      - name: check the Authenticode signature (Windows, only with the WINDOWS_* secrets)
+        if: steps.signing.outputs.win_sign == 'true'
+        shell: pwsh
+        env:
+          OUT: ${{ matrix.out }}
+        run: |
+          $files = @(Get-ChildItem -Path (Join-Path $env:OUT 'nsis') -Filter *.exe)
+          if (-not $files) { throw 'no installer to check' }
+          foreach ($f in $files) {
+            $s = Get-AuthenticodeSignature -FilePath $f.FullName
+            "$($f.Name): $($s.Status) ($($s.SignerCertificate.Subject))"
+            if ($s.Status -ne 'Valid') { throw "$($f.Name) is not validly signed: $($s.StatusMessage)" }
+          }
+      - name: signing state (job summary and the release notes; no secret value)
+        shell: bash
+        env:
+          OUT: ${{ matrix.out }}
+          SIGN: ${{ steps.signing.outputs.sign }}
+          NOTARIZE: ${{ steps.signing.outputs.notarize }}
+          WIN_SIGN: ${{ steps.signing.outputs.win_sign }}
+        run: |
+          case "$RUNNER_OS" in
+            macOS)
+              if [ "$SIGN" = true ] && [ "$NOTARIZE" = true ]; then line="macOS: Developer ID signed, notarized and stapled (App and .dmg)"
+              elif [ "$SIGN" = true ]; then line="macOS: Developer ID signed, NOT notarized (APPLE_ID / APPLE_PASSWORD / APPLE_TEAM_ID not set): Gatekeeper still asks once"
+              else line="macOS: ad-hoc signed, NOT notarized (no APPLE_* secrets): a browser download needs 系統設定 → 隱私權與安全性 → 仍要打開 once; install.sh --app-only does not"; fi ;;
+            Windows)
+              if [ "$WIN_SIGN" = true ]; then line="Windows: Authenticode signed (the installer checks Valid)"
+              else line="Windows: NOT signed (no WINDOWS_CERTIFICATE secret): SmartScreen warns"; fi ;;
+            *) line="Linux: not code-signed; check the files with SHA256SUMS (and SHA256SUMS.sig when present)" ;;
+          esac
+          mkdir -p "$OUT/signing"
+          printf '%s\n' "$line" > "$OUT/signing/signing-$RUNNER_OS.txt"
+          printf -- '- %s\n' "$line" >> "$GITHUB_STEP_SUMMARY"
+          echo "$line"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: shell-${{ runner.os }}
+          path: |
+            ${{ matrix.out }}/app-tar/Alca-macos.app.tar.gz
+            ${{ matrix.out }}/app-tar/Alca-macos.app.tar.gz.sha256
+            ${{ matrix.out }}/dmg/*.dmg
+            ${{ matrix.out }}/nsis/*.exe
+            ${{ matrix.out }}/deb/*.deb
+            ${{ matrix.out }}/appimage/*.AppImage
+            ${{ matrix.out }}/signing/*.txt
+          if-no-files-found: error
+
+  install-windows:
+    name: install.ps1 on Windows (the release's core tarball)
+    needs: core
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ env.TAG }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: core
+          path: core
+      - name: install.ps1 --tarball (checked against its .sha256), no service; the installed core runs
+        shell: pwsh
+        run: |
+          $prefix = Join-Path $env:RUNNER_TEMP 'alca'
+          ./scripts/install.ps1 --tarball core/alca-core.tar.gz --prefix $prefix --no-service
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          & (Join-Path $prefix 'bin\alca.cmd') update status
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+
+  release:
+    name: draft release
+    needs: [core, shell, install-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      # Build provenance (SLSA, Sigstore) for every file: `gh attestation verify <file> --repo <owner>/alca-bot`.
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: dist
+          merge-multiple: true
+      - name: one flat folder (upload-artifact keeps dmg/, nsis/, deb/, appimage/, app-tar/ under each shell artifact)
+        working-directory: dist
+        run: |
+          find . -mindepth 2 -type f -print0 | while IFS= read -r -d '' f; do
+            b="$(basename "$f")"
+            if [ -e "$b" ]; then echo "two release files named $b"; exit 1; fi
+            mv "$f" "$b"
+          done
+          find . -mindepth 1 -type d -empty -delete
+          if find . -mindepth 1 -type d | grep -q .; then echo "folders left in dist"; exit 1; fi
+      - name: signing states aside (they go into the notes, not the release files)
+        working-directory: dist
+        run: |
+          mkdir -p "$RUNNER_TEMP/signing"
+          for f in signing-*.txt; do if [ -f "$f" ]; then mv "$f" "$RUNNER_TEMP/signing/"; fi; done
+      - name: checksums for the installers; SHA256SUMS over every file
+        working-directory: dist
+        run: |
+          for f in *.dmg *.exe *.deb *.AppImage; do
+            if [ -f "$f" ]; then sha256sum "$f" > "$f.sha256"; fi
+          done
+          find . -maxdepth 1 -type f ! -name '*.sha256' -printf '%f\n' | LC_ALL=C sort | xargs sha256sum > SHA256SUMS
+          cat SHA256SUMS
+      - name: release signature over SHA256SUMS (only with the ALCA_RELEASE_SIGNING_KEY secret)
+        working-directory: dist
+        env:
+          ALCA_RELEASE_SIGNING_KEY: ${{ secrets.ALCA_RELEASE_SIGNING_KEY }}
+          ALCA_RELEASE_PUBLIC_KEY: ${{ vars.ALCA_RELEASE_PUBLIC_KEY }}
+        run: |
+          if [ -z "$ALCA_RELEASE_SIGNING_KEY" ]; then
+            echo "- Release signature: none (ALCA_RELEASE_SIGNING_KEY not set); \`alca update\` checks checksums only" >> "$RUNNER_TEMP/signing/signing-release.txt"
+            exit 0
+          fi
+          umask 077
+          key="$RUNNER_TEMP/release-key.pem"
+          printf '%s\n' "$ALCA_RELEASE_SIGNING_KEY" > "$key"
+          openssl pkeyutl -sign -rawin -inkey "$key" -in SHA256SUMS | base64 -w0 > SHA256SUMS.sig
+          rm -f "$key"
+          if [ -n "$ALCA_RELEASE_PUBLIC_KEY" ]; then
+            # The packed core trusts the variable's key: the signature must verify against it.
+            pub="$RUNNER_TEMP/release-pub.pem"
+            if printf '%s' "$ALCA_RELEASE_PUBLIC_KEY" | grep -q 'BEGIN PUBLIC KEY'; then printf '%s\n' "$ALCA_RELEASE_PUBLIC_KEY" > "$pub"
+            else printf '%s' "$ALCA_RELEASE_PUBLIC_KEY" | base64 -d | openssl pkey -pubin -inform DER -out "$pub"; fi
+            base64 -d SHA256SUMS.sig > "$RUNNER_TEMP/sig.bin"
+            openssl pkeyutl -verify -rawin -pubin -inkey "$pub" -in SHA256SUMS -sigfile "$RUNNER_TEMP/sig.bin"
+            echo "- Release signature: SHA256SUMS.sig (Ed25519), verified against ALCA_RELEASE_PUBLIC_KEY" >> "$RUNNER_TEMP/signing/signing-release.txt"
+          else
+            echo "::warning::SHA256SUMS is signed but ALCA_RELEASE_PUBLIC_KEY is not set: the packed core carries no key and \`alca update\` checks checksums only"
+            echo "- Release signature: SHA256SUMS.sig (Ed25519); the core carries no key (ALCA_RELEASE_PUBLIC_KEY not set)" >> "$RUNNER_TEMP/signing/signing-release.txt"
+          fi
+          ls -la
+      - name: build provenance attestation (free for public repositories; a private one needs GitHub Enterprise Cloud)
+        if: github.event.repository.visibility == 'public'
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-path: |
+            dist/*.tar.gz
+            dist/install.sh
+            dist/install.ps1
+            dist/SHA256SUMS
+            dist/*.dmg
+            dist/*.exe
+            dist/*.deb
+            dist/*.AppImage
+      - name: create the draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          {
+            echo "Pre-release build (draft). Signing state of this build:"
+            echo
+            for f in "$RUNNER_TEMP"/signing/signing-*.txt; do
+              [ -f "$f" ] || continue
+              sed 's/^- //; s/^/- /' "$f"
+            done
+            echo
+            echo "- Core + phone PWA: alca-core.tar.gz. macOS / Linux: curl -fsSL https://github.com/$GH_REPO/releases/download/$TAG/install.sh | bash -s -- --version $TAG"
+            echo "- Windows (core): download install.ps1, then: powershell -ExecutionPolicy Bypass -File .\\install.ps1 --version $TAG (Node 22.18+; the Windows .exe shell runs this core)"
+            echo "- Desktop shell: .dmg (macOS universal) and .deb / .AppImage (Linux) carry their own core + Node runtime."
+            echo "- macOS App from the terminal, no Gatekeeper prompt: curl -fsSL https://github.com/$GH_REPO/releases/download/$TAG/install.sh | bash -s -- --app-only --version $TAG"
+            echo "- Every file is in SHA256SUMS. An installed core updates with: alca update install (asks first)."
+          } > "$RUNNER_TEMP/notes.md"
+          cat "$RUNNER_TEMP/notes.md"
+          gh release create "$TAG" dist/* --draft --prerelease --title "Alca $TAG" --notes-file "$RUNNER_TEMP/notes.md"

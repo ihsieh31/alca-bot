@@ -1,0 +1,14 @@
+{
+  "name": "@alca/design",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Alca design tokens (青瓷 Celadon): one CSS file shared by the desktop UI and the phone PWA; and the UI string table (src/i18n, R9)",
+  "license": "Apache-2.0",
+  "exports": {
+    "./tokens.css": "./tokens.css",
+    ".": "./src/index.ts",
+    "./i18n": "./src/i18n/index.ts"
+  },
+  "dependencies": {}
+}

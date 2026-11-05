@@ -1,0 +1,455 @@
+/* Real devices (素 Plain §3.11, §3.13): the notification prompt, the iPhone
+   「加到主畫面」 and 「通知已關閉」 sheets, 診斷, the in-app notice for a card in
+   another conversation, the toast. No borders, no capsules: inset-grouped
+   cells, footnotes, level-2 elevation for what floats. */
+
+/* ── Viewport ───────────────────────────────────────────────── */
+/* No 100dvh / 100vh here: base.css pins body to the screen (inset: 0), which
+   follows the real screen in a Home Screen app (dvh can miss the bottom safe
+   area there) and the resized viewport where the keyboard resizes it. */
+
+/* The keyboard: viewport.ts sizes #app and the sheet layers to the visual
+   viewport (--vvh / --vvt) while a field has focus, and undoes the page
+   scroll iOS adds. Nothing else needs to know the keyboard's height. */
+
+/* ── Notification prompt / guides ───────────────────────────── */
+.np-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  padding: var(--s-2) 0 var(--s-1);
+}
+
+/* What a notification looks like: an iOS banner, level 2. */
+.np-preview {
+  display: flex;
+  gap: var(--s-3);
+  align-items: flex-start;
+  margin: var(--s-2) 0 var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-xl);
+  background: var(--bg-sheet-cell);
+  box-shadow: var(--shadow-2);
+  animation: rise var(--d-base) var(--e-spring);
+}
+
+.np-app img {
+  display: block;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+}
+
+.np-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.np-text p {
+  margin: 0;
+}
+
+.np-head {
+  display: flex;
+  justify-content: space-between;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+}
+
+.np-head b {
+  color: var(--label);
+  font-weight: 600;
+}
+
+.np-title {
+  margin-top: 2px !important;
+  font-size: var(--t-subhead);
+  font-weight: 600;
+}
+
+.np-body {
+  color: var(--label);
+  font-size: var(--t-subhead);
+  line-height: 1.35;
+}
+
+.np-hero {
+  display: grid;
+  place-items: center;
+  margin-top: var(--s-2);
+}
+
+.np-bell {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--accent);
+}
+
+.np-hero.muted .np-bell {
+  color: var(--label-2);
+}
+
+.np-title-big {
+  margin: 0;
+  padding: 0 var(--s-4);
+  font-family: var(--font-display);
+  font-size: var(--t-title2);
+  font-weight: 700;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.np-hero + .np-title-big {
+  text-align: center;
+}
+
+.np-hero ~ .np-lead {
+  text-align: center;
+}
+
+.np-lead {
+  margin: calc(-1 * var(--s-2)) 0 0;
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* The three promises: one inset-grouped cell, check marks in --success. */
+.np-facts {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  border-radius: var(--r-lg);
+  background: var(--bg-sheet-cell);
+}
+
+.np-facts li {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: 11px var(--s-4);
+  color: var(--label);
+  font-size: var(--t-subhead);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.np-facts li + li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: calc(var(--s-4) + 16px + var(--s-3));
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.np-facts .icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--success);
+}
+
+/* 加到主畫面: numbered rows in one cell (not three bordered boxes). */
+.np-steps {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  border-radius: var(--r-lg);
+  background: var(--bg-sheet-cell);
+}
+
+.np-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: var(--row-h);
+  padding: 10px var(--s-4);
+}
+
+.np-step + .np-step::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: calc(var(--s-4) + 24px + var(--s-3));
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.np-step p {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  font-size: var(--t-subhead);
+  line-height: 1.4;
+}
+
+.np-num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label);
+  font-size: var(--t-footnote);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.np-glyph {
+  display: inline-grid;
+  place-items: center;
+  color: var(--accent);
+}
+
+.np-glyph .icon {
+  transform: rotate(180deg);
+}
+
+.np-sheet .fine {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.np-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+/* 「之後再說」: a plain text button under the primary. */
+.btn.ghost {
+  background: transparent;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.btn.ghost:active:not(:disabled) {
+  background: var(--fill-hover);
+}
+
+.np-error {
+  margin: 0;
+  padding: 0 var(--s-4);
+  color: var(--danger);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+}
+
+/* ── 診斷 ───────────────────────────────────────────────────── */
+.dg-sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--s-6);
+}
+
+.dg-sheet > .sheet-title {
+  margin: 0 0 var(--s-6);
+  padding: 0 var(--s-4);
+}
+
+.dg-sheet > .sheet-title h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--t-title2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.dg-sheet > .sheet-title p {
+  margin: var(--s-1) 0 0;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* The actions: accent rows in one cell (§3.9: no grid of boxed buttons). */
+.dg-acts {
+  margin: 0 0 var(--s-8);
+}
+
+.dg-act {
+  color: var(--accent);
+  font-size: var(--t-body);
+  text-align: left;
+}
+
+.dg-act > .icon {
+  flex: none;
+  width: 22px;
+  color: var(--accent);
+}
+
+.dg-sec {
+  margin-bottom: var(--s-8);
+}
+
+.dg-list {
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--bg-sheet-cell);
+}
+
+.dg-row {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  min-height: var(--row-h);
+  padding: 11px var(--s-4);
+}
+
+.dg-row + .dg-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--s-4);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.dg-row dt {
+  flex: none;
+  color: var(--label);
+  font-size: var(--t-body);
+  white-space: nowrap;
+}
+
+/* Values: technical, so mono is fine here — but quiet, and they wrap. */
+.dg-row dd {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  color: var(--label-2);
+  font-family: var(--font-mono);
+  font-size: var(--t-footnote);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.dg-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--label-3);
+  transform: translateY(-1px);
+}
+
+.dg-row dd[data-tone="ok"] .dg-dot {
+  background: var(--success);
+}
+
+.dg-row dd[data-tone="warn"] .dg-dot {
+  background: var(--waiting);
+}
+
+.dg-row dd[data-tone="bad"] {
+  color: var(--danger);
+}
+
+.dg-row dd[data-tone="bad"] .dg-dot {
+  background: var(--danger);
+}
+
+.dg-loading {
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+}
+
+/* ── In-app notice: another conversation has a card waiting (§3.11) ── */
+.notify-banner {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  min-height: var(--touch);
+  padding: var(--s-2) calc(var(--s-4) + var(--safe-right)) var(--s-2) calc(var(--s-4) + var(--safe-left));
+  border: 0;
+  background: var(--fill);
+  color: var(--label);
+  font-size: var(--t-footnote);
+  font-weight: 500;
+  text-align: left;
+  animation: rise var(--d-base) var(--e-standard);
+}
+
+.notify-banner .icon {
+  flex: none;
+  color: var(--waiting);
+}
+
+.notify-banner span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.notify-banner b {
+  flex: none;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Toast: level 2, --r-lg, no capsule; one at a time (§3.11) ── */
+/* toast.ts: one layer over every sheet, in the same box as #app (viewport.ts). */
+.toast-layer {
+  position: fixed;
+  inset: 0;
+  top: var(--vvt, 0px);
+  height: var(--vvh, auto);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.app-toast {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--tab-h) + var(--safe-bottom) + var(--s-4));
+  z-index: 5;
+  width: max-content;
+  max-width: min(calc(100% - 2 * var(--s-4) - var(--safe-left) - var(--safe-right)), 420px);
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+  color: var(--label);
+  font-size: var(--t-subhead);
+  line-height: 1.4;
+  text-wrap: pretty;
+  transform: translateX(-50%);
+  box-shadow: var(--shadow-2);
+  animation: rise var(--d-base) var(--e-spring);
+}

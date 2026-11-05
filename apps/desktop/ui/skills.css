@@ -1,0 +1,192 @@
+/* Alca desktop UI — skills and the switch control of 記憶與技能 (split out of library.css, P13). */
+
+/* ── Skills (素 Plain §4.2): proposal = confirmation-style card; saved = rows ── */
+.lb-section .sk-card {
+  max-width: none;
+  margin-bottom: var(--s-4);
+}
+
+.sk-card .card-eyebrow {
+  margin: 0 0 2px;
+}
+
+.sk-card .ap-icon {
+  color: var(--accent);
+}
+
+/* Steps: a plain numbered list aligned to the title column (36px icon + 12px gap). */
+.sk-steps {
+  margin: var(--s-4) 0 0;
+  padding: 0 0 0 48px;
+  font: var(--t-body);
+  line-height: 1.6;
+  color: var(--label);
+  counter-reset: step;
+  list-style: none;
+}
+
+.sk-steps li {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  counter-increment: step;
+}
+
+.sk-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: -24px;
+  width: 16px;
+  color: var(--label-2);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.sk-steps li + li {
+  margin-top: 2px;
+}
+
+.sk-step-text {
+  overflow-wrap: anywhere;
+}
+
+.sk-lock {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  color: var(--waiting);
+}
+
+.sk-lock svg {
+  width: 12px;
+  height: 12px;
+}
+
+.sk-when,
+.sk-more,
+.sk-note {
+  margin: var(--s-2) 0 0 48px;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.sk-note {
+  color: var(--waiting);
+}
+
+.sk-card .sk-assure {
+  margin-left: 48px;
+}
+
+.sk-card .ap-foot {
+  align-items: center;
+}
+
+.sk-open {
+  font: var(--t-body);
+}
+
+.sk-card[data-state="done"] .sk-steps,
+.sk-card[data-state="done"] .sk-when,
+.sk-card[data-state="done"] .sk-assure,
+.sk-card[data-state="done"] .sk-more,
+.sk-card[data-state="done"] .sk-note {
+  display: none;
+}
+
+.sk-done {
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+/* A saved skill: name + one line; the steps fold out under it. */
+.sk-fold > summary {
+  list-style: none;
+  cursor: default;
+}
+
+.sk-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.sk-fold > summary:focus-visible {
+  outline: none;
+  border-radius: var(--r-sm);
+  box-shadow: var(--focus-ring);
+}
+
+.sk-fold .lb-meta {
+  margin-bottom: 0;
+}
+
+.sk-fold .sk-steps {
+  margin-top: var(--s-2);
+  padding-left: 24px;
+}
+
+.sk-fold .sk-when {
+  margin-left: 24px;
+}
+
+.sk-row .lb-actions {
+  align-self: center;
+  gap: var(--s-2);
+}
+
+/* ── Inline editor (a form, §3.14) ── */
+.sk-edit {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.sk-field {
+  display: grid;
+  gap: var(--s-1);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+/* Skill edit fields fill the card width (field = §3.14 text field). */
+.sk-field,
+.sk-area {
+  flex: none;
+  width: 100%;
+}
+
+.sk-area {
+  min-height: 72px;
+}
+
+/* ── Switch: the styled fallback of a native switch (§2.9) ── */
+.lb-switch {
+  position: relative;
+  flex: none;
+  width: 32px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-full);
+  background: var(--fill-strong);
+  transition: background var(--d-fast) var(--e-standard);
+}
+
+.lb-switch i {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.lb-switch[aria-checked="true"] {
+  background: var(--accent-fill);
+}
+
+.lb-switch[aria-checked="true"] i {
+  transform: translateX(12px);
+}

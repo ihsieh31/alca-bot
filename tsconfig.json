@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    // R9.3: the UI imports the shared string table as ./i18n/… (served and copied there).
+    "rootDirs": [".", "apps/desktop/ui", "apps/phone-pwa/app", "packages/design/src"]
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/test/**/*.ts",
+    "packages/*/testing/**/*.ts",
+    "packages/*/scripts/**/*.ts",
+    "apps/*/src/**/*.ts",
+    "apps/*/test/**/*.ts",
+    "apps/*/smoke/**/*.ts",
+    "apps/*/scripts/**/*.ts",
+    "services/*/src/**/*.ts",
+    "services/*/test/**/*.ts",
+    "scripts/**/*.ts",
+    "vitest.config.ts",
+    "vitest.smoke.config.ts"
+  ]
+}

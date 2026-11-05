@@ -1,0 +1,21 @@
+{
+  "attached": "Alca 正在執行（背景服務）",
+  "foot": "一切都在這台電腦上執行。",
+  "keepsStopping": "核心一直停止，請看紀錄檔後按「重新啟動核心」",
+  "logFile": "紀錄檔：{path}",
+  "logs": "打開紀錄檔資料夾",
+  "noCore": "找不到 Alca 核心（設定 ALCA_CORE_CMD，或執行 scripts/install.sh）",
+  "open": "打開 Alca",
+  "openAtLogin": "登入時開啟",
+  "openWaiting": "查看等你決定的事",
+  "pair": "配對手機…",
+  "phones": "{n} 支手機在線上",
+  "quit": "結束 Alca",
+  "restart": "重新啟動核心",
+  "restarting": "核心停止了，{n} 秒後重新啟動",
+  "running": "Alca 正在執行",
+  "startFailed": "無法啟動核心：{e}",
+  "starting": "Alca 正在啟動…",
+  "stopped": "核心停止了",
+  "waiting": "等你決定：{n} 件"
+}

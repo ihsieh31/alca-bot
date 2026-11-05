@@ -1,0 +1,21 @@
+{
+  "name": "@alca/evals",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Evals harness: scripted scenarios against fake engines (router dispatch, approval gates, memory, routines, team delegation, prompt injection) with a JSON + markdown report",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@alca/browser": "workspace:*",
+    "@alca/config": "workspace:*",
+    "@alca/connectors": "workspace:*",
+    "@alca/core": "workspace:*",
+    "@alca/engines": "workspace:*",
+    "@alca/policy": "workspace:*",
+    "@alca/protocol": "workspace:*",
+    "@alca/store": "workspace:*"
+  }
+}

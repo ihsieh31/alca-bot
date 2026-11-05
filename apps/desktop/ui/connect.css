@@ -1,0 +1,515 @@
+/* Alca desktop — Library › 連接 and 進行中 › 例行工作 (素 Plain §4.2): plain rows with
+   hairlines, per-account access as popup buttons, routines as rows with a switch. */
+
+.connect {
+  display: grid;
+  grid-template-rows: var(--toolbar-h) minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg);
+  animation: fade var(--d-fast) var(--e-standard) both;
+}
+
+.cn-notice {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0 0 var(--s-5);
+  font: var(--t-body);
+  color: var(--danger);
+}
+
+.cn-hint,
+.cn-sub {
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+/* An app's mark: a neutral glyph, no brand-coloured tiles (§2.8). */
+.cn-mark {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  color: var(--label-2);
+}
+
+.cn-mark .ico {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cn-row .cn-mark,
+.cn-app .cn-mark {
+  margin-top: 1px;
+}
+
+/* ── Accounts ── */
+.cn-row {
+  align-items: flex-start;
+  padding-bottom: var(--s-4);
+}
+
+/* The account holds its own inset group; a row-wide hover fill would swallow it. */
+.cn-row:hover {
+  background: transparent;
+}
+
+.cn-row:hover::before,
+.cn-row:hover + .lb-row::before {
+  visibility: visible;
+}
+
+.cn-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  font: var(--t-body);
+  font-weight: 500;
+}
+
+.cn-label,
+.cn-identity {
+  min-width: 0;
+}
+
+.cn-row .lb-meta[data-status="pending"] {
+  color: var(--waiting);
+}
+
+.cn-row .lb-meta[data-status="failed"],
+.cn-row .lb-meta[data-status="expired"] {
+  color: var(--danger);
+}
+
+.cn-rename {
+  display: flex;
+  gap: var(--s-2);
+  width: 100%;
+  max-width: 360px;
+}
+
+/* Who can use it + when it wakes a bot: one inset group under the account (§3.8 grouped list). */
+.cn-bots {
+  display: grid;
+  margin-top: var(--s-3);
+  padding: var(--s-1) var(--s-3) var(--s-1);
+  border-radius: var(--r-md);
+  background: var(--fill-hover);
+}
+
+.cn-sub {
+  padding: var(--s-2) 0 2px;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+/* One bot (or trigger) per line: name left, its state at the trailing edge. */
+.cn-bot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-height: 36px;
+}
+
+.cn-bot + .cn-bot {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.cn-bot-name {
+  font: var(--t-body);
+  color: var(--label);
+}
+
+.cn-triggers {
+  display: grid;
+  margin-top: var(--s-1);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.cn-trigger .btn {
+  height: 24px;
+  padding: 0 var(--s-3);
+  font-size: 13px;
+}
+
+.cn-on,
+.cn-off {
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.cn-on {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cn-on::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--success);
+}
+
+.lb-confirm .lb-main {
+  min-width: 0;
+}
+
+/* ── Add an app: rows with a 連接… button ── */
+.cn-app {
+  align-items: center;
+}
+
+.cn-app .lb-body {
+  font: var(--t-body);
+  font-weight: 500;
+}
+
+.cn-app-add {
+  flex: none;
+}
+
+.cn-add-form,
+.cn-key-row,
+.cn-login-form,
+.cn-mcp-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+}
+
+.cn-mcp-form {
+  display: grid;
+  max-width: 480px;
+}
+
+.cn-field {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-3);
+  font: var(--t-body);
+  color: var(--label);
+}
+
+.cn-field > span {
+  text-align: right;
+  color: var(--label-2);
+}
+
+.cn-section-hint {
+  max-width: 620px;
+  margin: 0 0 var(--s-2);
+}
+
+.cn-add-link {
+  margin: var(--s-2) 0 0 calc(-1 * var(--s-2));
+}
+
+/* The key: a setup card when missing; inside 技術細節 when set. */
+.cn-key {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  margin-bottom: var(--s-6);
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-xl);
+  background: var(--bg-cell);
+  box-shadow: var(--shadow-1);
+}
+
+.cn-key .lb-glyph {
+  display: none;
+}
+
+.cn-key-title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  font: var(--t-body);
+  font-weight: 600;
+}
+
+.cn-key-title code {
+  font: 12px / 1 var(--font-mono);
+  color: var(--label-2);
+}
+
+.cn-tech {
+  margin-top: var(--s-8);
+}
+
+.cn-tech .cn-key {
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.cn-tech .cn-key .lb-actions {
+  opacity: 1;
+}
+
+.cn-tech > .cn-hint {
+  margin: var(--s-2) 0 0;
+}
+
+/* 每日上限 */
+.form-value {
+  font: var(--t-body);
+  color: var(--label-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.cn-quota-row {
+  min-height: 40px;
+}
+
+/* Site sign-ins */
+.cn-login-bots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-4);
+  margin-top: var(--s-2);
+}
+
+.cn-login-bot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: var(--t-body);
+}
+
+.cn-login-bot input {
+  accent-color: var(--accent-fill);
+}
+
+/* ── Routines ── */
+.rt-row {
+  align-items: flex-start;
+}
+
+.rt-fold > summary {
+  list-style: none;
+}
+
+.rt-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.rt-fold > summary:focus-visible {
+  outline: none;
+  border-radius: var(--r-sm);
+  box-shadow: var(--focus-ring);
+}
+
+.rt-name {
+  font: var(--t-body);
+  font-weight: 500;
+}
+
+.rt-sub {
+  display: block;
+}
+
+.rt-sub[data-state="error"] {
+  color: var(--danger);
+}
+
+.rt-error-note {
+  margin: var(--s-2) 0 0;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.rt-log {
+  max-width: 560px;
+  margin: var(--s-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rt-log .act-row {
+  padding-left: 0;
+  color: var(--label-soft);
+}
+
+.rt-log-row[data-tone="danger"] .act-text {
+  color: var(--danger);
+}
+
+.rt-log-row[data-tone="warn"] .act-text {
+  color: var(--waiting);
+}
+
+.rt-row .lb-actions {
+  align-self: center;
+  gap: var(--s-2);
+  opacity: 1;
+}
+
+.rt-new {
+  display: inline-block;
+  margin-top: var(--s-3);
+  font: var(--t-body);
+}
+
+.rt-new:disabled {
+  color: var(--label-3);
+  text-decoration: none;
+}
+
+.rt-new .cn-hint {
+  margin-left: var(--s-2);
+}
+
+/* A new routine: a form card (§3.14 desktop). */
+.rt-form {
+  display: grid;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+  padding: var(--s-5);
+  border-radius: var(--r-xl);
+  background: var(--bg-cell);
+  box-shadow: var(--shadow-1);
+}
+
+.rt-form-grid {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.rt-field {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--s-4);
+  font: var(--t-body);
+}
+
+.rt-field > span {
+  text-align: right;
+  color: var(--label);
+}
+
+.rt-field > .popup,
+.rt-field > select {
+  justify-self: start;
+}
+
+.rt-check {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-left: calc(120px + var(--s-4));
+  font: var(--t-body);
+}
+
+.rt-check input {
+  accent-color: var(--accent-fill);
+}
+
+.rt-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  padding-top: var(--s-2);
+}
+
+.rt-form-actions code {
+  font: 12px / 1 var(--font-mono);
+  color: var(--label-2);
+}
+
+/* Drafts a routine prepared: a card with the draft as reading text. */
+.rt-drafts {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rt-draft {
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-xl);
+  background: var(--bg-cell);
+  box-shadow: var(--shadow-1);
+}
+
+.rt-draft-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+}
+
+.rt-draft-title {
+  min-width: 0;
+  font: var(--t-headline);
+}
+
+.rt-draft-head .lb-meta {
+  margin: 0 0 0 auto;
+}
+
+.rt-draft-body {
+  margin: var(--s-3) 0 0;
+  font: var(--t-reading);
+  line-height: 1.6;
+  color: var(--label);
+  white-space: pre-wrap;
+}
+
+.rt-draft-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+}
+
+.rt-draft-actions .cn-hint {
+  flex: 1;
+  min-width: 0;
+}
+
+.rt-early-state {
+  flex: none;
+  align-self: center;
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.rt-early-state[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.rt-early-state[data-tone="ok"] {
+  color: var(--success);
+}
+
+/* The account's … menu floats at the title line, so each bot's popup can sit at the
+   trailing edge, aligned with the 連接… buttons below. */
+.cn-row > .lb-actions {
+  position: absolute;
+  top: 8px;
+  right: var(--s-3);
+}
+
+.cn-row:has(> .lb-actions .lb-act) > .lb-main > .cn-head {
+  padding-right: 120px;
+}

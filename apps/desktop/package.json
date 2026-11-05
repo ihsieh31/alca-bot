@@ -1,0 +1,34 @@
+{
+  "name": "@alca/desktop",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Desktop: local loopback server (HTTP + SSE) and the Traditional Chinese web UI",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/main.ts"
+  },
+  "dependencies": {
+    "@alca/browser": "workspace:*",
+    "@alca/channel-telegram": "workspace:*",
+    "@alca/config": "workspace:*",
+    "@alca/connectors": "workspace:*",
+    "@alca/core": "workspace:*",
+    "@alca/design": "workspace:*",
+    "@alca/engines": "workspace:*",
+    "@alca/link": "workspace:*",
+    "@alca/memory": "workspace:*",
+    "@alca/os": "workspace:*",
+    "@alca/policy": "workspace:*",
+    "@alca/protocol": "workspace:*",
+    "@alca/push": "workspace:*",
+    "@alca/store": "workspace:*"
+  },
+  "devDependencies": {
+    "@alca/hands": "workspace:*",
+    "@alca/rendezvous": "workspace:*"
+  }
+}

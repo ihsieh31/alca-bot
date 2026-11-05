@@ -1,0 +1,20 @@
+# gitleaks findings reviewed before the repository goes public (docs/RELEASE.md § public): every one is a
+# test fixture — made-up keys (ghp_abc…xyz, sk-lan-key-…), the RFC 8291 test vector, a truncated PEM
+# and a sample JWT for the redaction tests. Reviewed 2026-11-05 (Phase E). A new finding is not here and fails
+# scripts/pre-public-check.sh until someone looks at it.
+19df3b00338580d72e873e69f49ee1bd8510182d:apps/desktop/test/providers.test.ts:generic-api-key:139
+19df3b00338580d72e873e69f49ee1bd8510182d:apps/desktop/test/providers.test.ts:generic-api-key:149
+2990027e978e62a5c2a1df568c4350142191316b:packages/push/test/push.test.ts:generic-api-key:22
+505b46ea82eb16a8426adbab359231500fae0102:apps/desktop/test/web-search.test.ts:generic-api-key:12
+59aa97b728141aa0914479a1a693572f53f2d9fe:apps/desktop/test/link-outbox.test.ts:generic-api-key:142
+59aa97b728141aa0914479a1a693572f53f2d9fe:apps/desktop/test/link-outbox.test.ts:generic-api-key:151
+59d7d588ec73e1ce142a8e154b63eae169bb7010:packages/core/test/harness-continue.test.ts:github-pat:18
+930dd0115da739e64e15816f67da6d88a87d794d:packages/core/test/harness-web-search.test.ts:generic-api-key:23
+c30363024debb528b8bb00646e412f8acc7ba1e2:apps/desktop/test/connectors.test.ts:generic-api-key:90
+eeb2bfc5674a877e75bce3a2d57dee2f0f3756c0:packages/memory/test/redact.test.ts:jwt:9
+eeb2bfc5674a877e75bce3a2d57dee2f0f3756c0:packages/memory/test/redact.test.ts:private-key:11
+f62493c88d3b6218263c023c26d332bfe9d1a582:packages/evals/scenarios/harness-web-search.ts:generic-api-key:23
+# Same made-up ghp_abc…xxx fixture, reached again on branches merged after 2026-11-05 (reviewed 2026-11-06).
+2855c15c411a116eae94c6648f0dbae74fd8dbbb:packages/core/test/harness-continue.test.ts:github-pat:18
+2855c15c411a116eae94c6648f0dbae74fd8dbbb:packages/evals/scenarios/harness-d2.ts:github-pat:250
+ba13fadba28c410128e041fd6d991c3a12a39ca9:packages/evals/scenarios/harness-d2.ts:github-pat:250

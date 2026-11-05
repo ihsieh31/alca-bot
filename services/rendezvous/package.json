@@ -1,0 +1,22 @@
+{
+  "name": "@alca/rendezvous",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Alca Link rendezvous: matches pairing codes and forwards ciphertext; with Google sign-in (P10) keeps keyed hashes of accounts → computers",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./relay": "./src/relay.ts",
+    "./accounts": "./src/accounts.ts",
+    "./google": "./src/google.ts",
+    "./rate": "./src/rate.ts"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/main.ts"
+  },
+  "dependencies": {
+    "@alca/link": "workspace:*",
+    "@alca/os": "workspace:*"
+  }
+}

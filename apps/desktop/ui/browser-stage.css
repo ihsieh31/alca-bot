@@ -1,0 +1,335 @@
+/* Alca desktop UI — browser panel, continued (split out of browser.css, review L9; same rules,
+   same order): the live frame, the approval card, the foot, empty state, first-run download,
+   the Chrome import and the top-bar toggle. */
+
+/* ── Stage: the live frame ──────────────────────────────────── */
+.bp-stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
+  padding: 0 var(--space-4) var(--space-4);
+  overflow-y: auto;
+}
+
+.bp-frame {
+  position: relative;
+  flex: none;
+  width: 100%;
+  aspect-ratio: var(--frame-ratio, 16 / 10);
+  overflow: hidden;
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-md);
+  background: var(--c-surface-sunken);
+  box-shadow: var(--shadow-md);
+  outline: none;
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.bp-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: top center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.bp-frame[data-controller="user"] {
+  border-color: var(--waiting);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--waiting) 25%, transparent),
+    var(--shadow-2);
+  cursor: crosshair;
+}
+
+.bp-frame:focus-visible {
+  box-shadow: var(--shadow-ring);
+}
+
+.bp-blank {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--c-ink-faint);
+  font-size: var(--text-xs);
+}
+
+.bp-caption {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: calc(100% - 32px);
+  height: 30px;
+  padding: 0 var(--space-3);
+  transform: translateX(-50%);
+  border-radius: var(--r-sm);
+  background: var(--overlay);
+  color: var(--on-overlay);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-md);
+  line-height: 1;
+}
+
+.bp-caption span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* No pulsing dot (§2.7): the caption's words say who is in control. */
+.bp-caption i {
+  display: none;
+}
+
+.bp-frame[data-controller="user"] .bp-caption {
+  top: var(--space-3);
+  bottom: auto;
+  background: var(--c-attention);
+  color: var(--c-attention-ink);
+}
+
+.bp-frame[data-controller="user"] .bp-caption i {
+  background: var(--c-attention-ink);
+}
+
+/* Approval card over the frame for sensitive browser steps. */
+/* §3.5: the decision lives in the chat; here one plain 「需要你」 receipt line — no tinted
+   card, no gradient. The icon and text take the waiting colour. */
+.bp-approval {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  padding: var(--s-2) var(--s-1);
+  color: var(--waiting);
+  font: var(--t-body);
+}
+
+.bp-approval .receipt-icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+}
+
+.bp-approval[data-tone="calm"] {
+  color: var(--label-2);
+}
+
+/* ── Foot: what happened last ───────────────────────────────── */
+.bp-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: var(--space-2) var(--space-5);
+  border-top: 1px solid var(--c-line);
+  font-size: var(--text-xs);
+  color: var(--c-ink-faint);
+  line-height: var(--leading-ui);
+}
+
+.bp-foot b {
+  color: var(--c-ink-soft);
+  font-weight: var(--weight-medium);
+}
+
+.bp-foot .sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--c-line-strong);
+}
+
+.bp-foot .bp-last {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bp-foot .bp-last[data-ok="false"] {
+  color: var(--c-danger);
+}
+
+/* ── Empty ──────────────────────────────────────────────────── */
+.bp-empty {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  text-align: center;
+}
+
+.bp-empty h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.bp-empty p {
+  max-width: 360px;
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--c-ink-muted);
+  line-height: var(--leading-body);
+}
+
+/* First-run Chromium download */
+.bp-install {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--c-ink-faint);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+}
+
+.bp-install[data-tone="danger"] {
+  border-color: var(--c-danger);
+}
+
+.bp-install p {
+  margin: 0;
+  line-height: var(--leading-body);
+}
+
+.bp-install progress {
+  width: 100%;
+  height: 6px;
+  accent-color: var(--c-ink);
+}
+
+.bp-install .btn {
+  justify-self: start;
+}
+
+.bp-install-note {
+  color: var(--c-ink-muted);
+  font-size: var(--text-xs);
+}
+
+/* 從 Chrome 匯入登入 */
+.bp-link {
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-ink-muted);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bp-link:hover {
+  color: var(--c-ink);
+}
+
+.bi-dialog {
+  width: min(520px, 92vw);
+}
+
+.bi-body {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.bi-note,
+.bi-status {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--c-ink-muted);
+  line-height: var(--leading-body);
+}
+
+.bi-list {
+  max-height: 280px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.bi-list label {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-1) 0;
+  font-size: var(--text-sm);
+}
+
+.bi-list small {
+  margin-left: auto;
+  color: var(--c-ink-muted);
+}
+
+.bi-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Top-bar toggle */
+/* ── 素 Plain ───────────────────────────────────────────────── */
+.bp-stage {
+  padding: var(--s-3);
+}
+
+.bp-frame {
+  border: 0;
+  border-radius: var(--r-lg);
+  box-shadow:
+    0 0 0 0.5px var(--separator),
+    var(--shadow-1);
+}
+
+.bp-caption {
+  border-radius: var(--r-sm);
+  background: var(--overlay);
+  color: var(--on-overlay);
+  font: var(--t-small);
+}
+
+.bp-caption i {
+  display: none;
+}
+
+p.bp-approval {
+  display: flex;
+  margin: var(--s-3) 0 0;
+  padding: 0 var(--s-1);
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+p.bp-approval .receipt-icon,
+p.bp-approval .receipt-text {
+  color: var(--waiting);
+}
+
+.bp-foot {
+  padding: var(--s-3) var(--s-4);
+  border-top: 0;
+  box-shadow: inset 0 0.5px 0 var(--separator);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.bp-foot .sep {
+  display: none;
+}
+
+.bp-foot .bp-last {
+  margin-left: auto;
+}

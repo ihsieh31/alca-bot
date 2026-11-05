@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Alca</title>
+    <link rel="stylesheet" href="/ui/tokens.css" />
+    <link rel="stylesheet" href="/ui/base.css" />
+    <link rel="stylesheet" href="/ui/app.css" />
+    <link rel="stylesheet" href="/ui/components.css" />
+    <link rel="stylesheet" href="/ui/composer.css" />
+    <link rel="stylesheet" href="/ui/browser.css" />
+    <link rel="stylesheet" href="/ui/browser-stage.css" />
+    <link rel="stylesheet" href="/ui/workers.css" />
+    <link rel="stylesheet" href="/ui/worker-harness.css" />
+    <link rel="stylesheet" href="/ui/link.css" />
+    <link rel="stylesheet" href="/ui/remote.css" />
+    <link rel="stylesheet" href="/ui/library.css" />
+    <link rel="stylesheet" href="/ui/skills.css" />
+    <link rel="stylesheet" href="/ui/connect.css" />
+    <link rel="stylesheet" href="/ui/team.css" />
+    <link rel="stylesheet" href="/ui/bot-edit.css" />
+    <link rel="stylesheet" href="/ui/addons.css" />
+    <link rel="stylesheet" href="/ui/providers.css" />
+    <link rel="stylesheet" href="/ui/settings.css" />
+    <link rel="stylesheet" href="/ui/forms.css" />
+    <script type="module" src="/ui/app.ts"></script>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <aside class="sidebar" aria-label="對話列表" data-i18n-aria-label="desktop.index.chatList">
+        <div class="side-head">
+          <label class="side-search search">
+            <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.25" /><path d="m10.25 10.25 3 3" /></svg>
+            <input id="thread-search" type="search" placeholder="搜尋對話" autocomplete="off" data-i18n-placeholder="desktop.index.searchChats" />
+            <kbd class="kbd-hint">⌘K</kbd>
+          </label>
+        </div>
+
+        <nav class="side-nav" aria-label="動作" data-i18n-aria-label="desktop.index.actions">
+          <button class="nav-item" id="needs-you" type="button" aria-label="需要你" hidden data-i18n-aria-label="desktop.index.needsYou">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 8.5V3.75a1 1 0 0 1 2 0V7.5M7.5 7V2.75a1 1 0 0 1 2 0V7M9.5 7.25V3.75a1 1 0 0 1 2 0v5.5c0 2.6-1.7 4.5-4.25 4.5-1.6 0-2.6-.7-3.4-1.9L2.6 9.8a1 1 0 0 1 1.6-1.2L5.5 10" /></svg>
+            <span data-i18n="desktop.index.needsYou">需要你</span>
+            <span class="nav-badge" id="needs-you-count" data-tone="waiting">0</span>
+          </button>
+          <button class="nav-item" id="routines-toggle" type="button" aria-label="例行工作" aria-pressed="false" hidden data-i18n-aria-label="desktop.index.routines">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.75" /><path d="M8 5v3l2 1.25" /></svg>
+            <span data-i18n="desktop.index.routines">例行工作</span>
+            <span class="nav-badge" id="routines-badge" data-tone="waiting" hidden>0</span>
+          </button>
+        </nav>
+
+        <div class="roster" id="team-roster" hidden></div>
+
+        <nav class="thread-list" id="thread-list" aria-label="歷史紀錄" data-i18n-aria-label="desktop.index.history"></nav>
+
+        <nav class="side-nav side-library" aria-label="資料庫" data-i18n-aria-label="desktop.index.library">
+          <p class="section-label" data-i18n="desktop.index.library">資料庫</p>
+          <button class="nav-item" id="team-toggle" type="button" aria-label="團隊" aria-pressed="false" hidden data-i18n-aria-label="desktop.index.team">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="6" cy="6" r="2.25" /><path d="M2 13c.4-2.2 2-3.5 4-3.5s3.6 1.3 4 3.5" /><path d="M10.5 3.9a2.25 2.25 0 0 1 0 4.2M11.75 9.75c1.2.4 2 1.6 2.25 3.25" /></svg>
+            <span data-i18n="desktop.index.team">團隊</span>
+            <span class="nav-badge" id="team-badge" data-tone="waiting" hidden>0</span>
+          </button>
+          <button class="nav-item" id="library-toggle" type="button" aria-label="記憶與技能" aria-pressed="false" hidden data-i18n-aria-label="desktop.index.memoryAndSkills">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5h7a1 1 0 0 1 1 1v10l-4.5-2.75L3.5 13.5v-10a1 1 0 0 1 1-1z" /></svg>
+            <span data-i18n="desktop.index.memoryAndSkills">記憶與技能</span>
+            <span class="nav-badge" id="library-badge" data-tone="waiting" hidden>0</span>
+          </button>
+          <button class="nav-item" id="connect-toggle" type="button" aria-label="連接" aria-pressed="false" hidden data-i18n-aria-label="desktop.index.connections">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6.75 9.25 9.25 6.75" /><path d="M7.4 4.6 8.5 3.5a2.6 2.6 0 0 1 3.7 3.7L11.1 8.3M8.6 11.4 7.5 12.5a2.6 2.6 0 0 1-3.7-3.7L4.9 7.7" /></svg>
+            <span data-i18n="desktop.index.connections">連接</span>
+          </button>
+          <button class="nav-item" id="providers-toggle" type="button" aria-label="模型與供應商" aria-pressed="false" hidden data-i18n-aria-label="desktop.index.modelsAndProviders">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="2.5" /><path d="M6 6.75h4M6 9.25h2.5" /></svg>
+            <span data-i18n="desktop.index.models">模型</span>
+          </button>
+          <button class="nav-item" id="settings-toggle" type="button" title="設定（⌘,）" aria-label="設定" data-i18n-title="desktop.index.settingsShortcut" data-i18n-aria-label="desktop.index.settings">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2" /><path d="M8 1.75v1.5M8 12.75v1.5M14.25 8h-1.5M3.25 8h-1.5M12.4 3.6l-1.06 1.06M4.66 11.34 3.6 12.4M12.4 12.4l-1.06-1.06M4.66 4.66 3.6 3.6" /></svg>
+            <span data-i18n="desktop.index.settings">設定</span>
+          </button>
+          <!-- Moved into 設定 (§3.2): kept as hidden hooks the app and 設定 still call. -->
+          <button id="level-label" type="button" hidden aria-label="設定" data-i18n-aria-label="desktop.index.settings"></button>
+          <button id="phone-toggle" type="button" hidden aria-label="手機與裝置" data-i18n-aria-label="desktop.index.phonesAndDevices"></button>
+          <button id="theme-toggle" type="button" hidden aria-label="切換外觀" data-i18n-aria-label="desktop.index.switchAppearance"></button>
+          <button id="help-toggle" type="button" hidden aria-label="快捷鍵" data-i18n-aria-label="desktop.index.shortcuts"></button>
+        </nav>
+      </aside>
+
+      <main class="main" id="main">
+        <header class="topbar">
+          <button class="tool-btn" id="sidebar-toggle" type="button" title="側邊欄（⌘\）" aria-label="顯示或隱藏側邊欄" data-i18n-title="desktop.index.sidebarShortcut" data-i18n-aria-label="desktop.index.toggleSidebar">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.75" y="4" width="14.5" height="12" rx="2.5" /><path d="M7.75 4v12" /></svg>
+          </button>
+          <h1 class="thread-title" id="thread-title">Alca</h1>
+          <span class="status sr-only" id="run-status" data-state="idle" role="status"><i></i><span data-i18n="desktop.index.ready">就緒</span></span>
+          <div class="topbar-right">
+            <button class="tool-btn" id="interrupt" type="button" title="停止（Esc）" aria-label="停止" hidden data-i18n-title="desktop.index.stopEsc" data-i18n-aria-label="desktop.index.stop">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.25" /><rect x="7.5" y="7.5" width="5" height="5" rx="1" /></svg>
+            </button>
+            <button class="tool-btn browser-toggle" id="browser-toggle" type="button" aria-pressed="false" title="瀏覽器（⌘B）" aria-label="瀏覽器" hidden data-i18n-title="desktop.index.browserB" data-i18n-aria-label="desktop.index.browser">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.25" /><path d="M2.75 10h14.5M10 2.75c2 2 3 4.4 3 7.25s-1 5.25-3 7.25c-2-2-3-4.4-3-7.25s1-5.25 3-7.25z" /></svg>
+              <span class="count" id="browser-count" hidden>0</span>
+            </button>
+            <button class="tool-btn workers-toggle" id="workers-toggle" type="button" aria-pressed="false" title="任務（⌘I）" aria-label="任務" hidden data-i18n-title="desktop.index.workersI" data-i18n-aria-label="desktop.index.workers">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.75" y="4" width="14.5" height="12" rx="2.5" /><path d="M12.25 4v12" /></svg>
+              <span class="count" id="workers-count" hidden>0</span>
+            </button>
+            <button class="tool-btn" id="new-thread" type="button" title="新對話（⌘J）" aria-label="新對話" data-i18n-title="desktop.index.newChatShortcut" data-i18n-aria-label="desktop.index.newChat">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M9 3.5H5.5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V11" /><path d="m14.2 3.3 2.5 2.5-6.6 6.6-3.1.6.6-3.1z" /></svg>
+            </button>
+          </div>
+        </header>
+
+        <section class="offer-strip" id="offers" aria-label="主動留意" hidden data-i18n-aria-label="desktop.index.proactiveSuggestions"></section>
+        <section class="timeline" id="timeline" aria-live="polite"></section>
+
+        <form class="composer" id="composer">
+          <div class="composer-box">
+            <textarea id="composer-input" rows="1" placeholder="傳訊息給 Alca" aria-label="訊息" data-i18n-placeholder="desktop.index.whatWouldYouLikeAlca" data-i18n-aria-label="desktop.index.message"></textarea>
+            <div class="composer-tools">
+              <span class="target-chip" id="target-chip" hidden></span>
+              <span class="engine-chip" id="engine-label" hidden></span>
+              <button class="send-btn" id="send" type="submit" aria-label="送出" data-i18n-aria-label="desktop.index.send">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 15V5M5.5 9.5 10 5l4.5 4.5" /></svg>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="starters" id="starters" hidden></div>
+      </main>
+
+      <section class="library" id="library" aria-label="記憶與技能" hidden data-i18n-aria-label="desktop.index.memoryAndSkills"></section>
+      <section class="connect" id="connect" aria-label="連接與例行工作" hidden data-i18n-aria-label="desktop.index.connectionsAndRoutines"></section>
+      <section class="library team" id="team" aria-label="團隊" hidden data-i18n-aria-label="desktop.index.team"></section>
+      <aside class="browser" id="browser" aria-label="瀏覽器" hidden data-i18n-aria-label="desktop.index.browser"></aside>
+      <aside class="workers" id="workers" aria-label="任務" hidden data-i18n-aria-label="desktop.index.workers"></aside>
+    </div>
+
+    <div class="overlay" id="help" hidden>
+      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="help-title">
+        <h2 id="help-title" data-i18n="desktop.index.keyboardShortcuts">鍵盤快捷鍵</h2>
+        <dl class="shortcuts">
+          <dt><kbd>⌘</kbd><kbd>J</kbd></dt><dd data-i18n="desktop.index.newChat">新對話</dd>
+          <dt><kbd>⌘</kbd><kbd>K</kbd></dt><dd data-i18n="desktop.index.searchChats">搜尋對話</dd>
+          <dt><kbd>Alt</kbd><kbd>↑</kbd> <kbd>↓</kbd></dt><dd data-i18n="desktop.index.previousNextChat">上一個／下一個對話</dd>
+          <dt><kbd>/</kbd></dt><dd data-i18n="desktop.index.focusTheInputBox">聚焦輸入框</dd>
+          <dt><kbd>@</kbd></dt><dd data-i18n="desktop.index.findATeammateInThe">在輸入框找一位隊友（↑↓ 選、Enter 確定）</dd>
+          <dt><kbd>Esc</kbd></dt><dd data-i18n="desktop.index.interruptTheCurrentTurn">中斷目前回合</dd>
+          <dt><kbd>⌘</kbd><kbd>B</kbd></dt><dd data-i18n="desktop.index.toggleTheBrowserPanel">開關瀏覽器面板</dd>
+          <dt><kbd>⌘</kbd><kbd>I</kbd></dt><dd data-i18n="desktop.index.toggleTheWorkerPanel">開關工人面板</dd>
+          <dt><kbd>⌘</kbd><kbd>⇧</kbd><kbd>M</kbd></dt><dd data-i18n="desktop.index.memoryAndSkills">記憶與技能</dd>
+          <dt><kbd>⌘</kbd><kbd>Enter</kbd></dt><dd data-i18n="desktop.index.allowOnceTheOldestApproval">允許一次（最早的批准卡）</dd>
+          <dt><kbd>⌘</kbd><kbd>⇧</kbd><kbd>⌫</kbd></dt><dd data-i18n="desktop.index.decline">拒絕</dd>
+          <dt><kbd>1</kbd>–<kbd>9</kbd></dt><dd data-i18n="desktop.index.pickAQuestionCardsOption">選擇提問卡的選項</dd>
+          <dt><kbd>?</kbd></dt><dd data-i18n="desktop.index.showThisHelp">顯示這個說明</dd>
+        </dl>
+        <p class="sheet-note"><span data-i18n="desktop.index.onWindowsLinux">Windows／Linux 上</span> <kbd>⌘</kbd> <span data-i18n="desktop.index.means">即</span> <kbd>Ctrl</kbd><span data-i18n="desktop.index.text">。</span></p>
+      </div>
+    </div>
+
+    <div class="lock" id="lock" hidden>
+      <div class="lock-card">
+        <h2 data-i18n="desktop.index.localKeyNeeded">需要本機金鑰</h2>
+        <p><span data-i18n="desktop.index.openTheAddressTheTerminal">請用終端機印出的網址開啟（網址最後帶著</span> <code>#token=…</code><span data-i18n="desktop.index.theKeyIsStoredOnly">）。這個金鑰只存在你的電腦上。</span></p>
+      </div>
+    </div>
+  </body>
+</html>

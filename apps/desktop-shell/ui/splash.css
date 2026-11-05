@@ -1,0 +1,125 @@
+/* The shell's own page (墨 Mono): shown only until the core's UI loads. */
+:root {
+  --canvas: #0a0a0a;
+  --ink: #f2f2f0;
+  --muted: #8a8a86;
+  --faint: #5a5a57;
+  --attention: #f2a33a;
+  --danger: #ff6b5b;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --canvas: #fafaf8;
+    --ink: #141414;
+    --muted: #6b6b67;
+    --faint: #a3a39e;
+    --attention: #b86e00;
+    --danger: #c8321f;
+    color-scheme: light;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+.splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+}
+
+.mark {
+  color: var(--ink);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+.word {
+  margin: 4px 0 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.spin {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.splash[data-kind="restarting"] .line {
+  color: var(--attention);
+}
+
+.splash[data-kind="stopped"] .line {
+  color: var(--danger);
+}
+
+.splash[data-kind="stopped"] .spin {
+  display: none;
+}
+
+.splash[data-kind="stopped"] .mark {
+  animation: none;
+  opacity: 0.5;
+}
+
+.log {
+  margin: 0;
+  color: var(--faint);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  user-select: text;
+}
+
+.foot {
+  position: fixed;
+  bottom: 28px;
+  margin: 0;
+  color: var(--faint);
+  font-size: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes breathe {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark,
+  .spin {
+    animation: none;
+  }
+}

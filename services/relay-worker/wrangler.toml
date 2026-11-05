@@ -1,0 +1,48 @@
+# Alca Link relay on Cloudflare Workers (P10). Nothing secret or deployment-specific lives here:
+#   wrangler secret put ALCA_RELAY_SECRET     (32+ random characters; keys the account hash)
+# then set the variables below in the dashboard (Workers & Pages → alca-relay → Settings →
+# Variables) or on the command line, and `wrangler deploy`. See docs/DEPLOY.md § 2a.
+#
+# Variables (plain text, not secrets):
+#   GOOGLE_CLIENT_IDS  comma list: the phone site's Web client ID (+ a Desktop client ID if used)
+#   ALLOWED_ORIGINS    comma list of browser origins allowed to open a relay socket — the phone
+#                      site, e.g. https://alca.example.com. Required for an official deployment:
+#                      empty = any website can open sockets (/healthz warns).
+#   RELAY_MODE         "production" for the official deployment: an empty ALLOWED_ORIGINS then
+#                      refuses browser sockets and /healthz answers ok:false.
+#   MAX_SOCKETS        sockets the one relay object accepts (default 5000)
+#
+# keep_vars: a deploy keeps the variables already set in the dashboard. There is no [vars]
+# table on purpose: its values would replace the dashboard's on every `wrangler deploy`.
+# For a one-off: wrangler deploy --var RELAY_MODE:production --var ALLOWED_ORIGINS:https://…
+name = "alca-relay"
+main = "src/worker.ts"
+compatibility_date = "2026-10-01"
+keep_vars = true
+# One endpoint: the relay's custom domain (the official service has no workers.dev fallback).
+# workers_dev / preview_urls false keep `wrangler deploy` from turning the *.workers.dev route
+# (and the Preview URLs) back on. A self-hoster without a custom domain sets workers_dev = true.
+workers_dev = false
+preview_urls = false
+
+# Every relay socket: pairing codes, mailboxes, the Google-account directory.
+[[durable_objects.bindings]]
+name = "RELAY"
+class_name = "RelayObject"
+
+# Review M3: webhook mailboxes (/v0/hooks/<id>), one object per mailbox id.
+[[durable_objects.bindings]]
+name = "HOOKS"
+class_name = "HookObject"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RelayObject"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["HookObject"]
+
+# Your relay's hostname (the only endpoint while workers_dev = false). Set it here in your fork,
+# or under Settings → Domains & Routes in the dashboard:
+# routes = [{ pattern = "relay.example.com", custom_domain = true }]

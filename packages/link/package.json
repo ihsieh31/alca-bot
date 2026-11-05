@@ -1,0 +1,23 @@
+{
+  "name": "@alca/link",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Alca Link: short-code + QR pairing (SPAKE2), signed ephemeral sessions, sealed frames, relay / LAN transports",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./browser": "./src/browser.ts",
+    "./bytes": "./src/bytes.ts",
+    "./identity": "./src/identity.ts",
+    "./relay-protocol": "./src/relay-protocol.ts",
+    "./ws": "./src/node/ws.ts"
+  },
+  "dependencies": {
+    "@noble/curves": "2.3.0",
+    "@noble/hashes": "2.3.0"
+  },
+  "optionalDependencies": {
+    "werift": "0.26.0"
+  }
+}

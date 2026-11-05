@@ -1,0 +1,399 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://alca.invalid/spec/alca-learning-channel.v0.schema.json",
+  "title": "Alca learning channel v0",
+  "description": "Generated from packages/protocol/src/learning.ts. Do not edit by hand; run `pnpm spec:gen`.",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "memory.changed"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "botId": {
+              "type": "string",
+              "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "memoryId": {
+              "type": "string",
+              "pattern": "^mem_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "added",
+                "superseded",
+                "confirmed",
+                "rescoped",
+                "forgotten"
+              ]
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "fact",
+                "preference",
+                "person",
+                "project"
+              ]
+            },
+            "origin": {
+              "type": "string",
+              "enum": [
+                "user",
+                "inferred"
+              ]
+            },
+            "scope": {
+              "type": "string",
+              "enum": [
+                "shared",
+                "bot"
+              ]
+            },
+            "replaces": {
+              "type": "string",
+              "pattern": "^mem_[0-9A-HJKMNP-TV-Z]{26}$"
+            },
+            "threadId": {
+              "type": "string",
+              "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+            }
+          },
+          "required": [
+            "botId",
+            "memoryId",
+            "op",
+            "kind",
+            "origin",
+            "scope"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "skill.proposed"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "skill": {
+              "type": "object",
+              "properties": {
+                "skillId": {
+                  "type": "string",
+                  "pattern": "^skl_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "botId": {
+                  "type": "string",
+                  "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "proposed",
+                    "active",
+                    "disabled",
+                    "rejected"
+                  ]
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "pendingVersion": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "triggers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "stepCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "actionClasses": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "read",
+                      "write",
+                      "execute",
+                      "network",
+                      "payment",
+                      "send",
+                      "delete",
+                      "publish"
+                    ]
+                  }
+                },
+                "sourceThreadId": {
+                  "type": "string",
+                  "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "sourceWorkerId": {
+                  "type": "string",
+                  "pattern": "^wkr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "uses": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                }
+              },
+              "required": [
+                "skillId",
+                "botId",
+                "name",
+                "status",
+                "version",
+                "triggers",
+                "stepCount",
+                "actionClasses",
+                "uses",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "skill"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "v": {
+          "type": "number",
+          "const": 0
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^evt_[0-9A-HJKMNP-TV-Z]{26}$"
+        },
+        "ts": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "type": "string",
+          "const": "skill.updated"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "skill": {
+              "type": "object",
+              "properties": {
+                "skillId": {
+                  "type": "string",
+                  "pattern": "^skl_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "botId": {
+                  "type": "string",
+                  "pattern": "^bot_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "proposed",
+                    "active",
+                    "disabled",
+                    "rejected"
+                  ]
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "pendingVersion": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "triggers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "stepCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "actionClasses": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "read",
+                      "write",
+                      "execute",
+                      "network",
+                      "payment",
+                      "send",
+                      "delete",
+                      "publish"
+                    ]
+                  }
+                },
+                "sourceThreadId": {
+                  "type": "string",
+                  "pattern": "^thr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "sourceWorkerId": {
+                  "type": "string",
+                  "pattern": "^wkr_[0-9A-HJKMNP-TV-Z]{26}$"
+                },
+                "uses": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                }
+              },
+              "required": [
+                "skillId",
+                "botId",
+                "name",
+                "status",
+                "version",
+                "triggers",
+                "stepCount",
+                "actionClasses",
+                "uses",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "approved",
+                "rejected",
+                "edited",
+                "disabled",
+                "enabled",
+                "deleted",
+                "used",
+                "revision"
+              ]
+            }
+          },
+          "required": [
+            "skill",
+            "op"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "v",
+        "id",
+        "ts",
+        "seq",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

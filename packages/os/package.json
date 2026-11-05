@@ -1,0 +1,12 @@
+{
+  "name": "@alca/os",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Low-level OS helpers shared by every package, with no dependencies: atomic settings / secret file writes with a .bak, the one SecretStore interface, the sealed local vault and where its key lives",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {}
+}

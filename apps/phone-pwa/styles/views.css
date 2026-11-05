@@ -1,0 +1,455 @@
+/* Screens built from the Plain parts: the 對話 list, the approval sheet, tasks
+   (list, detail, what a task asks), the 進行中 / 資料庫 / 設定 tabs. */
+
+/* ── 對話 list (plain, Messages-style) ───────────────────── */
+.threads-screen .root-scroll {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.threads-screen .large-title {
+  padding: 0 var(--s-4);
+}
+
+.threads-body > .ad-sec,
+.threads-body > .inline-error {
+  padding: 0 var(--s-4);
+}
+
+.row-av {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+  font-family: var(--font-display);
+  font-size: var(--t-subhead);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.row-av[data-size="28"] {
+  width: 28px;
+  height: 28px;
+  font-size: var(--t-caption);
+}
+
+.tr-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.thread-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: 64px;
+  padding: 10px var(--s-4);
+  border: 0;
+  background: var(--bg);
+  color: var(--label);
+  text-align: left;
+  transition: transform var(--d-base) var(--e-spring);
+  touch-action: pan-y;
+}
+
+.thread-row[data-dragging="true"] {
+  transition: none;
+}
+
+.thread-row:active:not([data-dragging="true"]) {
+  background: var(--fill-hover);
+}
+
+/* Hairline from the text start to the right edge. */
+.thread-row::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: var(--s-4);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+/* A conversation with nothing to report is one line (title and time). */
+.thread-row:not(:has(.tr-sub)) {
+  min-height: 52px;
+}
+
+.tr-wrap:last-child .thread-row::after {
+  display: none;
+}
+
+.tr-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tr-top {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.tr-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--t-body);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tr-time {
+  flex: none;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  font-variant-numeric: tabular-nums;
+}
+
+.tr-time[data-tone="waiting"],
+.tr-sub[data-tone="waiting"] {
+  color: var(--waiting);
+}
+
+.tr-time[data-tone="waiting"] {
+  font-weight: 600;
+}
+
+.tr-sub {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  overflow: hidden;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tr-sub .spin {
+  width: 12px;
+  height: 12px;
+}
+
+.tr-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+}
+
+.tr-act {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 80px;
+  border: 0;
+  background: var(--label-2);
+  color: #ffffff;
+  font-size: var(--t-footnote);
+  font-weight: 500;
+}
+
+.tr-act[data-tone="danger"] {
+  background: var(--danger-fill);
+}
+
+.list-sentinel {
+  height: 1px;
+}
+
+.as-cells {
+  border-top: 0.5px solid var(--separator);
+  border-radius: 0;
+  background: transparent;
+}
+
+.as-cells .row {
+  font-size: var(--t-subhead);
+}
+
+/* ── Approval sheet (§3.5) ──────────────────────────────── */
+.card-sheet-wrap .sheet-body {
+  padding: 0 var(--s-4);
+}
+
+.approval {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--s-2);
+}
+
+.ap-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-1);
+  padding: var(--s-2) 0 var(--s-5);
+}
+
+.ap-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: var(--s-2);
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+}
+
+.approval[data-tier="confirm"] .ap-icon {
+  color: var(--waiting);
+}
+
+.approval[data-tier="danger"] .ap-icon {
+  color: var(--danger);
+}
+
+.question .ap-icon {
+  color: var(--accent);
+}
+
+.ap-eyebrow {
+  margin: 0;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+}
+
+.ap-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--t-title2);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.ap-sub {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ap-facts {
+  margin-bottom: var(--s-4);
+}
+
+.ap-facts .row-value {
+  max-width: 62%;
+  color: var(--label);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.ap-facts .row-title {
+  color: var(--label-2);
+  white-space: nowrap;
+}
+
+.ap-facts .row-text {
+  flex: none;
+}
+
+.ap-facts .row {
+  justify-content: space-between;
+}
+
+.ap-preview {
+  display: -webkit-box;
+  margin: calc(var(--s-1) * -1) 0 var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--bg-sheet-cell);
+  font-size: var(--t-subhead);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow-wrap: anywhere;
+}
+
+.ap-lock {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin: 0 0 var(--s-4);
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.ap-lock .icon {
+  flex: none;
+  margin-top: 1px;
+}
+
+.ap-actions {
+  display: grid;
+  gap: var(--s-2);
+  margin-top: var(--s-1);
+}
+
+.approval .inline-error {
+  margin: 0 0 var(--s-3);
+  padding: 0 var(--s-4);
+}
+
+.ap-more {
+  margin: var(--s-3) 0 0;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  text-align: center;
+}
+
+.approval .tech {
+  margin-top: var(--s-2);
+}
+
+/* Question: choices as rows, then a field. */
+.q-choices {
+  margin-bottom: var(--s-3);
+}
+
+.q-field {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: var(--touch);
+  padding: 2px 4px 2px var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-sheet-cell);
+}
+
+.field-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--label);
+  font-size: var(--t-field);
+}
+
+.field-input::placeholder {
+  color: var(--placeholder);
+}
+
+.q-send {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent-fill);
+  color: #ffffff;
+}
+
+/* ── Tasks ─────────────────────────────────────────────── */
+.tasks-page,
+.task-page {
+  padding-top: var(--s-2);
+}
+
+.task-head {
+  padding: var(--s-2) 0 var(--s-6);
+}
+
+.task-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--t-title2);
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.task-status {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  margin: var(--s-1) 0 0;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+}
+
+.task-status[data-tone="waiting"] {
+  color: var(--waiting);
+}
+
+.task-status .row-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.task-status .row-icon .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.task-result {
+  margin-bottom: var(--s-8);
+}
+
+.task-result-text {
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-cell);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.act-cells .cells {
+  padding: var(--s-1) var(--s-4);
+}
+
+.act-cells .act-row {
+  min-height: 36px;
+}
+
+.row-sub {
+  white-space: pre-line;
+}
+
+/* ── Settings / library ─────────────────────────────────── */
+.settings-body .row-value > span,
+.settings-body .row-sub > span {
+  white-space: nowrap;
+}
+
+.row[data-muted="true"] {
+  color: var(--label-2);
+}

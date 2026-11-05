@@ -1,0 +1,477 @@
+/* 模型與供應商 (P11) in 素 Plain (§4.2 providers, §3.7, §3.8): the provider list as plain
+   rows with the state as trailing text, an open provider as a grouped form under its row,
+   the model picker as a searchable list, the custom-provider form. */
+
+.pv-sheet {
+  display: flex;
+  flex-direction: column;
+  width: min(640px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  overflow: hidden;
+}
+
+.pv-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-5) var(--s-6) var(--s-4);
+}
+
+.pv-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.pv-sheet .pv-head h2 {
+  margin: 0 0 2px;
+  font: var(--t-headline);
+}
+
+.pv-head .be-hint {
+  margin: 0;
+}
+
+.pv-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--s-2) var(--s-4) var(--s-4);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+/* ── Provider rows ── */
+.pv-list {
+  display: grid;
+}
+
+.pv-item {
+  position: relative;
+  border-radius: var(--r-md);
+}
+
+.pv-item + .pv-item::before,
+.pv-more-body > .pv-item + .pv-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--s-3);
+  right: var(--s-3);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.pv-item:hover::before,
+.pv-item:hover + .pv-item::before,
+.pv-item[data-open="true"]::before,
+.pv-item[data-open="true"] + .pv-item::before {
+  visibility: hidden;
+}
+
+.pv-item[data-open="true"] {
+  margin: var(--s-1) 0;
+  background: var(--fill-hover);
+}
+
+.pv-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+  min-height: 48px;
+  padding: 6px var(--s-3);
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+  text-align: left;
+  cursor: default;
+  transition: background-color var(--d-instant) var(--e-standard);
+}
+
+.pv-row:hover {
+  background: var(--fill-hover);
+}
+
+.pv-item[data-open="true"] > .pv-row:hover {
+  background: transparent;
+}
+
+.pv-row:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Bot editor / settings: the picked provider reads as selected. */
+.pv-list:not([data-compact]) .pv-row[aria-checked="true"] {
+  background: var(--fill-selected);
+}
+
+/* No letter tiles (§2.3, §2.8): the name identifies the provider. */
+.pv-mark {
+  display: none;
+}
+
+.pv-main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pv-name {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  font: var(--t-body);
+  font-weight: 500;
+}
+
+.pv-kind {
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.pv-hint {
+  overflow: hidden;
+  color: var(--label-2);
+  font: var(--t-small);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* State as trailing text, coloured only by meaning (§2.3, §3.12): no chip, no dot. */
+.pv-chip {
+  color: var(--label-2);
+  font: var(--t-small);
+  white-space: nowrap;
+}
+
+.pv-chip[data-status="ready"] {
+  color: var(--success);
+}
+
+.pv-chip[data-status="needs_login"],
+.pv-chip[data-status="needs_key"] {
+  color: var(--waiting);
+}
+
+/* 更多供應商 */
+.pv-more {
+  margin-top: var(--s-2);
+  padding-top: var(--s-2);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.pv-more-sum {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 36px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-md);
+  color: var(--label);
+  font: var(--t-body);
+  list-style: none;
+}
+
+.pv-more-sum::-webkit-details-marker {
+  display: none;
+}
+
+.pv-more-sum::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin: 0 3px 0 1px;
+  border-right: 1.5px solid var(--label-2);
+  border-bottom: 1.5px solid var(--label-2);
+  transform: rotate(-45deg);
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.pv-more[open] > .pv-more-sum::before {
+  transform: rotate(45deg);
+}
+
+.pv-more-sum:hover {
+  background: var(--fill-hover);
+}
+
+.pv-more-sum:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.pv-count {
+  color: var(--label-2);
+  font: var(--t-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.pv-more-body {
+  display: grid;
+}
+
+/* ── An open provider: a grouped form under its row ── */
+.pv-detail {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-1) var(--s-3) var(--s-4);
+}
+
+/* The fix (an install command, where to get a key): the one place a command may show. */
+.pv-fix {
+  margin: 0;
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  color: var(--label);
+  font: 12px / 1.6 var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.pv-fix[data-status="ready"] {
+  font: var(--t-small);
+  line-height: 1.6;
+}
+
+.pv-inline {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.pv-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.pv-cur {
+  margin-left: var(--s-2);
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.pv-cur[data-tone="ok"] {
+  color: var(--success);
+}
+
+.pv-clear {
+  margin-left: var(--s-2);
+}
+
+.pv-native {
+  margin: 0;
+  color: var(--label-2);
+  font: var(--t-small);
+  line-height: 1.6;
+}
+
+.pv-native b {
+  margin-right: var(--s-1);
+  color: var(--label);
+  font-weight: 500;
+}
+
+.pv-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pv-add {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+  padding: var(--s-3) var(--s-1) 0;
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.pv-add .be-hint {
+  margin: 0;
+}
+
+.pv-empty {
+  margin: 0;
+  padding: var(--s-4) var(--s-3);
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+/* ── Model picker: a search field over a list ── */
+.pv-picker {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.pv-models {
+  display: grid;
+  align-content: start;
+  max-height: 232px;
+  overflow-y: auto;
+  padding: var(--s-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  background: var(--bg);
+}
+
+.pv-model {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  width: 100%;
+  min-width: 0;
+  min-height: 30px;
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+  text-align: left;
+  cursor: default;
+}
+
+.pv-model:hover {
+  background: var(--fill-hover);
+}
+
+.pv-model[aria-selected="true"] {
+  background: var(--fill-selected);
+}
+
+.pv-model[aria-selected="true"] .pv-model-name::after {
+  content: "✓";
+  margin-left: var(--s-2);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.pv-model-id {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: baseline;
+  gap: var(--s-2);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.pv-model-name {
+  flex: 0 0 auto;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pv-model-label {
+  flex: 0 100 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--label-2);
+  font: var(--t-small);
+  text-overflow: ellipsis;
+}
+
+.pv-model-new {
+  flex: none;
+  color: var(--accent);
+  font: var(--t-small);
+}
+
+.pv-model-meta {
+  display: flex;
+  flex: none;
+  gap: var(--s-3);
+  color: var(--label-2);
+  font: var(--t-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.pv-models-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin: 0;
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+/* ── Custom provider form ── */
+.pv-form {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-2) 0;
+}
+
+.pv-form-title {
+  margin: 0 0 var(--s-1);
+  font: var(--t-headline);
+}
+
+.pv-form-part {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.pv-form-part[hidden] {
+  display: none;
+}
+
+.pv-form .be-foot {
+  margin: var(--s-2) calc(-1 * var(--s-6)) 0;
+}
+
+.pv-form .popup,
+.pv-detail .popup {
+  justify-self: start;
+}
+
+/* ── Bot editor ── */
+.be-pick {
+  display: grid;
+  gap: var(--s-1);
+  padding: var(--s-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+  background: var(--bg);
+}
+
+.be-pick .pv-row {
+  min-height: 44px;
+}
+
+.be-model {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.pv-list[data-dense] .pv-row {
+  min-height: 36px;
+  padding-block: var(--s-1);
+}
+
+.pv-end {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.pv-change {
+  color: var(--accent);
+  font: var(--t-body);
+}
+
+.be-label-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.pv-reset {
+  margin-left: auto;
+  font-weight: 400;
+}

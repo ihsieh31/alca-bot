@@ -1,0 +1,15 @@
+{
+  "name": "@alca/engines",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Engine interface, capability descriptors, scripted engine, Claude Code persistent CLI engine, OpenAI-compatible + Gemini HTTP engines",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./testing/mock-llm.ts"
+  },
+  "dependencies": {
+    "@alca/os": "workspace:*"
+  }
+}

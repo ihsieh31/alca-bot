@@ -1,0 +1,286 @@
+/* Alca phone — 素 Plain tokens (docs/design/DESIGN-SYSTEM.md §2).
+   Loaded right after the shared tokens.css: the new names (--bg, --label,
+   --accent …) are defined here for the phone, and the old 墨 Mono names are
+   re-pointed at them so every stylesheet picks up the new palette at once.
+   Theme blocks use (0,2,0) selectors so they win over tokens.css by order. */
+
+:root:is([data-theme], :not([data-theme])) {
+  /* ── Type (rem off the iOS body size: Dynamic Type) ───────── */
+  --font-text:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang TC", "Segoe UI Variable Text", "Segoe UI",
+    "Noto Sans TC", "Noto Sans CJK TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-sans: var(--font-text);
+  --font-display:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang TC", "Segoe UI Variable Display",
+    "Segoe UI", "Noto Sans TC", "Noto Sans CJK TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  --t-large-title: 2rem; /* 34 */
+  --t-title1: 1.647rem; /* 28 */
+  --t-title2: 1.294rem; /* 22 */
+  --t-title3: 1.176rem; /* 20 */
+  --t-headline: 1rem; /* 17 / 600 */
+  --t-body: 1rem; /* 17 */
+  --t-callout: 0.941rem; /* 16 */
+  --t-subhead: 0.882rem; /* 15 */
+  --t-footnote: 0.765rem; /* 13 */
+  --t-caption: 0.706rem; /* 12 */
+  /* Text fields never under 16px: iOS zooms the page on focus below that (and the keyboard fit
+     in viewport-calc.ts gives up while zoomed). Dynamic Type xSmall–Medium puts 1rem at 14–16px. */
+  --t-field: max(16px, var(--t-body));
+
+  /* The old scale, re-pointed (phone sizes; nothing under 12). */
+  --text-2xs: var(--t-caption);
+  --text-xs: var(--t-footnote);
+  --text-sm: var(--t-subhead);
+  --text-md: var(--t-body);
+  --text-lg: var(--t-body);
+  --text-xl: var(--t-title3);
+  --text-2xl: var(--t-title2);
+  --text-3xl: var(--t-large-title);
+  --leading-tight: 1.3;
+  --leading-ui: 1.4;
+  --leading-body: 1.6;
+  --tracking-cjk: 0;
+  --tracking-display: 0;
+
+  /* ── Space ─────────────────────────────────────────────── */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-14: 56px;
+
+  /* ── Radius (concentric; capsules only for badges, composer, segment thumb) ── */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-sheet: 14px;
+  --r-bubble: 18px;
+  --r-full: 9999px;
+  --radius-xs: var(--r-sm);
+  --radius-sm: var(--r-md);
+  --radius-md: var(--r-lg);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-sheet);
+  /* No more pills: what used to be a capsule is a rounded rect. */
+  --radius-pill: var(--r-md);
+  --sheet-radius: var(--r-sheet);
+
+  /* ── Layout ───────────────────────────────────────────── */
+  --touch: 44px;
+  --touch-big: 50px;
+  --phone-topbar: 44px;
+  --phone-gutter: 16px;
+  --nav-h: 44px;
+  --tab-h: 49px;
+  --row-h: 44px;
+
+  /* ── Motion ───────────────────────────────────────────── */
+  --d-instant: 80ms;
+  --d-fast: 150ms;
+  --d-base: 250ms;
+  --d-sheet: 420ms;
+  --e-standard: cubic-bezier(0.2, 0, 0, 1);
+  --e-exit: cubic-bezier(0.4, 0, 1, 1);
+  --e-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: var(--e-standard);
+  --dur-fast: var(--d-fast);
+  --dur-base: var(--d-base);
+  --dur-slow: var(--d-base);
+
+  /* ── Colour: dark (true black, cells lift by lightness) ── */
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-grouped: #000000;
+  --bg-cell: #1c1c1e;
+  --bg-elevated: #1c1c1e;
+  --bg-sheet: #1c1c1e;
+  --bg-sheet-cell: #2c2c2e;
+  --fill: rgb(120 120 128 / 0.24);
+  --fill-2: rgb(120 120 128 / 0.32);
+  --fill-hover: rgb(120 120 128 / 0.16);
+  --fill-selected: rgb(77 163 255 / 0.2);
+  --separator: rgb(84 84 88 / 0.6);
+  --label: #f5f5f7;
+  --label-2: #98989d;
+  --label-3: #636366;
+  /* Text in a field before it is typed, and the count capsule: still quiet, but readable
+     (4.5:1 on --fill / under white). --label-3 stays for disabled and decoration. */
+  --placeholder: var(--label-2);
+  --count-fill: var(--label-3);
+  --accent: #4da3ff;
+  --accent-fill: #0071e3;
+  --accent-fill-press: #0062c4;
+  --waiting: #ffb340;
+  --waiting-fill: #a35200;
+  --danger: #ff6961;
+  --danger-fill: #d70015;
+  --success: #32d74b;
+  --bar: rgb(0 0 0 / 0.78);
+  --scrim: rgb(0 0 0 / 0.5);
+  --shadow-1: 0 0 0 0.5px rgb(255 255 255 / 0.08);
+  --shadow-2: 0 8px 28px rgb(0 0 0 / 0.6), 0 0 0 0.5px rgb(255 255 255 / 0.1);
+  --shadow-3: 0 24px 64px rgb(0 0 0 / 0.7);
+
+  /* ── The old names, re-pointed ────────────────────────── */
+  --c-canvas: var(--bg);
+  --c-surface: var(--bg);
+  --c-surface-raised: var(--bg-cell);
+  --c-surface-sunken: var(--fill);
+  --c-sidebar: var(--bg-grouped);
+  --c-composer: var(--fill);
+  --c-hover: var(--fill-hover);
+  --c-active: var(--fill);
+  --c-line: var(--separator);
+  --c-line-strong: var(--separator);
+  --c-ink: var(--label);
+  --c-ink-soft: var(--label);
+  --c-ink-muted: var(--label-2);
+  --c-ink-faint: var(--label-2);
+  --c-accent: var(--accent);
+  --c-accent-strong: var(--accent);
+  --c-accent-soft: var(--fill);
+  --c-accent-ink: #ffffff;
+  --c-inverse: var(--accent-fill);
+  --c-inverse-hover: var(--accent-fill-press);
+  --c-inverse-ink: #ffffff;
+  --c-attention: var(--waiting);
+  --c-attention-soft: transparent;
+  --c-attention-ink: #ffffff;
+  --c-danger: var(--danger);
+  --c-danger-soft: transparent;
+  --c-danger-line: var(--separator);
+  --c-success: var(--success);
+  --c-success-soft: transparent;
+  --c-user-bubble: var(--fill);
+  --c-overlay: rgb(0 0 0 / 0.72);
+  --c-overlay-ink: #ffffff;
+  --c-focus: var(--accent);
+  --c-selection: rgb(77 163 255 / 0.3);
+  --c-scrim: var(--scrim);
+  --shadow-xs: none;
+  --shadow-sm: var(--shadow-1);
+  --shadow-md: var(--shadow-2);
+  --shadow-lg: var(--shadow-3);
+  --shadow-composer: none;
+  --shadow-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent);
+  --c-bot-ink-bg: var(--fill);
+  --c-bot-ink-fg: var(--label);
+  --c-bot-vermilion-bg: var(--fill);
+  --c-bot-vermilion-fg: var(--label);
+  --c-bot-jade-bg: var(--fill);
+  --c-bot-jade-fg: var(--label);
+  --c-bot-indigo-bg: var(--fill);
+  --c-bot-indigo-fg: var(--label);
+  --c-bot-ochre-bg: var(--fill);
+  --c-bot-ochre-fg: var(--label);
+  --c-bot-plum-bg: var(--fill);
+  --c-bot-plum-fg: var(--label);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-grouped: #f2f2f7;
+  --bg-cell: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-sheet: #f2f2f7;
+  --bg-sheet-cell: #ffffff;
+  --fill: rgb(120 120 128 / 0.12);
+  --fill-2: rgb(120 120 128 / 0.2);
+  --fill-hover: rgb(120 120 128 / 0.08);
+  --fill-selected: rgb(0 102 204 / 0.12);
+  --separator: rgb(60 60 67 / 0.29);
+  --label: #1d1d1f;
+  --label-2: #6e6e73;
+  --label-3: #86868b;
+  --placeholder: #6c6c71;
+  --count-fill: var(--label-2);
+  --accent: #0066cc;
+  --waiting: #a35200;
+  --danger: #c4161c;
+  --success: #1f7a34;
+  --bar: rgb(255 255 255 / 0.78);
+  --scrim: rgb(0 0 0 / 0.3);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06), 0 0 0 0.5px rgb(0 0 0 / 0.06);
+  --shadow-2: 0 8px 28px rgb(0 0 0 / 0.14), 0 0 0 0.5px rgb(0 0 0 / 0.08);
+  --shadow-3: 0 24px 64px rgb(0 0 0 / 0.22);
+  --c-selection: rgb(0 102 204 / 0.2);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #ffffff;
+    --bg-grouped: #f2f2f7;
+    --bg-cell: #ffffff;
+    --bg-elevated: #ffffff;
+    --bg-sheet: #f2f2f7;
+    --bg-sheet-cell: #ffffff;
+    --fill: rgb(120 120 128 / 0.12);
+    --fill-2: rgb(120 120 128 / 0.2);
+    --fill-hover: rgb(120 120 128 / 0.08);
+    --fill-selected: rgb(0 102 204 / 0.12);
+    --separator: rgb(60 60 67 / 0.29);
+    --label: #1d1d1f;
+    --label-2: #6e6e73;
+    --label-3: #86868b;
+    --placeholder: #6c6c71;
+    --count-fill: var(--label-2);
+    --accent: #0066cc;
+    --waiting: #a35200;
+    --danger: #c4161c;
+    --success: #1f7a34;
+    --bar: rgb(255 255 255 / 0.78);
+    --scrim: rgb(0 0 0 / 0.3);
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.06), 0 0 0 0.5px rgb(0 0 0 / 0.06);
+    --shadow-2: 0 8px 28px rgb(0 0 0 / 0.14), 0 0 0 0.5px rgb(0 0 0 / 0.08);
+    --shadow-3: 0 24px 64px rgb(0 0 0 / 0.22);
+    --c-selection: rgb(0 102 204 / 0.2);
+  }
+}
+
+/* Translucent bars fall back to opaque where blur is missing or unwanted. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root:is([data-theme], :not([data-theme])) {
+    --bar: var(--bg);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root:is([data-theme], :not([data-theme])) {
+    --bar: var(--bg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:is([data-theme], :not([data-theme])) {
+    --d-instant: 0ms;
+    --d-fast: 150ms;
+    --d-base: 0ms;
+    --d-sheet: 0ms;
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+    --dur-sheet: 0ms;
+  }
+}
+
+/* Dynamic Type: the root follows the iOS text size; every size above is in rem. */
+html {
+  font-size: 106.25%;
+}
+
+@supports (font: -apple-system-body) {
+  html {
+    /* biome-ignore lint/a11y/useGenericFontNames: a system font keyword (iOS Dynamic Type), not a family */
+    font: -apple-system-body;
+  }
+}

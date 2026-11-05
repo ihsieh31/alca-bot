@@ -1,0 +1,153 @@
+/* Alca desktop — shared form controls (素 Plain §3.8, §3.14): popup buttons, steppers,
+   text fields and the grouped form (label left, control right). Loaded last so the
+   older per-screen field styles defer to it while screens migrate. */
+
+/* ── Popup button: a native select drawn as a push button with a ⌄ ── */
+.popup,
+select.cn-input,
+.lb-menu,
+.tm-select {
+  height: 28px;
+  max-width: 100%;
+  padding: 0 26px 0 10px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background:
+    var(--fill)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='m1 1 4 4 4-4' fill='none' stroke='%238e8e93' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat right 9px center / 9px 6px;
+  color: var(--label);
+  font: var(--t-body);
+  text-overflow: ellipsis;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: background-color var(--d-instant) var(--e-standard);
+}
+
+.popup:hover,
+select.cn-input:hover {
+  background-color: var(--fill-strong);
+}
+
+/* ── Text field: 28px, hairline border, accent ring on focus ── */
+.cn-input:not(select),
+.field {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--separator);
+  border-radius: var(--r-sm);
+  background: var(--bg);
+  color: var(--label);
+  font: var(--t-body);
+  transition:
+    border-color var(--d-fast) var(--e-standard),
+    box-shadow var(--d-fast) var(--e-standard);
+}
+
+textarea.cn-input,
+textarea.field {
+  height: auto;
+  min-height: 72px;
+  padding: 6px 8px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.cn-input:not(select):focus,
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.cn-input::placeholder,
+.field::placeholder {
+  color: var(--label-3);
+}
+
+/* ── Stepper: value + − / + ── */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.stepper-value {
+  min-width: 3em;
+  font: var(--t-body);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.stepper-btns {
+  display: inline-flex;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+}
+
+.stepper-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--label);
+  font: 500 15px / 1 var(--font-text);
+}
+
+.stepper-btn + .stepper-btn {
+  box-shadow: inset 0.5px 0 0 var(--separator);
+}
+
+.stepper-btn:hover {
+  background: var(--fill-hover);
+}
+
+.stepper-btn:disabled {
+  opacity: 0.4;
+}
+
+/* ── Grouped form: rows on a cell, hairlines between, label left ── */
+.form-group {
+  border-radius: var(--r-md);
+  background: var(--bg-cell);
+  box-shadow: var(--shadow-1);
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-6);
+  min-height: 48px;
+  padding: var(--s-2) var(--s-4);
+}
+
+.form-row + .form-row {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.form-label {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font: var(--t-body);
+  color: var(--label);
+}
+
+.form-label small {
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.form-control {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--s-2);
+  max-width: 55%;
+}

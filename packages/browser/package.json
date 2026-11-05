@@ -1,0 +1,20 @@
+{
+  "name": "@alca/browser",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Alca Browser: our own Chromium over --remote-debugging-pipe, bot-owned Spaces, semantic snapshots, script mode, takeover, sensitive-action gate",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./testing/fake-cdp.ts"
+  },
+  "dependencies": {
+    "@alca/config": "workspace:*",
+    "@alca/policy": "workspace:*",
+    "@alca/protocol": "workspace:*",
+    "@alca/tools": "workspace:*",
+    "@jitl/quickjs-wasmfile-release-sync": "0.32.0",
+    "quickjs-emscripten-core": "0.32.0"
+  }
+}

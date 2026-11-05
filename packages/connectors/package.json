@@ -1,0 +1,22 @@
+{
+  "name": "@alca/connectors",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Connected apps (Composio first): local key vault, accounts and per-bot grants, gated find / use tools, daily quota, triggers through the person's own relay",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./testing/mock-composio.ts"
+  },
+  "dependencies": {
+    "@alca/config": "workspace:*",
+    "@alca/os": "workspace:*",
+    "@alca/policy": "workspace:*",
+    "@alca/store": "workspace:*",
+    "@alca/tools": "workspace:*"
+  },
+  "devDependencies": {
+    "@alca/rendezvous": "workspace:*"
+  }
+}

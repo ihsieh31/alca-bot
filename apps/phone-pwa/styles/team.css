@@ -1,0 +1,227 @@
+/* 團隊 (素 Plain §4.1): monochrome avatar glyphs, bylines in team threads,
+   the @mention menu above the composer, a bot's page, a hand-off page.
+   Colour does not tell bots apart; the name does (§2.3). */
+
+/* ── Avatar glyph: initial on --fill, never a colour tile ───── */
+.bot-av {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+  font-family: var(--font-display);
+  font-size: var(--t-footnote);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.bot-av[data-size="sm"] {
+  width: 20px;
+  height: 20px;
+  font-size: 0.6rem;
+}
+
+.bot-av[data-size="lg"] {
+  width: 64px;
+  height: 64px;
+  font-size: var(--t-title2);
+}
+
+/* ── Team threads: bot name above a run of its messages ─────── */
+.msg-by {
+  margin-bottom: 2px;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  font-weight: 600;
+}
+
+/* ── @mention: a menu right above the composer (level 2) ────── */
+.mention {
+  margin: 0 0 var(--s-2);
+  padding: var(--s-1) 0;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-2);
+}
+
+.mention[hidden] {
+  display: none;
+}
+
+.mention-head {
+  margin: 0;
+  padding: var(--s-2) var(--s-4) var(--s-1);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+}
+
+.mention-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: var(--row-h);
+  padding: var(--s-1) var(--s-4);
+  border: 0;
+  background: transparent;
+  color: var(--label);
+  text-align: left;
+}
+
+.mention-row + .mention-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: calc(var(--s-4) + 32px + var(--s-3));
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.mention-row:active {
+  background: var(--fill);
+}
+
+.mention-name {
+  flex: none;
+  font-size: var(--t-body);
+}
+
+.mention-role {
+  overflow: hidden;
+  min-width: 0;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Who a new conversation goes to: plain text with a clear button, no pill. */
+.to-slot:empty {
+  display: none;
+}
+
+.to-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 32px;
+  margin: 0 0 var(--s-1) var(--s-2);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+}
+
+.to-chip-x {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: calc(var(--s-2) * -1);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--label-3);
+}
+
+/* The composer's own field shows focus; no second ring inside it. */
+.composer-input:focus-visible {
+  box-shadow: none;
+}
+
+/* ── A bot's page ─────────────────────────────────────────── */
+.bot-page {
+  padding-top: var(--s-2);
+}
+
+.bot-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-2) var(--s-1) var(--s-8);
+  text-align: center;
+}
+
+.bot-hero .row-av,
+.bot-hero .bot-av {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--s-2);
+  font-size: var(--t-title2);
+}
+
+.bot-hero .task-status {
+  justify-content: center;
+  margin: 0;
+}
+
+.bot-hero .bot-talk {
+  max-width: 360px;
+  margin-top: var(--s-5);
+}
+
+.bot-instr {
+  display: block;
+  padding: var(--s-1) 0;
+  font-size: var(--t-subhead);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ── A hand-off: what was asked, its steps, what was said ───── */
+.peer-page {
+  padding-top: var(--s-2);
+}
+
+.peer-page .task-head {
+  padding-bottom: var(--s-4);
+}
+
+.peer-ask {
+  margin-bottom: var(--s-8);
+  white-space: pre-wrap;
+}
+
+.peer-said {
+  margin-bottom: var(--s-8);
+}
+
+.peer-msg {
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-cell);
+  font-size: var(--t-subhead);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.peer-msg + .peer-msg {
+  margin-top: var(--s-2);
+}
+
+.peer-msg p {
+  margin: 0;
+}
+
+.peer-msg p + p,
+.peer-msg .prose {
+  margin-top: var(--s-1);
+}
+
+.peer-who {
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  font-weight: 600;
+}
+
+.peer-msg[data-role="system"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 0.5px var(--separator);
+  color: var(--label-2);
+}

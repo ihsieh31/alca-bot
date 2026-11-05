@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <!-- No status-bar-style tag: iOS then paints the status bar with theme-color
+         and picks readable text for the dark and the light theme. -->
+    <meta name="apple-mobile-web-app-title" content="Alca" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="description" content="Alca 手機版：看你的電腦在做什麼、隨時批准或拒絕。" />
+    <title>Alca</title>
+    <!-- BUG-10: the saved theme (status bar color, color scheme) before the first paint. -->
+    <script src="./app/theme-boot.js"></script>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./styles/plain.css" />
+    <link rel="stylesheet" href="./styles/base.css" />
+    <link rel="stylesheet" href="./styles/ui.css" />
+    <link rel="stylesheet" href="./styles/chat.css" />
+    <link rel="stylesheet" href="./styles/sheet.css" />
+    <link rel="stylesheet" href="./styles/views.css" />
+    <link rel="stylesheet" href="./styles/workers.css" />
+    <link rel="stylesheet" href="./styles/screens.css" />
+    <link rel="stylesheet" href="./styles/browser.css" />
+    <link rel="stylesheet" href="./styles/memory.css" />
+    <link rel="stylesheet" href="./styles/connect.css" />
+    <link rel="stylesheet" href="./styles/team.css" />
+    <link rel="stylesheet" href="./styles/addons.css" />
+    <link rel="stylesheet" href="./styles/device.css" />
+    <link rel="stylesheet" href="./styles/account.css" />
+    <link rel="stylesheet" href="./styles/forms.css" />
+    <link rel="stylesheet" href="./styles/offline.css" />
+    <script type="module" src="./app/main.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <noscript data-i18n-ignore>Alca 需要啟用 JavaScript。Alca needs JavaScript.</noscript>
+    </div>
+  </body>
+</html>

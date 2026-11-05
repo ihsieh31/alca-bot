@@ -1,0 +1,657 @@
+/* The shell and the native building blocks (素 Plain §3.1, §3.2, §3.7–§3.12):
+   tab bar, large-title root screens, inset grouped lists, rows, switches,
+   技術細節, empty states. app/ui.ts and app/tabs.ts draw them. */
+
+/* ── Shell: four root tabs, a tab bar, the pushed chat ──────── */
+.app-shell {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  /* clip, not just hidden: focus moving into an off-screen layer must never scroll the shell sideways. */
+  /* biome-ignore lint/suspicious/noDuplicateProperties: hidden is the fallback where clip is unsupported */
+  overflow: clip;
+  background: var(--bg-grouped);
+}
+
+.tab-screens {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  transition: transform 300ms var(--e-spring);
+}
+
+.app-shell[data-chat="true"] .tab-screens,
+:root[data-pages]:not([data-pages="0"]) .tab-screens {
+  transform: translateX(-28%);
+}
+
+:root[data-pages]:not([data-pages="0"]) .app-shell[data-chat="true"] .chat-layer {
+  transform: translateX(-28%);
+}
+
+.root-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+  background: var(--bg-grouped);
+}
+
+.root-screen[data-plain="true"] {
+  background: var(--bg);
+}
+
+/* (.nav-bar.root-bar: sheet.css's .nav-bar padding shorthand loads later and
+   would otherwise drop the status-bar inset.) */
+.nav-bar.root-bar {
+  flex: none;
+  padding: var(--safe-top) var(--s-2) 0;
+  min-height: calc(var(--nav-h) + var(--safe-top));
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.root-bar .nav-title {
+  opacity: 0;
+  transition: opacity var(--d-fast) linear;
+}
+
+.root-bar[data-collapsed="true"] {
+  background: var(--bar);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 0.5px 0 var(--separator);
+}
+
+.root-bar[data-collapsed="true"] .nav-title {
+  opacity: 1;
+}
+
+.root-bar .icon-btn .icon {
+  width: 24px;
+  height: 24px;
+}
+
+.root-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--s-4) calc(var(--tab-h) + var(--safe-bottom) + var(--s-6));
+  -webkit-overflow-scrolling: touch;
+}
+
+/* iOS: a 52pt row under the 44pt bar — 34pt bold, 41pt line, 3pt above. */
+.large-title {
+  margin: 0;
+  padding: 3px 0 var(--s-2);
+  font-family: var(--font-display);
+  font-size: var(--t-large-title);
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+/* The tab bar: 49 + home indicator, translucent, icon over label. */
+.tabbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0 var(--safe-right) var(--safe-bottom) var(--safe-left);
+  background: var(--bar);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 -0.5px 0 var(--separator);
+  transition: transform 300ms var(--e-spring);
+}
+
+.app-shell[data-chat="true"] .tabbar,
+:root[data-pages]:not([data-pages="0"]) .tabbar {
+  transform: translateX(-28%);
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  height: var(--tab-h);
+  padding: 7px 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--label-2);
+  font-size: 0.588rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.tab .icon {
+  width: 26px;
+  height: 26px;
+}
+
+.tab[aria-selected="true"] {
+  color: var(--accent);
+}
+
+.tab .count {
+  position: absolute;
+  top: 3px;
+  left: calc(50% + 6px);
+}
+
+/* Sideways: icon beside the label, a shorter bar (as iOS does). */
+@media (orientation: landscape) and (max-height: 500px) {
+  .tab {
+    flex-direction: row;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0;
+    font-size: var(--t-footnote);
+  }
+  .tab .icon {
+    width: 22px;
+    height: 22px;
+  }
+  /* Beside the label, not over it. */
+  .tab .count {
+    position: static;
+  }
+  .root-scroll {
+    padding-bottom: calc(32px + var(--safe-bottom) + var(--s-6));
+  }
+  .large-title {
+    font-size: var(--t-title1);
+  }
+}
+
+.chat-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: var(--bg);
+  transform: translateX(100%);
+  transition: transform 300ms var(--e-spring);
+  box-shadow: -8px 0 32px rgb(0 0 0 / 0.18);
+  visibility: hidden;
+}
+
+.app-shell[data-chat="true"] .chat-layer {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.app-shell[data-chat="false"] .chat-layer {
+  transition:
+    transform 300ms var(--e-spring),
+    visibility 0s linear 300ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab-screens,
+  .tabbar,
+  .chat-layer {
+    transform: none !important;
+  }
+  .chat-layer {
+    opacity: 0;
+    transition: opacity 150ms linear;
+  }
+  .app-shell[data-chat="true"] .chat-layer {
+    opacity: 1;
+  }
+}
+
+/* ── Inset grouped lists ─────────────────────────────────── */
+.group {
+  margin: 0 0 var(--s-8);
+}
+
+.group:first-child {
+  margin-top: var(--s-2);
+}
+
+.group-h {
+  margin: 0 0 var(--s-2);
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.group-f {
+  margin: var(--s-2) 0 0;
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.45;
+}
+
+.cells {
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--bg-cell);
+}
+
+.sheet:not(.page) .cells {
+  background: var(--bg-sheet-cell);
+}
+
+.group[data-plain="true"] .cells {
+  border-radius: 0;
+  background: transparent;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: var(--row-h);
+  margin: 0;
+  padding: var(--s-2) var(--s-4);
+  border: 0;
+  background: transparent;
+  color: var(--label);
+  font-size: var(--t-body);
+  line-height: 1.3;
+  text-align: left;
+}
+
+/* Hairlines inset to the text (not under the icon). */
+.cells > .row + .row::before,
+.cells > * + .row::before,
+.cells > .row + *::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--s-4);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.cells > .row:has(.row-icon) + .row::before,
+.cells > .row + .row:has(.row-icon)::before {
+  left: calc(var(--s-4) + 28px + var(--s-3));
+}
+
+.cells > .row:has(.row-av) + .row::before,
+.cells > .row + .row:has(.row-av)::before {
+  left: calc(var(--s-4) + 40px + var(--s-3));
+}
+
+button.row:active:not(:disabled) {
+  background: var(--fill);
+}
+
+button.row:disabled {
+  opacity: 0.4;
+}
+
+.row-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  color: var(--label);
+}
+
+.row-icon.bare {
+  background: transparent;
+  color: var(--label-2);
+}
+
+.row-icon[data-tone="accent"] {
+  color: var(--accent);
+}
+
+.row-icon[data-tone="waiting"] {
+  color: var(--waiting);
+}
+
+.row-icon[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.row-icon[data-tone="success"] {
+  color: var(--success);
+}
+
+.row-icon .spin {
+  width: 16px;
+  height: 16px;
+}
+
+.row-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: var(--s-1) 0;
+}
+
+.row-title {
+  overflow-wrap: anywhere;
+}
+
+.row-sub {
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.row-sub[data-tone="waiting"],
+.row-value[data-tone="waiting"] {
+  color: var(--waiting);
+}
+
+.row-sub[data-tone="danger"],
+.row-value[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.row-sub[data-tone="success"],
+.row-value[data-tone="success"] {
+  color: var(--success);
+}
+
+.row-value {
+  flex: none;
+  max-width: 45%;
+  overflow: hidden;
+  color: var(--label-2);
+  font-size: var(--t-body);
+  text-align: right;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+.row-value:has(input, button) {
+  max-width: none;
+  overflow: visible;
+}
+
+.row-chev {
+  display: grid;
+  flex: none;
+  margin-right: -4px;
+  color: var(--label-3);
+}
+
+.row-chev .icon {
+  stroke-width: 2;
+}
+
+.row[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.row[data-tone="accent"] {
+  color: var(--accent);
+}
+
+.row[data-center="true"] {
+  justify-content: center;
+  text-align: center;
+}
+
+.row[data-center="true"] .row-text {
+  flex: none;
+  align-items: center;
+}
+
+/* At big text sizes the trailing value moves under the title (§2.2). */
+@media (min-width: 0) {
+  .row-text:has(.row-title:only-child) + .row-value:not(:has(input, button)) {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+}
+
+/* ── Switch: Safari draws the native one; elsewhere this is the look ── */
+.switch-input {
+  position: relative;
+  flex: none;
+  width: 51px;
+  height: 31px;
+  margin: 0;
+  border: 0;
+  border-radius: var(--r-full);
+  background: var(--fill-2);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: background-color var(--d-fast) linear;
+}
+
+.switch-input::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 3px 8px rgb(0 0 0 / 0.15),
+    0 1px 1px rgb(0 0 0 / 0.16);
+  transition: transform var(--d-base) var(--e-spring);
+}
+
+.switch-input:checked {
+  background: #34c759;
+}
+
+.switch-input:checked::before {
+  transform: translateX(20px);
+}
+
+.switch-input:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.row-switch {
+  padding-top: var(--s-1);
+  padding-bottom: var(--s-1);
+}
+
+/* ── 技術細節 ───────────────────────────────────────────── */
+.tech {
+  margin: var(--s-6) 0 0;
+}
+
+.tech-sum {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: var(--touch);
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  list-style: none;
+  cursor: pointer;
+}
+
+.tech-sum::-webkit-details-marker {
+  display: none;
+}
+
+.tech-sum .icon {
+  stroke-width: 2;
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.tech[open] .tech-sum .icon {
+  transform: rotate(90deg);
+}
+
+.tech-list {
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--bg-cell);
+}
+
+.sheet:not(.page) .tech-list {
+  background: var(--bg-sheet-cell);
+}
+
+.td-row {
+  position: relative;
+  padding: var(--s-2) var(--s-4);
+}
+
+.td-row + .td-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--s-4);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.td-row dt {
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+}
+
+.td-row dd {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  margin: 2px 0 0;
+}
+
+.td-row code {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--label);
+  font-size: var(--t-footnote);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.td-copy {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  margin: -6px -8px -6px 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+}
+
+.td-copy[data-done="true"] {
+  color: var(--success);
+}
+
+.td-all {
+  margin-top: var(--s-1);
+  padding-left: var(--s-4);
+  font-size: var(--t-subhead);
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  min-height: 40vh;
+  padding: var(--s-8) var(--s-6);
+  text-align: center;
+}
+
+.es-title {
+  margin: 0;
+  font-size: var(--t-headline);
+  font-weight: 600;
+}
+
+.es-text {
+  max-width: 300px;
+  margin: 0;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+  line-height: 1.5;
+}
+
+.empty-state .text-btn {
+  margin-top: var(--s-2);
+}
+
+/* ── Fine print and inline errors ────────────────────────── */
+.fine {
+  margin: var(--s-2) 0 0;
+  padding: 0 var(--s-4);
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.45;
+}
+
+.inline-error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-1);
+  margin: var(--s-2) 0 0;
+  padding: 0 var(--s-4);
+  color: var(--danger);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+}
+
+.inline-error .icon {
+  margin-top: 1px;
+}
+
+/* A check that draws itself (approval done, pairing done). */
+.check-draw path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: draw 250ms var(--e-standard) 60ms forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Filled icons (selected tab): the shape filled, inner details cut in the bar colour. */
+.icon.filled path:first-child {
+  fill: currentColor;
+}
+
+.icon.filled .icon-detail {
+  fill: none;
+  stroke: var(--bg);
+  stroke-width: 1.75;
+}

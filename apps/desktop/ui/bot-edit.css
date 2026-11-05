@@ -1,0 +1,298 @@
+/* Alca desktop — the bot editor as a sheet window with a grouped form (素 Plain §4.2, §3.14):
+   label right-aligned on the left, control on the right; 進階 folds the rest away. */
+
+/* Mac test 2026-11 B10: a column, not a 3-row grid — with the 設定／擴充 tabs the
+   editor has four children, and the body must take the room that is left and scroll. */
+.tm-editor {
+  display: flex;
+  flex-direction: column;
+  width: min(600px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  overflow: hidden;
+}
+
+.be-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-6) var(--s-4);
+}
+
+.tm-editor .be-head h2 {
+  margin: 0 0 2px;
+  font: var(--t-headline);
+}
+
+.be-head .be-hint {
+  margin: 0;
+}
+
+/* 設定 / 擴充: a segmented control under the title. */
+.be-tabs {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 2px;
+  margin: 0 var(--s-6) var(--s-3);
+  padding: 2px;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+}
+
+.be-tab {
+  height: 24px;
+  border-bottom: 0;
+  padding: 0 var(--s-3);
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+}
+
+.be-tab[aria-selected="true"] {
+  background: var(--bg-elevated);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
+  font-weight: 500;
+}
+
+.be-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: var(--s-3);
+  overflow-y: auto;
+  padding: var(--s-2) var(--s-6) var(--s-5);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.be-pane {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-3);
+  padding-top: var(--s-3);
+}
+
+.be-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-6);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+/* ── A field: label | control, the hint under the control ── */
+.be-field {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: start;
+  gap: 4px var(--s-4);
+}
+
+.be-field > .be-label {
+  grid-column: 1;
+  padding-top: 5px;
+  text-align: right;
+}
+
+.be-field > :not(.be-label) {
+  grid-column: 2;
+}
+
+.be-field > * {
+  min-width: 0;
+}
+
+.be-field .cn-input:not(select) {
+  width: 100%;
+}
+
+.be-field > .be-hint {
+  margin-top: 2px;
+}
+
+.be-label {
+  font: var(--t-body);
+  color: var(--label);
+}
+
+.be-label-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+
+.be-hint {
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.be-row-name {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  gap: var(--s-3);
+}
+
+.be-row-name > .be-field:last-child {
+  grid-template-columns: auto 48px;
+}
+
+.be-avatar-input {
+  text-align: center;
+}
+
+.be-area {
+  min-height: 84px;
+}
+
+.be-seg,
+.popup {
+  justify-self: start;
+}
+
+.be-link {
+  justify-self: start;
+  padding: 0;
+  height: auto;
+}
+
+/* ── 進階: a disclosure with a hairline above, not a box ── */
+.be-adv {
+  min-width: 0;
+  margin-top: var(--s-2);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.be-adv-sum {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  padding: var(--s-3) 0;
+  font: var(--t-body);
+  font-weight: 600;
+  color: var(--label);
+  list-style: none;
+}
+
+.be-adv-sum::-webkit-details-marker {
+  display: none;
+}
+
+.be-adv-sum::after {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 6px;
+  height: 6px;
+  margin-left: auto;
+  border: solid var(--label-3);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(-45deg);
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.be-adv[open] > .be-adv-sum::after {
+  transform: rotate(45deg);
+}
+
+.be-adv-sum .be-hint {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+
+/* B10: 進階 stays on one line however long the hint beside it is. */
+.be-adv-word {
+  flex: none;
+  white-space: nowrap;
+}
+
+.be-adv-body {
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-1) 0 var(--s-2);
+}
+
+/* ── Footer and the in-place 封存 question ── */
+.be-foot[data-confirm="true"] {
+  background: var(--fill-hover);
+}
+
+.be-confirm {
+  overflow: hidden;
+  min-width: 0;
+  margin: 0;
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.be-confirm b {
+  margin-right: var(--s-2);
+  font-weight: 600;
+  color: var(--label);
+}
+
+/* P13: folder, shell review, 提前做 */
+.be-stack {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.be-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 24px;
+  font: var(--t-body);
+  color: var(--label);
+}
+
+.be-toggle input {
+  accent-color: var(--accent-fill);
+}
+
+/* Phase 6: 完全授權 warning + second confirm, and the budget caps per harness. */
+.be-warn {
+  margin: 0;
+  font: var(--t-small);
+  color: var(--waiting);
+}
+
+.be-confirm-box {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--bg-cell);
+  box-shadow: var(--shadow-1);
+  font: var(--t-small);
+  color: var(--label);
+}
+
+.be-confirm-box p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.be-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s-2);
+}
+
+.be-caps {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.be-cap-row {
+  display: grid;
+  grid-template-columns: 40px repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: var(--s-2);
+}

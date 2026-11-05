@@ -1,0 +1,554 @@
+/* Alca desktop — chat components (素 Plain): activity rows, confirmation and question cards, receipts, notices, empty state. */
+
+/* ── Activity rows (§3.4): one collapsed row per turn, no dots, no timeline line ── */
+.activity {
+  color: var(--label-2);
+}
+
+.item.activity + .item:not(.activity) {
+  margin-top: var(--s-3);
+}
+
+.act-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: var(--row-h);
+  padding: 0 var(--s-2);
+  margin: 0 calc(-1 * var(--s-2));
+  border-radius: var(--r-sm);
+  list-style: none;
+  font: var(--t-body);
+  color: var(--label-2);
+  cursor: default;
+}
+
+.act-row::-webkit-details-marker {
+  display: none;
+}
+
+.act-row:hover {
+  background: var(--fill-hover);
+}
+
+.act-summary {
+  width: fit-content;
+  max-width: 100%;
+}
+
+.act-icon {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.act-text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.act-trail {
+  flex: none;
+  margin-left: auto;
+  padding-left: var(--s-3);
+  font: var(--t-small);
+  color: var(--label-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.act-trail:empty {
+  display: none;
+}
+
+.act-chev {
+  width: 12px;
+  height: 12px;
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.activity[open] > .act-summary .act-trail:empty {
+  display: none;
+}
+
+.activity[open] > .act-summary .act-chev {
+  transform: rotate(90deg);
+}
+
+.act-list {
+  display: flex;
+  flex-direction: column;
+  max-width: 560px;
+  margin-top: 2px;
+}
+
+.act-step > .act-row {
+  color: var(--label-soft);
+}
+
+.act-step > .tech-body {
+  margin: 2px 0 var(--s-2) var(--s-6);
+}
+
+.act-step[data-state="fail"] .act-icon,
+.act-step[data-state="fail"] .act-text,
+.act-step[data-state="fail"] .act-trail,
+.activity[data-state="fail"] > .act-summary .act-icon {
+  color: var(--danger);
+}
+
+/* ── Cards: confirmation (§3.5) and question ──────────────── */
+.timeline > .card {
+  max-width: 560px;
+  margin-left: max(0px, calc(50% - var(--content-max) / 2));
+  margin-right: auto;
+}
+
+.card {
+  max-width: 560px;
+  padding: var(--s-5);
+  border-radius: var(--r-xl);
+  background: var(--bg-cell);
+  box-shadow: var(--shadow-1);
+  animation: card-in var(--d-base) var(--e-standard) both;
+}
+
+.ap-head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+}
+
+.ap-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label-2);
+}
+
+.ap-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ap-icon[data-risk="confirm"] {
+  color: var(--waiting);
+}
+
+.ap-icon[data-risk="destructive"] {
+  color: var(--danger);
+}
+
+.ap-titles {
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.ap-title {
+  margin: 0;
+  font: 600 17px / 22px var(--font-display);
+  color: var(--label);
+  overflow-wrap: anywhere;
+}
+
+.ap-sub {
+  margin: 2px 0 0;
+  font: var(--t-body);
+  color: var(--label-2);
+  overflow-wrap: anywhere;
+}
+
+.ap-facts {
+  margin: var(--s-4) 0 0;
+  border-radius: var(--r-md);
+  background: var(--fill-hover);
+}
+
+.ap-fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-height: 32px;
+  padding: 6px var(--s-3);
+  font: var(--t-body);
+}
+
+.ap-fact + .ap-fact {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.ap-fact-label {
+  flex: none;
+  color: var(--label-2);
+}
+
+.ap-fact-value {
+  min-width: 0;
+  color: var(--label);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.ap-lock {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: var(--s-3) 0 0;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.ap-lock svg {
+  width: 13px;
+  height: 13px;
+  margin-top: 1px;
+}
+
+.ap-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+
+.ap-foot > .tech {
+  flex: 1 1 200px;
+  min-width: 0;
+  margin: 0;
+  padding-top: 6px;
+}
+
+.ap-actions {
+  display: flex;
+  flex: none;
+  gap: var(--s-2);
+  margin-left: auto;
+}
+
+/* A question card. */
+.card-eyebrow {
+  margin-bottom: var(--s-1);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.card-title {
+  margin: 0 0 var(--s-4);
+  font: 600 17px / 22px var(--font-display);
+}
+
+.card-detail {
+  margin: 0 0 var(--s-4);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--fill-hover);
+  font: 12px / 18px var(--font-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--label-soft);
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 var(--s-3);
+  border-radius: var(--r-md);
+  background: var(--fill-hover);
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 36px;
+  padding: 0 var(--s-3);
+  border: 0;
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+  text-align: left;
+}
+
+.choice {
+  position: relative;
+}
+
+.choice + .choice::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 40px;
+  right: 0;
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.choice:first-child {
+  border-radius: var(--r-md) var(--r-md) 0 0;
+}
+
+.choice:last-child {
+  border-radius: 0 0 var(--r-md) var(--r-md);
+}
+
+.choice:hover {
+  background: var(--fill-hover);
+}
+
+.choice kbd {
+  background: transparent;
+  color: var(--label-3);
+}
+
+.answer-row {
+  display: flex;
+  gap: var(--s-2);
+}
+
+/* After a decision: one line, like a system message (§3.5). */
+.card[data-state="done"] {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  animation: none;
+}
+
+.receipt {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: var(--row-h);
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.receipt-icon {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}
+
+.receipt[data-tone="ok"] .receipt-icon {
+  color: var(--success);
+}
+
+.receipt[data-tone="no"] .receipt-icon {
+  color: var(--danger);
+}
+
+.receipt-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.receipt-time {
+  margin-left: auto;
+  padding-left: var(--s-3);
+  font: var(--t-small);
+  color: var(--label-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.resolution {
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+/* ── Notices (errors, interrupts): a quiet centred line ────── */
+.notice {
+  display: flex;
+  justify-content: center;
+  font: var(--t-small);
+  color: var(--label-2);
+  text-align: center;
+}
+
+.notice[data-tone="error"] {
+  color: var(--danger);
+}
+
+/* ── Empty state (§3.10): one line, three plain rows ──────── */
+.main[data-empty] {
+  grid-template-rows: var(--toolbar-h) minmax(0, 38fr) auto auto minmax(0, 62fr);
+}
+
+.main[data-empty] .timeline {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding-bottom: var(--s-5);
+}
+
+.main[data-empty] .composer {
+  padding-bottom: 0;
+}
+
+.empty {
+  width: 100%;
+  animation: rise var(--d-base) var(--e-standard) both;
+}
+
+.empty-title {
+  margin: 0;
+  font: var(--t-title);
+  letter-spacing: -0.01em;
+  color: var(--label);
+}
+
+.starters {
+  padding: var(--s-4) var(--s-6) 0;
+  animation: rise var(--d-base) var(--e-standard) 40ms both;
+}
+
+.starter-row {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+.starter {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 40px;
+  padding: 0 var(--s-3);
+  margin: 0 calc(-1 * var(--s-3));
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+  text-align: left;
+}
+
+.starter {
+  position: relative;
+}
+
+.starter + .starter::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--s-3);
+  right: var(--s-3);
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.starter:hover {
+  background: var(--fill-hover);
+}
+
+.starter:hover::before,
+.starter:hover + .starter::before {
+  visibility: hidden;
+}
+
+.starter-title {
+  flex: none;
+  font-weight: 500;
+}
+
+.starter-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--label-2);
+}
+
+.starter-chev {
+  width: 12px;
+  height: 12px;
+  color: var(--label-3);
+}
+
+.starter-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: var(--content-max);
+  margin: var(--s-5) auto 0;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.starter-note svg {
+  width: 13px;
+  height: 13px;
+  margin-top: 1px;
+}
+
+/* ── Menu (§3.8): a level-2 popover list ── */
+.menu {
+  position: fixed;
+  z-index: 60;
+  display: grid;
+  min-width: 160px;
+  padding: 5px;
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-2);
+  animation: fade var(--d-fast) var(--e-standard) both;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: 28px;
+  padding: 0 var(--s-3) 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+  text-align: left;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.menu-item:hover,
+.menu-item:focus-visible {
+  outline: none;
+  background: var(--accent-fill);
+  color: #fff;
+}
+
+.menu-item[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.menu-item[data-tone="danger"]:hover,
+.menu-item[data-tone="danger"]:focus-visible {
+  background: var(--danger-fill);
+  color: #fff;
+}
+
+.menu-check {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+}

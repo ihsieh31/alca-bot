@@ -1,0 +1,21 @@
+{
+  "attached": "Alca is running (background service)",
+  "foot": "Everything runs on this computer.",
+  "keepsStopping": "The core keeps stopping; check the log file, then press \"Restart the core\"",
+  "logFile": "Log file: {path}",
+  "logs": "Open the logs folder",
+  "noCore": "Alca's core wasn't found (set ALCA_CORE_CMD, or run scripts/install.sh)",
+  "open": "Open Alca",
+  "openAtLogin": "Open at login",
+  "openWaiting": "See what's waiting on you",
+  "pair": "Pair a phone…",
+  "phones": "{n} phones online",
+  "quit": "Quit Alca",
+  "restart": "Restart the core",
+  "restarting": "The core stopped; restarting in {n} s",
+  "running": "Alca is running",
+  "startFailed": "Couldn't start the core: {e}",
+  "starting": "Alca is starting…",
+  "stopped": "The core stopped",
+  "waiting": "Waiting on you: {n}"
+}

@@ -1,0 +1,55 @@
+/* P13 / §3.3: offline on the phone — a message waiting in the outbox (the
+   bubble at 60% opacity, 「等待傳送」 under it; a failed one gets a red
+   exclamation and 「沒送出」; tap for 重試 / 刪除) and the line over a
+   conversation read from the phone's encrypted copy. No dashed borders. */
+
+.item.user.queued {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.q-bubble {
+  display: block;
+  margin: 0;
+  border: 0;
+  font: inherit;
+  font-size: var(--t-body);
+  text-align: left;
+  opacity: 0.6;
+  transition: opacity var(--d-fast) var(--e-standard);
+}
+
+.q-bubble:disabled {
+  cursor: default;
+}
+
+.q-bubble:active:not(:disabled) {
+  opacity: 0.45;
+}
+
+.item.user.queued[data-state="failed"] .q-bubble {
+  position: relative;
+  opacity: 1;
+}
+
+.q-alert {
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  display: grid;
+  color: var(--danger);
+  transform: translateY(-50%);
+}
+
+.q-meta {
+  margin: 0;
+  padding: 0 var(--s-1);
+  color: var(--label-2);
+  font-size: var(--t-caption);
+  line-height: 1.3;
+}
+
+.item.user.queued[data-state="failed"] .q-meta {
+  color: var(--danger);
+}

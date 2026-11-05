@@ -1,0 +1,102 @@
+# Phase E: the Windows install path on a real Windows runner — scripts/install.ps1 with a
+# packed core (tar.exe without symlinks, junctions instead), then `alca update install` from a
+# newer tarball and `alca update rollback` (renaming the running core's folder on Windows).
+# The pwsh unit tests (apps/desktop/test/install-ps1.test.ts) run in ci.yml on Linux; this is
+# the part only Windows can show. A separate workflow so ci.yml stays as it is.
+name: install-windows
+
+on:
+  pull_request:
+    paths:
+      - scripts/install.ps1
+      - scripts/pack-core.ts
+      - apps/desktop/src/update-*.ts
+      - apps/desktop/src/service.ts
+      - apps/desktop/src/cli.ts
+      - .github/workflows/install-windows.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    name: pack two core tarballs (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: pack 0.0.1-ci and 0.0.2-ci (+ .sha256)
+        run: |
+          mkdir -p out/one out/two
+          ALCA_VERSION=v0.0.1-ci node --disable-warning=ExperimentalWarning scripts/pack-core.ts --tar out/one/alca-core.tar.gz
+          ALCA_VERSION=v0.0.2-ci node --disable-warning=ExperimentalWarning scripts/pack-core.ts --tar out/two/alca-core.tar.gz
+          (cd out/one && sha256sum alca-core.tar.gz > alca-core.tar.gz.sha256)
+          (cd out/two && sha256sum alca-core.tar.gz > alca-core.tar.gz.sha256)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cores
+          path: out/
+          if-no-files-found: error
+
+  windows:
+    name: install.ps1 → alca update → rollback (Windows)
+    needs: pack
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: cores
+          path: cores
+      - name: install.ps1 (Windows PowerShell 5.1, as most people have it)
+        shell: powershell
+        run: |
+          $prefix = Join-Path $env:RUNNER_TEMP 'alca'
+          & ./scripts/install.ps1 --tarball cores/one/alca-core.tar.gz --prefix $prefix --no-service
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $link = Get-Item (Join-Path $prefix 'app\apps\desktop\node_modules\@alca\core')
+          "link: $($link.LinkType) → $($link.Target)"
+          if ($link.LinkType -ne 'Junction') { throw 'workspace link is not a junction' }
+          $v = (Get-Content (Join-Path $prefix 'app\ALCA_VERSION') -Raw | ConvertFrom-Json).version
+          if ($v -ne '0.0.1-ci') { throw "installed $v" }
+      - name: a wrong checksum is refused (pwsh 7)
+        shell: pwsh
+        run: |
+          $bad = Join-Path $env:RUNNER_TEMP 'bad'
+          New-Item -ItemType Directory $bad | Out-Null
+          Copy-Item cores/one/alca-core.tar.gz $bad
+          Set-Content -Path (Join-Path $bad 'alca-core.tar.gz.sha256') -Value ('0' * 64 + '  alca-core.tar.gz')
+          & ./scripts/install.ps1 --tarball (Join-Path $bad 'alca-core.tar.gz') --prefix (Join-Path $env:RUNNER_TEMP 'alca-bad') --no-service
+          if ($LASTEXITCODE -ne 1) { throw "expected exit 1, got $LASTEXITCODE" }
+          if (Test-Path (Join-Path $env:RUNNER_TEMP 'alca-bad\app')) { throw 'a refused tarball was installed' }
+          $global:LASTEXITCODE = 0
+      - name: alca update install --tarball (newer), then rollback
+        shell: pwsh
+        run: |
+          $prefix = Join-Path $env:RUNNER_TEMP 'alca'
+          $alca = Join-Path $prefix 'bin\alca.cmd'
+          $ver = { (Get-Content (Join-Path $prefix 'app\ALCA_VERSION') -Raw | ConvertFrom-Json).version }
+          & $alca update install --tarball cores/two/alca-core.tar.gz --yes --data-dir $prefix
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          if ((& $ver) -ne '0.0.2-ci') { throw "after update: $(& $ver)" }
+          if (-not (Test-Path (Join-Path $prefix 'app.prev\ALCA_VERSION'))) { throw 'app.prev missing' }
+          & node --disable-warning=ExperimentalWarning (Join-Path $prefix 'app\apps\desktop\src\cli.ts')
+          if ($LASTEXITCODE) { throw 'the updated core does not run' }
+          & $alca update status --data-dir $prefix
+          & $alca update rollback --yes --data-dir $prefix
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          if ((& $ver) -ne '0.0.1-ci') { throw "after rollback: $(& $ver)" }
+          & node --disable-warning=ExperimentalWarning (Join-Path $prefix 'app\apps\desktop\src\cli.ts')
+          if ($LASTEXITCODE) { throw 'the rolled-back core does not run' }

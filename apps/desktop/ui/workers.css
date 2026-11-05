@@ -1,0 +1,359 @@
+/* Alca desktop — the inspector's task list and detail (§3.6), and the report rows in the chat. */
+
+.app[data-workers] {
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--inspector-w);
+}
+
+.app[data-sidebar="hidden"][data-workers] {
+  grid-template-columns: minmax(0, 1fr) var(--inspector-w);
+}
+
+.workers {
+  display: grid;
+  grid-template-rows: var(--toolbar-h) auto minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg);
+  box-shadow: inset 0.5px 0 0 var(--separator);
+  animation: fade var(--d-fast) var(--e-standard) both;
+}
+
+.wp-head {
+  grid-row: 1;
+}
+
+.wp-summary {
+  grid-row: 2;
+}
+
+.wp-list,
+.wp-stream,
+.wp-empty {
+  grid-row: 3;
+}
+
+.wp-foot {
+  grid-row: 4;
+}
+
+/* ── Head: continues the unified toolbar ── */
+.wp-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  height: var(--toolbar-h);
+  padding: 0 var(--s-2) 0 var(--s-4);
+  box-shadow: inset 0 -0.5px 0 var(--separator);
+}
+
+.wp-head > .tool-btn:first-child {
+  margin-left: calc(-1 * var(--s-2));
+}
+
+.wp-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: var(--t-headline);
+}
+
+.flip {
+  transform: scaleX(-1);
+}
+
+.wp-stop {
+  height: 28px;
+}
+
+/* ── Status icon (no tiles, no dots) ── */
+.wp-state {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--label-2);
+}
+
+.wp-state[data-tone="waiting"],
+.wp-state[data-tone="needs_review"] {
+  color: var(--waiting);
+}
+
+.wp-state[data-tone="succeeded"] {
+  color: var(--success);
+}
+
+.wp-state[data-tone="failed"] {
+  color: var(--danger);
+}
+
+/* ── List: 需要你 / 進行中 / 已完成 ── */
+.wp-list {
+  overflow-y: auto;
+  padding: var(--s-2) var(--s-3) var(--s-4);
+}
+
+.wp-section + .wp-section {
+  margin-top: var(--s-4);
+}
+
+.wp-label {
+  height: 28px;
+  padding: 0 var(--s-2);
+  font: var(--t-caption);
+  line-height: 28px;
+  color: var(--label-2);
+}
+
+.wp-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.wp-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: var(--list-row-2);
+  padding: 6px var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label);
+  text-align: left;
+}
+
+.wp-item:hover {
+  background: var(--fill-hover);
+}
+
+.wp-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.wp-item-body b {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: 500 14px / 20px var(--font-text);
+}
+
+.wp-item-body small {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.wp-item-body small[data-tone="waiting"] {
+  color: var(--waiting);
+}
+
+.wp-time {
+  flex: none;
+  font: var(--t-small);
+  color: var(--label-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.wp-go {
+  width: 12px;
+  height: 12px;
+  color: var(--label-3);
+}
+
+.wp-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--s-1);
+  padding: var(--s-8) var(--s-6);
+  text-align: center;
+}
+
+.wp-empty b {
+  font: 600 17px / 22px var(--font-text);
+}
+
+.wp-empty p {
+  margin: 0;
+  max-width: 260px;
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+/* ── Detail ── */
+.wp-summary {
+  padding: var(--s-4) var(--s-4) var(--s-3);
+  box-shadow: inset 0 -0.5px 0 var(--separator);
+}
+
+.wp-name {
+  margin: 0;
+  font: var(--t-title);
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.wp-status {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: var(--s-1) 0 0;
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.wp-status[data-tone="waiting"] > span:not(.wp-state):not(.wp-time) {
+  color: var(--waiting);
+}
+
+.wp-status .wp-time {
+  margin-left: auto;
+}
+
+.wp-reason {
+  margin: var(--s-2) 0 0;
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.wp-reason[data-status="failed"] {
+  color: var(--danger);
+}
+
+.wp-summary > .tech {
+  margin-top: var(--s-3);
+}
+
+.wp-stream {
+  overflow-y: auto;
+  padding: var(--s-4);
+}
+
+.wp-stream .item + .item {
+  margin-top: var(--s-3);
+}
+
+.wp-stream .card:not(.ap-compact) {
+  padding: var(--s-4);
+}
+
+.wp-stream .ap-compact {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.ap-compact .receipt[data-tone="waiting"] .receipt-icon,
+.ap-compact .receipt[data-tone="waiting"] .receipt-text {
+  color: var(--waiting);
+}
+
+.wp-stream .msg-user .bubble {
+  max-width: 90%;
+}
+
+.wp-foot {
+  padding: var(--s-3) var(--s-4);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+/* ── A task's brief at the top of its stream ── */
+.task {
+  padding: 0;
+}
+
+.task-label {
+  display: block;
+  margin-bottom: 2px;
+  font: var(--t-caption);
+  color: var(--label-2);
+}
+
+.task-goal {
+  margin: 0;
+  font: var(--t-reading);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ── Report rows in the chat (a task finished, a teammate replied): a plain row ── */
+.report {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-2);
+  padding: 2px 0;
+}
+
+.report-icon {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 20px;
+  flex: none;
+  color: var(--label-2);
+}
+
+.report[data-status="succeeded"] .report-icon {
+  color: var(--success);
+}
+
+.report[data-status="failed"] .report-icon {
+  color: var(--danger);
+}
+
+.report[data-status="needs_review"] .report-icon,
+.report[data-status="waiting"] .report-icon {
+  color: var(--waiting);
+}
+
+.report-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  font: var(--t-body);
+}
+
+.report-body b {
+  font-weight: 500;
+  color: var(--label);
+}
+
+.report-text {
+  color: var(--label-2);
+  overflow-wrap: anywhere;
+}
+
+.report-meta {
+  display: none; /* the spill id belongs to 技術細節 */
+}
+
+.report-open {
+  flex: none;
+  height: 24px;
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--accent);
+  font: var(--t-body);
+}
+
+.report-open:hover {
+  background: var(--fill-hover);
+}

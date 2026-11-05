@@ -1,0 +1,23 @@
+{
+  "name": "@alca/core",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Core: 8-phase turn pipeline, runner, loop guard, prompt layers, startup safety check",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@alca/config": "workspace:*",
+    "@alca/engines": "workspace:*",
+    "@alca/jobs": "workspace:*",
+    "@alca/memory": "workspace:*",
+    "@alca/os": "workspace:*",
+    "@alca/policy": "workspace:*",
+    "@alca/protocol": "workspace:*",
+    "@alca/store": "workspace:*",
+    "@alca/tools": "workspace:*",
+    "zod": "4.6.7"
+  }
+}

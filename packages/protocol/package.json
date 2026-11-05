@@ -1,0 +1,14 @@
+{
+  "name": "@alca/protocol",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Alca Event Protocol v0 — event envelope, types and runtime validators",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  }
+}

@@ -1,0 +1,332 @@
+/* Alca desktop UI — the composer, overlays and motion (split out of components.css, P13). */
+
+/* ── Composer (§3.3): capsule on --fill, send appears with text ── */
+.composer {
+  position: relative;
+  padding: var(--s-2) var(--s-6) var(--s-5);
+}
+
+.composer-box {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-2);
+  max-width: var(--composer-max);
+  min-height: 40px;
+  margin: 0 auto;
+  padding: 4px 4px 4px var(--s-4);
+  border-radius: 20px;
+  background: var(--bg-cell);
+  box-shadow:
+    0 0 0 0.5px var(--separator),
+    var(--shadow-1);
+  cursor: text;
+  transition: box-shadow var(--d-fast) var(--e-standard);
+}
+
+.composer-box:focus-within {
+  box-shadow:
+    0 0 0 0.5px var(--label-3),
+    var(--shadow-1);
+}
+
+.composer textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 32px;
+  max-height: 220px;
+  padding: 6px 0;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: transparent;
+  font: var(--t-reading);
+  line-height: 20px;
+}
+
+.composer textarea:focus-visible {
+  box-shadow: none;
+}
+
+.composer textarea::placeholder {
+  color: var(--label-3);
+}
+
+.composer-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  height: 32px;
+}
+
+.engine-chip {
+  display: none;
+}
+
+.send-btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent-fill);
+  color: var(--on-accent);
+  transition:
+    background var(--d-instant) var(--e-standard),
+    opacity var(--d-fast) var(--e-standard),
+    transform var(--d-fast) var(--e-standard);
+}
+
+.send-btn:hover {
+  background: var(--accent-fill-press);
+}
+
+/* Nothing typed yet, or a turn is running: the button steps out of the way. */
+.composer-box:has(textarea:placeholder-shown) .send-btn,
+.send-btn:disabled {
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+}
+
+.send-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── Overlays: sheets are windows (§3.14) ───────────────── */
+.overlay,
+.lock {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--scrim);
+  animation: fade var(--d-fast) var(--e-standard) both;
+  z-index: 10;
+}
+
+.sheet,
+.lock-card {
+  width: min(440px, calc(100vw - 32px));
+  padding: var(--s-6);
+  border-radius: var(--r-xl);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-3);
+  animation: card-in var(--d-base) var(--e-standard) both;
+}
+
+.sheet h2,
+.lock-card h2 {
+  margin: 0 0 var(--s-4);
+  font: var(--t-headline);
+}
+
+.lock-card p {
+  margin: 0;
+  color: var(--label-2);
+}
+
+.shortcuts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s-2) var(--s-6);
+  margin: 0;
+  font: var(--t-body);
+}
+
+.shortcuts dt {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.shortcuts kbd {
+  height: 20px;
+  min-width: 20px;
+}
+
+.shortcuts dd {
+  margin: 0;
+  align-self: center;
+  color: var(--label);
+}
+
+.sheet-note {
+  margin: var(--s-4) 0 0;
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+/* ── Motion ────────────────────────────────────────────────── */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+}
+
+/* ── 復原 toast (§3.11): one sentence + 〔復原〕, bottom-centre above the composer ── */
+.undo-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: fit-content;
+  max-width: min(560px, 100%);
+  margin: 0 auto var(--s-3);
+  padding: 6px 6px 6px var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-2);
+  color: var(--label);
+  font: var(--t-body);
+  animation: rise var(--d-base) var(--e-standard) both;
+}
+.undo-strip[hidden] {
+  display: none;
+}
+.undo-dot {
+  display: none;
+}
+.undo-strip[data-tone="danger"] {
+  color: var(--danger);
+}
+.undo-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.undo-btn {
+  flex: none;
+  height: 28px;
+}
+.undo-strip .btn-quiet {
+  background: transparent;
+  color: var(--accent);
+}
+.undo-strip .btn-quiet:hover {
+  background: var(--fill-hover);
+}
+
+/* ── Alerts (native <dialog>): centred on the window (§4.2) ── */
+.undo-dialog {
+  width: min(440px, calc(100vw - 48px));
+  margin: auto;
+  padding: var(--s-6);
+  border: 0;
+  border-radius: var(--r-xl);
+  background: var(--bg-elevated);
+  color: var(--label);
+  box-shadow: var(--shadow-3);
+}
+.undo-dialog::backdrop {
+  background: var(--scrim);
+}
+.undo-title {
+  margin: 0 0 var(--s-2);
+  font: var(--t-headline);
+}
+.undo-lead {
+  margin: 0 0 var(--s-4);
+  color: var(--label-2);
+  font: var(--t-body);
+}
+.undo-files {
+  display: grid;
+  gap: 0;
+  max-height: 240px;
+  margin: 0 0 var(--s-4);
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+  border-radius: var(--r-md);
+  background: var(--fill-hover);
+  font: var(--t-body);
+}
+.undo-files li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  align-items: center;
+  min-height: 32px;
+  padding: 4px var(--s-3);
+}
+.undo-files li + li {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+.undo-files code {
+  padding: 0;
+  background: none;
+  font-family: var(--font-text);
+  font-size: inherit;
+  overflow-wrap: anywhere;
+}
+.undo-tag {
+  margin-left: auto;
+  color: var(--label-2);
+  font: var(--t-small);
+}
+.undo-tag[data-tone="warn"] {
+  color: var(--waiting);
+}
+.undo-error {
+  margin: 0 0 var(--s-3);
+  color: var(--danger);
+  font: var(--t-small);
+}
+.undo-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s-2);
+  margin-top: var(--s-5);
+}

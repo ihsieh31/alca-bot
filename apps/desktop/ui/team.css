@@ -1,0 +1,477 @@
+/* Alca desktop — 團隊 (素 Plain §4.2): avatar glyphs, the sidebar roster, @mentions,
+   who spoke in a thread, the member list, collaboration rules and the hand-off list. */
+
+/* ── Avatar: a monochrome glyph on --fill; the name tells bots apart, not colour (§2.3) ── */
+.bot-av {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--label);
+  font: 600 13px / 1 var(--font-text);
+  user-select: none;
+}
+
+.bot-av[data-size="sm"] {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.bot-av[data-size="lg"] {
+  width: 36px;
+  height: 36px;
+  font-size: 15px;
+}
+
+.bot-av[data-size="xl"] {
+  width: 48px;
+  height: 48px;
+  font-size: 20px;
+}
+
+/* ── Sidebar roster ── */
+.roster {
+  margin: var(--s-2) 0 var(--s-1);
+  padding: var(--s-2);
+}
+
+.roster-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s-2);
+  font: var(--t-caption);
+  color: var(--label-2);
+}
+
+.roster-all {
+  height: 20px;
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label-2);
+  font: var(--t-small);
+}
+
+.roster-all:hover {
+  background: var(--fill-hover);
+  color: var(--label);
+}
+
+.roster-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+}
+
+.roster-bot {
+  position: relative;
+  padding: 2px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.roster-bot:hover .bot-av {
+  background: var(--fill-strong);
+}
+
+.roster-bot[aria-pressed="true"] .bot-av {
+  background: var(--accent-fill);
+  color: #fff;
+}
+
+/* Waiting on you is the only state worth a mark here. */
+.roster-dot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--bg-grouped);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.roster-dot[data-state="waiting"] {
+  background: var(--waiting);
+}
+
+/* ── Composer: who the next message goes to, the @mention menu ── */
+.composer-box {
+  position: relative;
+}
+
+.target-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: 28px;
+  padding: 0 2px 0 4px;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  color: var(--label);
+  font: var(--t-body);
+  white-space: nowrap;
+}
+
+.target-x {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--r-xs);
+  background: transparent;
+  color: var(--label-2);
+  font: 15px / 1 var(--font-text);
+}
+
+.target-x .ico {
+  width: 14px;
+  height: 14px;
+}
+
+.target-x:hover {
+  background: var(--fill-hover);
+  color: var(--label);
+}
+
+.mention-box {
+  position: absolute;
+  bottom: calc(100% + var(--s-2));
+  left: 0;
+  right: 0;
+  z-index: 5;
+  max-height: min(320px, 50vh);
+  overflow-y: auto;
+  padding: 5px;
+  border-radius: var(--r-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-2);
+  animation: fade var(--d-fast) var(--e-standard) both;
+}
+
+.mention-head {
+  padding: var(--s-1) var(--s-2) var(--s-2);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.mention-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: 36px;
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label);
+  text-align: left;
+}
+
+.mention-item[aria-selected="true"],
+.mention-item:hover {
+  background: var(--fill-selected);
+}
+
+.mention-name {
+  font: var(--t-body);
+  font-weight: 500;
+}
+
+.mention-role {
+  overflow: hidden;
+  min-width: 0;
+  font: var(--t-small);
+  color: var(--label-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Chat: who spoke (a 20px glyph and the name above the run) ── */
+.msg-by {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-2);
+}
+
+.msg-by-name {
+  font: var(--t-small);
+  font-weight: 600;
+  color: var(--label-2);
+}
+
+/* ── Member list: rows, not cards ── */
+.tm-list {
+  margin-bottom: var(--s-2);
+}
+
+.tm-row {
+  align-items: center;
+  cursor: default;
+}
+
+.tm-row:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.tm-row .bot-av {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+}
+
+.tm-row-name {
+  margin: 0;
+  font: var(--t-body);
+  font-weight: 500;
+  color: var(--label);
+}
+
+.tm-row .lb-meta {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tm-row[data-archived] .tm-row-name {
+  color: var(--label-2);
+}
+
+.tm-state {
+  flex: none;
+  height: 24px;
+  padding: 0 var(--s-1);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label-2);
+  font: var(--t-body);
+}
+
+.tm-state[data-state="waiting"] {
+  color: var(--waiting);
+}
+
+.tm-state:not(:disabled):hover {
+  background: var(--fill);
+}
+
+.tm-row .lb-actions {
+  order: 2;
+}
+
+.tm-row .tm-state {
+  order: 3;
+}
+
+.tm-row .lb-main > p {
+  margin: 0;
+}
+
+.tm-row .lb-meta {
+  margin-top: 2px;
+}
+
+.tm-add {
+  padding: 10px 0 0 calc(32px + var(--s-3));
+  list-style: none;
+  font: var(--t-body);
+}
+
+/* ── Collaboration rules ── */
+.tm-rules {
+  margin-top: var(--s-8);
+}
+
+.tm-rules .ap-lock {
+  margin-top: var(--s-2);
+  padding: 0 var(--s-1);
+}
+
+.tm-archived {
+  margin-top: var(--s-8);
+}
+
+/* ── Hand-off list ── */
+.tm-peers {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tm-peer {
+  position: relative;
+}
+
+.tm-peer + .tm-peer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0.5px;
+  background: var(--separator);
+}
+
+.tm-peer-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: calc(100% + var(--s-6));
+  min-height: 48px;
+  margin: 0 calc(-1 * var(--s-3));
+  padding: 8px var(--s-3);
+  border: 0;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--label);
+  text-align: left;
+}
+
+.tm-peer-row:hover {
+  background: var(--fill-hover);
+}
+
+.tm-peer-row .lb-main {
+  display: grid;
+  gap: 2px;
+}
+
+.tm-peer-row .lb-meta {
+  display: block;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tm-status {
+  flex: none;
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.tm-status[data-status="running"] {
+  color: var(--label);
+}
+
+.tm-status[data-status="failed"],
+.tm-status[data-status="denied"],
+.tm-status[data-status="refused"] {
+  color: var(--danger);
+}
+
+.tm-time {
+  flex: none;
+  width: 72px;
+  font: var(--t-small);
+  color: var(--label-2);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tm-chev {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  color: var(--label-3);
+  transition: transform var(--d-fast) var(--e-standard);
+}
+
+.tm-peer-row[aria-expanded="true"] .tm-chev {
+  transform: rotate(90deg);
+}
+
+.tm-detail {
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-1) 0 var(--s-4);
+}
+
+.tm-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tm-step {
+  color: var(--label-soft);
+}
+
+.tm-step[data-kind="approval"] .act-icon,
+.tm-step[data-kind="card"] .act-icon {
+  color: var(--waiting);
+}
+
+.tm-step[data-kind="approved"] .act-icon,
+.tm-step[data-kind="answered"] .act-icon {
+  color: var(--success);
+}
+
+.tm-step[data-kind="failed"] .act-icon,
+.tm-step[data-kind="refused"] .act-icon,
+.tm-step[data-kind="denied"] .act-icon {
+  color: var(--danger);
+}
+
+.tm-convo {
+  display: grid;
+  gap: var(--s-3);
+  max-width: var(--content-max, 720px);
+}
+
+.tm-convo-head {
+  margin: 0;
+}
+
+.tm-msg {
+  display: grid;
+  gap: 2px;
+}
+
+.tm-msg-label {
+  font: var(--t-small);
+  font-weight: 600;
+  color: var(--label-2);
+}
+
+.tm-msg p {
+  margin: 0;
+  font: var(--t-reading);
+  line-height: 1.6;
+  color: var(--label);
+  white-space: pre-wrap;
+}
+
+.tm-msg[data-role="system"] p {
+  font: var(--t-body);
+  color: var(--label-2);
+}
+
+.tm-detail-actions {
+  display: flex;
+  gap: var(--s-5);
+  font: var(--t-body);
+}
+
+.btn-link[data-tone="danger"] {
+  color: var(--danger);
+}
+
+.tm-err {
+  margin: 0;
+  font: var(--t-small);
+  color: var(--danger);
+}

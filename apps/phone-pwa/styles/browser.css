@@ -1,0 +1,329 @@
+/* The live browser frame (素 Plain §4.1 phone-browser / -takeover): nav bar with
+   the site name, the page with a dark caption overlay, a compact pending row,
+   a bottom toolbar (接手; or 鍵盤, 捲動, 交還 while you drive). */
+
+.browser-wrap .sheet-body {
+  padding: 0;
+}
+
+.browser-view {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.bv-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--s-2) var(--s-4) var(--s-4);
+}
+
+/* Several Spaces: plain text tabs, the open one in the label colour. */
+.bv-spaces {
+  display: flex;
+  gap: var(--s-4);
+  margin: 0 0 var(--s-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.bv-spaces[hidden] {
+  display: none;
+}
+
+.bv-space {
+  flex: none;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--label-2);
+  font-size: var(--t-subhead);
+}
+
+.bv-space[aria-selected="true"] {
+  color: var(--label);
+  font-weight: 600;
+}
+
+/* ── The page ─────────────────────────────────────────────── */
+.bv-stage {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.bv-scroll {
+  max-width: 100%;
+  /* The visible height (keyboard, landscape), not the layout viewport's. */
+  max-height: calc(var(--vvh, 100dvh) * 0.56);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--r-lg);
+  scrollbar-width: none;
+}
+
+.bv-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.bv-scroll[data-zoom="true"] .bv-frame {
+  width: 200%;
+}
+
+.bv-frame {
+  position: relative;
+  margin: 0 auto;
+  aspect-ratio: 16 / 10;
+  /* D4: held sideways, the whole frame fits the visible height instead of being cut. */
+  width: min(100%, calc(var(--vvh, 100dvh) * 0.56 * 16 / 10));
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--fill);
+  box-shadow: inset 0 0 0 0.5px var(--separator);
+  touch-action: manipulation;
+}
+
+/* You drive: a 2px accent ring says taps go to the page. */
+.bv-frame[data-driving="true"] {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.bv-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.bv-wait {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+}
+
+.bv-wait[hidden] {
+  display: none;
+}
+
+/* Who is driving: a small caption on the page, fixed dark in both themes (§2.3). */
+.bv-overlay {
+  position: absolute;
+  left: var(--s-2);
+  bottom: var(--s-2);
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% - var(--s-4));
+  margin: 0;
+  padding: 4px var(--s-2);
+  border-radius: var(--r-sm);
+  background: rgb(0 0 0 / 0.72);
+  color: #ffffff;
+  font-size: var(--t-caption);
+  font-weight: 500;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
+.bv-overlay[hidden] {
+  display: none;
+}
+
+.bv-ripple {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.25);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bv-ripple[data-on="true"] {
+  animation: ripple 420ms var(--e-standard);
+}
+
+@keyframes ripple {
+  from {
+    opacity: 0.9;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+
+/* Last step on the left, 放大 on the right. */
+.bv-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-height: var(--touch);
+  padding: 0 0 0 var(--s-4);
+}
+
+.bv-caption {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: var(--label-2);
+  font-size: var(--t-footnote);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.bv-caption[data-gated="true"] {
+  color: var(--waiting);
+}
+
+.bv-zoom {
+  flex: none;
+  font-size: var(--t-subhead);
+}
+
+.bv-pending {
+  margin: var(--s-4) 0 0;
+}
+
+.bv-wait-row .row-sub {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* While the person drives, the page gets the room. */
+.browser-view[data-driving="true"] .bv-info,
+.browser-view[data-driving="true"] .bv-note {
+  display: none;
+}
+
+.bv-note {
+  margin: var(--s-3) 0 0;
+}
+
+.bv-note:empty {
+  display: none;
+}
+
+/* ── Bottom toolbar ───────────────────────────────────────── */
+.bv-bar {
+  flex: none;
+  padding: 0 var(--s-2) max(var(--safe-bottom), var(--s-2));
+  background: var(--bar);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+:root[data-keyboard="open"] .bv-bar {
+  padding-bottom: var(--s-2);
+}
+
+.bv-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  min-height: 49px;
+}
+
+.bv-controls:empty {
+  display: none;
+}
+
+.bv-controls .takeover {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.bv-tool[aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--fill);
+}
+
+.bv-spacer {
+  flex: 1;
+}
+
+.bv-handback {
+  min-height: 36px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-md);
+  font-size: var(--t-subhead);
+}
+
+/* The text field over the native keyboard, a quiet capsule like the composer. */
+.bv-typing {
+  padding: var(--s-2) var(--s-2) 0;
+}
+
+.bv-typing[hidden] {
+  display: none;
+}
+
+.bv-input {
+  width: 100%;
+  min-height: 36px;
+  padding: 0 var(--s-4);
+  border: 0;
+  border-radius: var(--r-full);
+  outline: 0;
+  background: var(--fill);
+  color: var(--label);
+  font-size: var(--t-field);
+}
+
+.bv-input::placeholder {
+  color: var(--placeholder);
+}
+
+/* 分頁 sheet. */
+.bv-tabs {
+  padding-top: var(--s-2);
+}
+
+.bv-check {
+  color: var(--accent);
+}
+
+/* Short landscape: page left, the pending row and notes right. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .bv-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    column-gap: var(--s-6);
+    padding-right: calc(var(--s-4) + var(--safe-right));
+    padding-left: calc(var(--s-4) + var(--safe-left));
+  }
+  .bv-main > .bv-stage {
+    grid-row: 1 / span 4;
+  }
+  .bv-main > :not(.bv-stage) {
+    grid-column: 2;
+  }
+  .bv-pending {
+    margin-top: 0;
+  }
+  .bv-note {
+    margin-top: var(--s-2);
+    text-align: left;
+  }
+}

@@ -1,0 +1,59 @@
+name: Bug report
+description: Something does not work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Security problems:** do not file them here — see SECURITY.md (private vulnerability reporting).
+        Do not paste keys, tokens, pairing codes, chat contents or personal data. Redact logs.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. pnpm desktop:demo
+        2. …
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Desktop app / core
+        - Phone PWA / Alca Link
+        - Alca Browser
+        - Engines / providers
+        - Connected apps / routines
+        - Memory / skills
+        - Team of bots
+        - Installer / release / service
+        - Relay (rendezvous / Worker)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v0.1.0 or the output of `git rev-parse --short HEAD`
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: macOS 15 / Node 22.18 / engine (demo, Claude Code, …) / phone + browser if relevant
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs (redacted)
+      render: text

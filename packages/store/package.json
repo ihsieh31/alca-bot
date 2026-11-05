@@ -1,0 +1,14 @@
+{
+  "name": "@alca/store",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "SQLite state store (node:sqlite, WAL, migrations, append-only logs, CJK FTS)",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@alca/os": "workspace:*"
+  }
+}

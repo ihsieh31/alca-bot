@@ -1,0 +1,27 @@
+// English strings, desktop-link. Same keys as ../zh/desktop-link.ts (typecheck enforces it).
+export const desktopLink = {
+  "desktop.link.alcaLinkIsntOnYet": "Phone connection isn't on for this computer yet, so a phone can't pair.",
+  "desktop.link.connectionSettings": "Connection settings…",
+  "desktop.link.couldntGenerateAPairingCode": "Couldn't generate a pairing code",
+  "desktop.link.expiredGenerateANewOne": "Expired; generate a new one",
+  "desktop.link.generateAPairingCode": "Generate a pairing code",
+  "desktop.link.hands": "Hands",
+  "desktop.link.letThisPhoneTakeOver": "Let this phone use the browser too",
+  "desktop.link.offline": "Offline",
+  "desktop.link.orUseAPairingCode": "Or use a pairing code",
+  "desktop.link.useAPairingCode": "Use a pairing code",
+  "desktop.link.pairingQrCode": "Pairing QR code",
+  "desktop.link.pnpmDesktopRendezvousHttpsYour": "pnpm desktop --rendezvous https://your-rendezvous-server",
+  "desktop.link.revokeItDisconnectsRightAway":
+    "Revoke {name}? It disconnects right away and must pair again to reconnect.",
+  "desktop.link.thisComputersKey": "This computer’s safety number ",
+  "desktop.link.validForSSingleUse": "Valid for {s} s, single use",
+  "desktop.link.addPhone": "Add a phone",
+  "desktop.link.step1": "Open the Alca phone page in Safari on your iPhone.",
+  "desktop.link.step2": "Scan the QR code on the left, or type the pairing code.",
+  "desktop.link.step3": "Once paired, the phone shows up under Paired devices below.",
+  "desktop.link.safetyNumber": "Safety number",
+  "desktop.link.phonesCanReach": "Phones can reach this computer.",
+  "desktop.link.pairedDevicesHeading": "Paired devices",
+  "desktop.link.telegramEllipsis": "Telegram…",
+};

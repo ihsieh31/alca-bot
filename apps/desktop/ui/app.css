@@ -1,0 +1,446 @@
+/* Alca desktop — shell (素 Plain): source-list sidebar, unified toolbar, chat column. */
+
+/* ── Shell ─────────────────────────────────────────────────── */
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  height: 100vh;
+  background: var(--bg);
+}
+
+.app[data-sidebar="hidden"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.app[data-sidebar="hidden"] > .sidebar {
+  display: none;
+}
+
+/* ── Sidebar (§3.2): source list ───────────────────────────── */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0 var(--s-2) var(--s-2);
+  background: var(--bg-grouped);
+  box-shadow: inset -0.5px 0 0 var(--separator);
+}
+
+.side-head {
+  display: flex;
+  align-items: center;
+  height: var(--toolbar-h);
+  flex: none;
+}
+
+.side-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: var(--r-sm);
+  background: var(--fill);
+  color: var(--label-2);
+  cursor: text;
+}
+
+.side-search:focus-within {
+  box-shadow: var(--focus-ring);
+}
+
+.side-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  color: var(--label);
+  font: var(--t-body);
+}
+
+.side-search input:focus-visible {
+  box-shadow: none;
+}
+
+.side-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.side-search .kbd-hint {
+  background: transparent;
+  color: var(--label-3);
+}
+
+.side-search:focus-within .kbd-hint {
+  visibility: hidden;
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: none;
+}
+
+.side-nav:not(:empty) {
+  margin-top: var(--s-2);
+}
+
+.side-library {
+  padding-top: var(--s-3);
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.side-library .section-label {
+  height: 24px;
+  line-height: 24px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  height: var(--row-h);
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label);
+  font: var(--t-body);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.nav-item > span:not(.nav-badge) {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-item > svg {
+  color: var(--accent);
+}
+
+.nav-item:hover {
+  background: var(--fill-hover);
+}
+
+.nav-item[aria-pressed="true"],
+.nav-item[aria-current="true"] {
+  background: var(--fill-selected);
+}
+
+#needs-you > svg {
+  color: var(--waiting);
+}
+
+/* ── Conversation list ─────────────────────────────────────── */
+.thread-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin: var(--s-3) calc(-1 * var(--s-2)) var(--s-2);
+  padding: 0 var(--s-2);
+}
+
+.thread-group {
+  height: 24px;
+  margin-top: var(--s-3);
+  padding: 0 var(--s-2);
+  font: var(--t-caption);
+  line-height: 24px;
+  color: var(--label-2);
+}
+
+.thread-group:first-child {
+  margin-top: 0;
+}
+
+.thread-row {
+  position: relative;
+}
+
+.thread-row + .thread-row {
+  margin-top: 1px;
+}
+
+.thread-item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  height: var(--row-h);
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--label);
+  text-align: left;
+}
+
+.thread-item:hover {
+  background: var(--fill-hover);
+}
+
+.thread-item[aria-current="true"] {
+  background: var(--fill-selected);
+}
+
+.thread-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: var(--t-body);
+}
+
+/* Trailing state: an orange hand when it waits on you, a spinner while it works. */
+.thread-state {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.thread-state[data-state="waiting"] {
+  color: var(--waiting);
+}
+
+.thread-state svg {
+  width: 14px;
+  height: 14px;
+}
+
+.thread-empty {
+  padding: var(--s-6) var(--s-2);
+  font: var(--t-small);
+  color: var(--label-2);
+}
+
+.thread-acts {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: none;
+  gap: 0;
+  padding-left: var(--s-4);
+  border-radius: var(--r-sm);
+  background: linear-gradient(to right, transparent, var(--bg-grouped) var(--s-4));
+}
+
+.thread-row:hover .thread-acts,
+.thread-row:focus-within .thread-acts {
+  display: flex;
+}
+
+.thread-act {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-xs);
+  background: transparent;
+  color: var(--label-2);
+}
+
+.thread-act:hover {
+  background: var(--fill);
+  color: var(--label);
+}
+
+.thread-act svg {
+  width: 14px;
+  height: 14px;
+}
+
+.thread-more {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--row-h);
+  margin-top: var(--s-1);
+  padding: 0 var(--s-2);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--accent);
+  font: var(--t-body);
+  text-align: left;
+}
+
+.thread-more:hover {
+  background: var(--fill-hover);
+}
+
+.thread-archived-toggle {
+  margin-top: var(--s-2);
+  color: var(--label-2);
+}
+
+/* ── Main column + unified toolbar (§3.1) ──────────────────── */
+.main {
+  display: grid;
+  grid-template-rows: var(--toolbar-h) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: var(--toolbar-h);
+  padding: 0 var(--s-3);
+  box-shadow: inset 0 -0.5px 0 var(--separator);
+}
+
+.thread-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0 0 0 var(--s-1);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: var(--t-headline);
+  color: var(--label);
+}
+
+.main[data-empty] .thread-title {
+  visibility: hidden;
+}
+
+.main[data-empty] .topbar {
+  box-shadow: none;
+}
+
+.topbar-right {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--s-1);
+}
+
+#interrupt {
+  color: var(--label);
+}
+
+/* ── Timeline ──────────────────────────────────────────────── */
+.timeline {
+  overflow-y: auto;
+  padding: var(--s-8) var(--s-6) var(--s-6);
+}
+
+.timeline > * {
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+.item {
+  animation: rise var(--d-base) var(--e-standard) both;
+}
+
+.item + .item {
+  margin-top: var(--s-5);
+}
+
+/* User: tail-less bubble on --fill (§3.3). */
+.msg-user {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.msg-user + .msg-assistant,
+.msg-assistant + .msg-user {
+  margin-top: var(--s-6);
+}
+
+.msg-user .bubble {
+  max-width: 70%;
+  padding: 8px 14px;
+  border-radius: var(--r-bubble);
+  background: var(--fill);
+  font: var(--t-reading);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Assistant: no bubble, no avatar in a 1:1 chat. */
+.msg-assistant {
+  display: block;
+}
+
+.prose {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font: var(--t-reading);
+  color: var(--label);
+}
+
+.prose p {
+  margin: 0;
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose p + p,
+.prose pre + p,
+.prose p + pre,
+.prose ul,
+.prose ol {
+  margin-top: var(--s-3);
+}
+
+.prose pre {
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--fill-hover);
+  overflow-x: auto;
+  font: 13px / 20px var(--font-mono);
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+}
+
+.prose.streaming {
+  white-space: pre-wrap;
+}
+
+/* One caret at the end while it streams (§2.7), no per-token fade. */
+.prose.streaming::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--label);
+  animation: caret 1s steps(1) infinite;
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* A page (團隊, 連接…) is open in place of the chat: only its sidebar row reads as selected. */
+.app[data-library] .thread-item[aria-current="true"]:not(:hover) {
+  background: transparent;
+}

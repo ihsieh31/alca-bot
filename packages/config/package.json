@@ -1,0 +1,14 @@
+{
+  "name": "@alca/config",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Settings schema: 5 user-facing pages + hidden engineering params",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  }
+}

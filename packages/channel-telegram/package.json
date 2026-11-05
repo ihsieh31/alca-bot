@@ -1,0 +1,22 @@
+{
+  "name": "@alca/channel-telegram",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Telegram as a reply channel: the person's own bot token (local vault), long polling (no webhook, no inbound port), an allow-list of private chat ids, messages routed to a chosen bot's thread; approvals stay on paired devices",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./testing/fake-telegram.ts"
+  },
+  "dependencies": {
+    "@alca/core": "workspace:*",
+    "@alca/os": "workspace:*",
+    "@alca/protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "@alca/config": "workspace:*",
+    "@alca/engines": "workspace:*",
+    "@alca/store": "workspace:*"
+  }
+}

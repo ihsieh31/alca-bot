@@ -1,0 +1,20 @@
+{
+  "name": "@alca/phone-pwa",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Phone PWA: chat, approval sheets, workers, live browser frame + takeover, pairing, devices — over Alca Link",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "node --disable-warning=ExperimentalWarning scripts/build.ts"
+  },
+  "dependencies": {
+    "@alca/design": "workspace:*",
+    "@alca/link": "workspace:*"
+  },
+  "devDependencies": {
+    "@alca/browser": "workspace:*",
+    "@alca/rendezvous": "workspace:*",
+    "@alca/desktop": "workspace:*"
+  }
+}
