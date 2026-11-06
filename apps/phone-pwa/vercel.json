@@ -15,7 +15,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!app/|link/|styles/|icons/|sw\\.js|config\\.json|tokens\\.css|manifest\\.webmanifest).*)",
+      "source": "/((?!app/|link/|styles/|icons/|legal/|sw\\.js|config\\.json|tokens\\.css|manifest\\.webmanifest).*)",
       "destination": "/index.html"
     }
   ],

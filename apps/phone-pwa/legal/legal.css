@@ -1,0 +1,47 @@
+body {
+  font:
+    16px / 1.6 system-ui,
+    -apple-system,
+    "PingFang TC",
+    "Noto Sans TC",
+    sans-serif;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+  color: #1a1a1a;
+  background: #fff;
+}
+h1 {
+  font-size: 1.6em;
+  margin: 0.2em 0 0.6em;
+}
+h2 {
+  font-size: 1.15em;
+  margin: 1.6em 0 0.4em;
+}
+.lang {
+  border-top: 1px solid #ddd;
+  margin-top: 40px;
+  padding-top: 8px;
+}
+a {
+  color: #0b57d0;
+}
+small {
+  color: #666;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #111;
+    color: #eee;
+  }
+  .lang {
+    border-color: #333;
+  }
+  a {
+    color: #8ab4f8;
+  }
+  small {
+    color: #aaa;
+  }
+}

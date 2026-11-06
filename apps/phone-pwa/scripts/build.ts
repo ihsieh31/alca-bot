@@ -202,6 +202,7 @@ export function buildPwa(
   copy(TOKENS_CSS_PATH, join(out, "tokens.css"));
   for (const f of readdirSync(join(HERE, "styles"))) copy(join(HERE, "styles", f), join(out, "styles", f));
   for (const f of readdirSync(join(HERE, "icons"))) copy(join(HERE, "icons", f), join(out, "icons", f));
+  for (const f of readdirSync(join(HERE, "legal"))) copy(join(HERE, "legal", f), join(out, "legal", f));
 
   // Service worker: precache list + a version derived from the content.
   const files: string[] = [];
