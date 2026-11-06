@@ -55,7 +55,11 @@ pub fn words_for(en: bool) -> Words {
 
 /// The first, disabled line of the menu and the tooltip.
 pub fn headline(phase: &Phase, st: Option<&CoreStatus>) -> String {
-    let w = words();
+    headline_in(words(), phase, st)
+}
+
+/// The headline in the given words (tests pin the language instead of following the system's).
+fn headline_in(w: &Words, phase: &Phase, st: Option<&CoreStatus>) -> String {
     match phase {
         Phase::Starting => w.starting.clone(),
         Phase::Restarting { in_secs } => w.restarting.replace("{n}", &in_secs.to_string()),
@@ -70,10 +74,14 @@ pub fn headline(phase: &Phase, st: Option<&CoreStatus>) -> String {
 
 /// The tooltip: the headline, plus how many phones are online when any are.
 pub fn tooltip(phase: &Phase, st: Option<&CoreStatus>) -> String {
-    let line = headline(phase, st);
+    tooltip_in(words(), phase, st)
+}
+
+fn tooltip_in(w: &Words, phase: &Phase, st: Option<&CoreStatus>) -> String {
+    let line = headline_in(w, phase, st);
     match st {
         Some(s) if s.phones_online > 0 => {
-            format!("{line} · {}", words().phones.replace("{n}", &s.phones_online.to_string()))
+            format!("{line} · {}", w.phones.replace("{n}", &s.phones_online.to_string()))
         }
         _ => line,
     }
@@ -140,11 +148,12 @@ mod tests {
 
     #[test]
     fn headline_says_what_waits() {
+        let w = &words_for(false);
         let st = CoreStatus { approvals: 2, questions: 1, phones_online: 0 };
-        assert_eq!(headline(&Phase::Running, Some(&st)), "等你決定：3 件");
-        assert_eq!(headline(&Phase::Running, Some(&CoreStatus::default())), "Alca 正在執行");
-        assert_eq!(headline(&Phase::Attached, None), "Alca 正在執行（背景服務）");
-        assert_eq!(headline(&Phase::Restarting { in_secs: 4 }, None), "核心停止了，4 秒後重新啟動");
+        assert_eq!(headline_in(w, &Phase::Running, Some(&st)), "等你決定：3 件");
+        assert_eq!(headline_in(w, &Phase::Running, Some(&CoreStatus::default())), "Alca 正在執行");
+        assert_eq!(headline_in(w, &Phase::Attached, None), "Alca 正在執行（背景服務）");
+        assert_eq!(headline_in(w, &Phase::Restarting { in_secs: 4 }, None), "核心停止了，4 秒後重新啟動");
     }
 
     #[test]
@@ -156,8 +165,9 @@ mod tests {
 
     #[test]
     fn tooltip_adds_phones_online() {
+        let w = &words_for(false);
         let st = CoreStatus { approvals: 0, questions: 0, phones_online: 2 };
-        assert_eq!(tooltip(&Phase::Running, Some(&st)), "Alca 正在執行 · 2 支手機在線上");
-        assert_eq!(tooltip(&Phase::Running, Some(&CoreStatus::default())), "Alca 正在執行");
+        assert_eq!(tooltip_in(w, &Phase::Running, Some(&st)), "Alca 正在執行 · 2 支手機在線上");
+        assert_eq!(tooltip_in(w, &Phase::Running, Some(&CoreStatus::default())), "Alca 正在執行");
     }
 }
